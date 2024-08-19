@@ -21,4 +21,10 @@ export default defineSchema({
     label: v.string(),
     message: v.string(),
   }),
+  schools: defineTable({
+    creatorId: v.id("users"),
+    name: v.string(),
+    description: v.string(),
+    isPublic: v.boolean(),
+  }).index("by_creatorId", ["creatorId"]),
 });

@@ -50,6 +50,7 @@ export function LogoIcon(props: React.SVGProps<SVGSVGElement>) {
       height="36"
       viewBox="0 0 512 512"
       preserveAspectRatio="xMidYMid meet"
+      aria-label="logo"
       {...props}
     >
       <g

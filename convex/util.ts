@@ -2,7 +2,7 @@ import { ActionCtx, MutationCtx, QueryCtx } from "./_generated/server";
 
 export function formatName(
   firstName?: string | null,
-  lastName?: string | null,
+  lastName?: string | null
 ) {
   firstName = firstName ?? "";
   lastName = lastName ?? "";

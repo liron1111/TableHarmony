@@ -83,6 +83,8 @@ export const deleteUser = internalMutation({
       throw new ConvexError("Could not find user");
     }
 
+    if (user._id !== args.userId) throw new ConvexError("Unauthorized");
+
     await ctx.db.delete(user._id);
   },
 });

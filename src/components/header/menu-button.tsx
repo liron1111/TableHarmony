@@ -1,6 +1,12 @@
 "use client";
 
-import { MenuIcon } from "lucide-react";
+import {
+  MenuIcon,
+  SchoolIcon,
+  SearchIcon,
+  SettingsIcon,
+  XIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -12,16 +18,11 @@ import {
 import { Separator } from "@/components/ui/separator";
 import useMediaQuery from "@/hooks/use-media-query";
 import { SignOutButton, UserButton } from "@clerk/nextjs";
-import { publicRoutes } from "@/config/routes";
-import { usePathname } from "next/navigation";
 
 export function MenuButton() {
   const { isMobile } = useMediaQuery();
-  const path = usePathname();
 
   if (!isMobile) return <UserButton />;
-
-  const isPublicRoute = publicRoutes.some((route) => path === route);
 
   return (
     <Popover>
@@ -30,34 +31,39 @@ export function MenuButton() {
           <MenuIcon className="size-4" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        className="grid space-y-4 text-sm text-muted-foreground"
-        align="end"
-      >
-        <Link
-          href="/browse"
-          className="hover:text-neutral-700 dark:hover:text-neutral-200"
-        >
-          Browse
-        </Link>
-        <Link
-          href="/schools"
-          className="hover:text-neutral-700 dark:hover:text-neutral-200"
-        >
-          Schools
-        </Link>
-        {isPublicRoute && (
-          <>{/**TODO: add public links such as jobs and browse */}</>
-        )}
-        <Separator />
-        <div className="flex items-center justify-between">
-          Theme <ModeToggle />
+      <PopoverContent className="max-w-[275px]" align="end">
+        <div className="flex flex-col space-y-4 text-sm text-muted-foreground">
+          <Link
+            href="/schools"
+            className="flex items-center gap-2 hover:text-neutral-700 dark:hover:text-neutral-200"
+          >
+            <SchoolIcon className="size-4" />
+            Schools
+          </Link>
+          <Link
+            href="/browse"
+            className="flex items-center gap-2 hover:text-neutral-700 dark:hover:text-neutral-200"
+          >
+            <SearchIcon className="size-4" />
+            Browse
+          </Link>
+          <Link
+            href="/account-settings"
+            className="flex items-center gap-2 hover:text-neutral-700 dark:hover:text-neutral-200"
+          >
+            <SettingsIcon className="size-4" />
+            Account settings
+          </Link>
+          <Separator />
+          <div className="flex items-center justify-between">
+            Theme <ModeToggle />
+          </div>
+          <SignOutButton>
+            <span className="cursor-pointer hover:text-neutral-700 dark:hover:text-neutral-200">
+              Sign out
+            </span>
+          </SignOutButton>
         </div>
-        <SignOutButton>
-          <span className="cursor-pointer hover:text-neutral-700 dark:hover:text-neutral-200">
-            Sign out
-          </span>
-        </SignOutButton>
       </PopoverContent>
     </Popover>
   );
