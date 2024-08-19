@@ -24,15 +24,18 @@ export const createSchool = mutation({
 });
 
 export const getUserSchools = query({
-  async handler(ctx) {
+  args: {},
+  async handler(ctx, args) {
     const user = await getCurrentUser(ctx, {});
 
     if (!user) return null;
 
-    return await ctx.db
+    let schools = await ctx.db
       .query("schools")
       .withIndex("by_creatorId", (q) => q.eq("creatorId", user._id))
       .collect();
+
+    return schools;
   },
 });
 

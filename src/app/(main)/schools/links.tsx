@@ -10,6 +10,8 @@ export function MainLinks() {
 
   return (
     <div className="hidden items-center gap-2 md:flex">
+      {/**
+       * 
       <Button
         variant="ghost"
         className={path === "/browse" ? "bg-muted" : ""}
@@ -20,6 +22,7 @@ export function MainLinks() {
           <span>Browse</span>
         </Link>
       </Button>
+      */}
       <Button
         variant="ghost"
         className={path === "/account-settings" ? "bg-muted" : ""}

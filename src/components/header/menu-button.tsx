@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  MenuIcon,
-  SchoolIcon,
-  SearchIcon,
-  SettingsIcon,
-  XIcon,
-} from "lucide-react";
+import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -35,23 +29,23 @@ export function MenuButton() {
         <div className="flex flex-col space-y-4 text-sm text-muted-foreground">
           <Link
             href="/schools"
-            className="flex items-center gap-2 hover:text-neutral-700 dark:hover:text-neutral-200"
+            className="hover:text-neutral-700 dark:hover:text-neutral-200"
           >
-            <SchoolIcon className="size-4" />
             Schools
           </Link>
+          {/**
+           * 
           <Link
             href="/browse"
-            className="flex items-center gap-2 hover:text-neutral-700 dark:hover:text-neutral-200"
+            className="hover:text-neutral-700 dark:hover:text-neutral-200"
           >
-            <SearchIcon className="size-4" />
             Browse
           </Link>
+           */}
           <Link
             href="/account-settings"
-            className="flex items-center gap-2 hover:text-neutral-700 dark:hover:text-neutral-200"
+            className="hover:text-neutral-700 dark:hover:text-neutral-200"
           >
-            <SettingsIcon className="size-4" />
             Account settings
           </Link>
           <Separator />

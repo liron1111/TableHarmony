@@ -28,7 +28,6 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { LoaderButton } from "@/components/loader-button";
 import { Button } from "@/components/ui/button";
-import { PlusCircleIcon } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { useMutation } from "convex/react";
@@ -156,9 +155,7 @@ export function CreateSchoolSheet() {
   return (
     <Sheet open={showSheet} onOpenChange={setShowSheet}>
       <SheetTrigger asChild>
-        <Button>
-          <PlusCircleIcon className="mr-2 size-4" /> Create school
-        </Button>
+        <Button>New school</Button>
       </SheetTrigger>
 
       <SheetContent>
