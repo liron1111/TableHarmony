@@ -1,7 +1,7 @@
 import { httpRouter } from "convex/server";
 import { ConvexError } from "convex/values";
 
-import { internal } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 import { httpAction } from "./_generated/server";
 
 import { formatName } from "./util";
@@ -44,7 +44,7 @@ http.route({
 
           if (!updatedUser) throw new ConvexError("User does not exist");
 
-          await ctx.runMutation(internal.users.updateUser, {
+          await ctx.runMutation(api.users.updateUser, {
             userId: updatedUser._id,
             image: result.data.image_url,
           });

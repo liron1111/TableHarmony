@@ -1,4 +1,9 @@
-import { internalMutation, internalQuery, query } from "./_generated/server";
+import {
+  internalMutation,
+  internalQuery,
+  mutation,
+  query,
+} from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { getClerkId } from "./util";
 
@@ -82,10 +87,11 @@ export const deleteUser = internalMutation({
   },
 });
 
-export const updateUser = internalMutation({
+export const updateUser = mutation({
   args: {
     userId: v.id("users"),
     image: v.optional(v.string()),
+    name: v.optional(v.string()),
   },
   async handler(ctx, args) {
     const user = await getUser(ctx, { userId: args.userId });
@@ -95,7 +101,8 @@ export const updateUser = internalMutation({
     }
 
     await ctx.db.patch(user._id, {
-      image: args.image,
+      image: args.image || user.image,
+      name: args.name || user.name,
     });
   },
 });
