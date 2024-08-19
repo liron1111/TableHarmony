@@ -1,4 +1,4 @@
-import { SiteHeader } from "@/components/header/header";
+import { SiteHeader } from "@/components/header";
 import { SiteFooter } from "@/components/site-footer";
 
 export default function LandingLayout({

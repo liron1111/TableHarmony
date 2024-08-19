@@ -48,7 +48,7 @@ export function HeaderLinks({ links }: { links?: React.ReactNode }) {
 
       <SlashIcon className="size-4 -rotate-12" />
 
-      <Link href="/dashboard" className="flex items-center gap-2">
+      <Link href="/schools" className="flex items-center gap-2">
         <Avatar className="size-6">
           <AvatarImage src={user?.image} alt="profile" />
           <AvatarFallback>SC</AvatarFallback>

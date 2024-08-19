@@ -35,7 +35,7 @@ export function HeaderActions() {
   if (isPublicRoute) {
     return (
       <Button asChild>
-        <Link href="/dashboard">Dashboard</Link>
+        <Link href="/schools">Dashboard</Link>
       </Button>
     );
   }

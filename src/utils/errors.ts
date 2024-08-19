@@ -23,19 +23,3 @@ export class AuthorizationError extends PublicError {
     this.name = "AuthorizationError";
   }
 }
-
-export class NotFoundError extends PublicError {
-  constructor(message: string) {
-    super(message);
-    this.name = "NotFoundError";
-  }
-}
-
-export const RATE_LIMIT_ERROR = "Rate limit exceeded";
-
-export class RateLimitError extends PublicError {
-  constructor() {
-    super(RATE_LIMIT_ERROR);
-    this.name = "RateLimitError";
-  }
-}

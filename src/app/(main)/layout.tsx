@@ -1,5 +1,5 @@
-import { SiteHeader } from "@/components/header/header";
-import { MainLinks } from "./dashboard/links";
+import { SiteHeader } from "@/components/header";
+import { MainLinks } from "./schools/links";
 
 export default function MainLayout({
   children,

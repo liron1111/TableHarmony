@@ -41,10 +41,10 @@ export function MenuButton() {
           Browse
         </Link>
         <Link
-          href="/dashboard"
+          href="/schools"
           className="hover:text-neutral-700 dark:hover:text-neutral-200"
         >
-          Dashboard
+          Schools
         </Link>
         {isPublicRoute && (
           <>{/**TODO: add public links such as jobs and browse */}</>
