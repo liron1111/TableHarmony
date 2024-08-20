@@ -1,61 +1,53 @@
-"use client";
-
-import { api } from "../../../convex/_generated/api";
-import { useQuery } from "convex/react";
-
 import Link from "next/link";
+import { Suspense } from "react";
 
-import { usePathname } from "next/navigation";
-import useMediaQuery from "@/hooks/use-media-query";
+import { SignedIn } from "@clerk/nextjs";
 
 import { LogoIcon } from "@/components/icons";
-import { Logo } from "@/components/logo";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { SlashIcon } from "lucide-react";
-import { publicRoutes } from "@/config/routes";
 
-export function HeaderLinks({ links }: { links?: React.ReactNode }) {
-  const user = useQuery(api.users.getCurrentUser);
-  const { isMobile } = useMediaQuery();
-  const path = usePathname();
+import { fetchQuery } from "convex/nextjs";
+import { api } from "../../../convex/_generated/api";
+import { ClientProfile } from "./profile";
 
-  if (isMobile) {
-    return (
-      <Link href="/" aria-label="logo">
-        <LogoIcon />
-      </Link>
-    );
-  }
-
-  const isPublicRoute = publicRoutes.some((route) => path === route);
-
-  if (!user || isPublicRoute) {
-    return (
-      <>
-        <Logo />
-        <div className="hidden space-x-8 md:flex md:flex-row">
-          {/**TODO: add public links such as jobs and browse */}
-        </div>
-      </>
-    );
-  }
+export async function HeaderLinks({ links }: { links?: React.ReactNode }) {
+  const user = await fetchQuery(api.users.getCurrentUser);
 
   return (
-    <div className="flex items-center gap-4">
-      <Link href="/">
-        <LogoIcon />
-      </Link>
+    <SignedIn>
+      <div className="flex items-center gap-4">
+        <Link href="/schools">
+          <LogoIcon />
+        </Link>
 
-      <SlashIcon className="size-4 -rotate-12" />
+        <SlashIcon className="size-4 -rotate-12" />
 
-      <Link href="/schools" className="flex items-center gap-2">
-        <Avatar className="size-6">
-          <AvatarImage src={user?.image} alt="profile" />
-          <AvatarFallback>SC</AvatarFallback>
-        </Avatar>
-        <span>{user?.name}</span>
-      </Link>
-      {links}
-    </div>
+        <ClientProfile />
+
+        {/**
+         * 
+        <Suspense fallback={<Skeleton className="h-[20px] w-[100px]" />}>
+          <Profile />
+        </Suspense>
+        */}
+        {links}
+      </div>
+    </SignedIn>
+  );
+}
+
+async function Profile() {
+  const user = await fetchQuery(api.users.getCurrentUser);
+
+  return (
+    <Link href="/schools" className="flex items-center gap-2">
+      <Avatar className="size-6">
+        <AvatarImage src={user?.image} alt="profile" />
+        <AvatarFallback className="text-xs">SC</AvatarFallback>
+      </Avatar>
+      <span>{user?.name}</span>
+    </Link>
   );
 }

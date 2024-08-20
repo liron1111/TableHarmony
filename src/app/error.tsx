@@ -18,7 +18,7 @@ export default function ErrorPage({
   error: Error & { digest?: string };
 }) {
   const isAuthenticationError = error.message.includes(
-    AUTHENTICATION_ERROR_MESSAGE
+    AUTHENTICATION_ERROR_MESSAGE,
   );
 
   return (

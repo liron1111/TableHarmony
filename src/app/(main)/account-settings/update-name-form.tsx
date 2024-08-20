@@ -24,10 +24,6 @@ const updateNameSchema = z.object({
   name: z.string(),
 });
 
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export function UpdateNameForm() {
   const { toast } = useToast();
   const user = useQuery(api.users.getCurrentUser);

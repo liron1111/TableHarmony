@@ -13,13 +13,15 @@ export const getCurrentUser = query({
 
     if (!clerkId) return null;
 
-    const user = await getUserByClerkId(ctx, { clerkId });
+    const user = await getUserByClerkId(ctx, {
+      clerkId: clerkId,
+    });
 
     return user;
   },
 });
 
-export const getUser = internalQuery({
+export const getUserById = internalQuery({
   args: { userId: v.id("users") },
   async handler(ctx, args) {
     const user = await ctx.db
@@ -30,16 +32,6 @@ export const getUser = internalQuery({
     if (!user) throw new ConvexError("Could not find user");
 
     return user;
-  },
-});
-
-export const getUserByEmail = internalQuery({
-  args: { email: v.string() },
-  async handler(ctx, args) {
-    return await ctx.db
-      .query("users")
-      .withIndex("by_email", (q) => q.eq("email", args.email))
-      .first();
   },
 });
 
@@ -77,7 +69,7 @@ export const createUser = internalMutation({
 export const deleteUser = internalMutation({
   args: { userId: v.id("users") },
   async handler(ctx, args) {
-    const user = await getUser(ctx, { userId: args.userId });
+    const user = await getUserById(ctx, { userId: args.userId });
 
     if (!user) {
       throw new ConvexError("Could not find user");
@@ -96,7 +88,7 @@ export const updateUser = mutation({
     name: v.optional(v.string()),
   },
   async handler(ctx, args) {
-    const user = await getUser(ctx, { userId: args.userId });
+    const user = await getUserById(ctx, { userId: args.userId });
 
     if (!user) {
       throw new ConvexError("Could not find user");
