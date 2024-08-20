@@ -27,7 +27,7 @@ export default function SchoolsPage({
           <CreateSchoolSheet />
         </PageActions>
       </PageHeader>
-      <SchoolList />
+      <SchoolList query={query} page={page} />
     </div>
   );
 }

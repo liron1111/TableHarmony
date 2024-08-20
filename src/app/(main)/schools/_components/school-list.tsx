@@ -1,14 +1,14 @@
 "use client";
 
-import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 
 import { cardStyles, gridStyles } from "@/styles/common";
 
 import Image from "next/image";
 import { SchoolCard } from "./school-card";
+import { useQuery } from "convex/react";
 
-export function SchoolList() {
+export function SchoolList({ query, page }: { query: string; page: number }) {
   const schools = useQuery(api.schools.getUserSchools);
 
   if (!schools) return;

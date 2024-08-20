@@ -24,7 +24,8 @@ export const createSchool = mutation({
 });
 
 export const getUserSchools = query({
-  args: {},
+  args: {
+  },
   async handler(ctx, args) {
     const user = await getCurrentUser(ctx, {});
 

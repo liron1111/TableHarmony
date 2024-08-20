@@ -28,7 +28,19 @@ export function HeaderActions() {
     );
   }
 
-  if (isMobile) return <MenuButton />;
+  if (isMobile) {
+    return (
+      <div className="flex items-center gap-2">
+        <SendFeedbackSheet>
+          <Button size="icon" variant="ghost" aria-label="feedback">
+            <MessageCircleIcon className="size-4" />
+          </Button>
+        </SendFeedbackSheet>
+        <Notifications />
+        <MenuButton />
+      </div>
+    );
+  }
 
   const isPublicRoute = publicRoutes.some((route) => path === route);
 
