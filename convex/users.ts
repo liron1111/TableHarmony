@@ -86,6 +86,7 @@ export const updateUser = mutation({
     userId: v.id("users"),
     image: v.optional(v.string()),
     name: v.optional(v.string()),
+    bio: v.optional(v.string()),
   },
   async handler(ctx, args) {
     const user = await getUserById(ctx, { userId: args.userId });
@@ -97,6 +98,7 @@ export const updateUser = mutation({
     await ctx.db.patch(user._id, {
       image: args.image || user.image,
       name: args.name || user.name,
+      bio: args.bio || user.bio,
     });
   },
 });

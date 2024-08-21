@@ -8,7 +8,7 @@ export default function PrivateLayout({
   return (
     <>
       <PrivateHeader />
-      <main className="flex-1">{children}</main>
+      <main className="mb-10 flex-1">{children}</main>
     </>
   );
 }
