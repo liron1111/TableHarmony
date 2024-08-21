@@ -1,16 +1,3 @@
-import { SiteHeader } from "@/components/header";
-import { SiteFooter } from "@/components/site-footer";
+import PublicLayout from "@/components/layouts/public-layout";
 
-export default function LandingLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <>
-      <SiteHeader />
-      <main className="flex-1">{children}</main>
-      <SiteFooter />
-    </>
-  );
-}
+export default PublicLayout;

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/popover";
 import { BellIcon } from "lucide-react";
 import Link from "next/link";
-import { Separator } from "../ui/separator";
+import { Separator } from "@/components/ui/separator";
 
 export function Notifications() {
   const [isOpen, setIsOpen] = useState(false);

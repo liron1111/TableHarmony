@@ -12,14 +12,20 @@ import {
 import { Separator } from "@/components/ui/separator";
 import useMediaQuery from "@/hooks/use-media-query";
 import { SignOutButton, UserButton } from "@clerk/nextjs";
+import { useState } from "react";
 
 export function MenuButton() {
   const { isMobile } = useMediaQuery();
+  const [open, setIsOpen] = useState(false);
 
-  if (!isMobile) return <UserButton />;
+  if (!isMobile) {
+    return (
+      <UserButton /> // TODO: in order to prevent on refresh disapper use a button that triggers the dropdown
+    );
+  }
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setIsOpen}>
       <PopoverTrigger>
         <Button size="icon" variant="ghost" aria-label="menu">
           <MenuIcon className="size-4" />
@@ -30,21 +36,14 @@ export function MenuButton() {
           <Link
             href="/schools"
             className="hover:text-neutral-700 dark:hover:text-neutral-200"
+            onClick={() => setIsOpen(false)}
           >
             Schools
           </Link>
-          {/**
-           * 
-          <Link
-            href="/browse"
-            className="hover:text-neutral-700 dark:hover:text-neutral-200"
-          >
-            Browse
-          </Link>
-           */}
           <Link
             href="/account-settings"
             className="hover:text-neutral-700 dark:hover:text-neutral-200"
+            onClick={() => setIsOpen(false)}
           >
             Account settings
           </Link>
