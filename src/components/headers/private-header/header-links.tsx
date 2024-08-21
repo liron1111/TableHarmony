@@ -13,8 +13,9 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { SettingsIcon, SlashIcon } from "lucide-react";
+import { SchoolsCombobox } from "@/app/(main)/schools/[schoolId]/schools-combobox";
 
-export function HeaderLinks({ links }: { links?: React.ReactNode }) {
+export function HeaderLinks() {
   const { isMobile } = useMediaQuery();
   const { isLoading } = useConvexAuth();
 
@@ -38,9 +39,7 @@ export function HeaderLinks({ links }: { links?: React.ReactNode }) {
 
       {isLoading ? <Skeleton className="h-5 w-28" /> : <Profile />}
 
-      {!links && <Links />}
-
-      {links}
+      <Links />
     </div>
   );
 }
@@ -60,19 +59,35 @@ function Profile() {
 
 function Links() {
   const path = usePathname();
+  const segments = path.split("/").filter(Boolean);
+
+  const hasIds = segments.length > 1 && segments.at(0) === "schools";
+
+  if (!hasIds) {
+    return (
+      <div className="hidden items-center gap-2 md:flex">
+        <Button
+          variant="ghost"
+          className={path === "/account-settings" ? "bg-muted" : ""}
+          asChild
+        >
+          <Link className="flex items-center gap-2" href="/account-settings">
+            <SettingsIcon className="size-4" />
+            <span>Account settings</span>
+          </Link>
+        </Button>
+      </div>
+    );
+  }
+
+  const schoolId = segments.at(1);
+
+  if (!schoolId) return;
 
   return (
-    <div className="hidden items-center gap-2 md:flex">
-      <Button
-        variant="ghost"
-        className={path === "/account-settings" ? "bg-muted" : ""}
-        asChild
-      >
-        <Link className="flex items-center gap-2" href="/account-settings">
-          <SettingsIcon className="size-4" />
-          <span>Account settings</span>
-        </Link>
-      </Button>
+    <div className="flex items-center gap-2">
+      <SlashIcon className="size-3 -rotate-12 text-muted-foreground" />
+      <SchoolsCombobox schoolId={schoolId} />
     </div>
   );
 }

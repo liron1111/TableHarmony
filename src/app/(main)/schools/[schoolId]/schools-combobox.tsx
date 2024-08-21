@@ -40,7 +40,7 @@ export function SchoolsCombobox({ schoolId }: { schoolId: string }) {
           variant="ghost"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-fit justify-between"
         >
           {!value ? (
             "Select schools..."
@@ -57,7 +57,7 @@ export function SchoolsCombobox({ schoolId }: { schoolId: string }) {
               {schools.find((schools) => schools._id === value)?.name}
             </div>
           )}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ml-4 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="max-w-72 p-0">
