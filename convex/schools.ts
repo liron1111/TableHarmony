@@ -19,13 +19,13 @@ export const createSchool = mutation({
       description: args.description,
       isPublic: args.isPublic,
       creatorId: user._id,
+      image: "/assets/project.png",
     });
   },
 });
 
 export const getUserSchools = query({
-  args: {
-  },
+  args: {},
   async handler(ctx, args) {
     const user = await getCurrentUser(ctx, {});
 

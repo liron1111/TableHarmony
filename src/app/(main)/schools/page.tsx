@@ -12,11 +12,9 @@ export default function SchoolsPage({
 }: {
   searchParams?: {
     query?: string;
-    page?: string;
   };
 }) {
   const query = searchParams?.query || "";
-  const page = Number(searchParams?.page) || 1;
 
   return (
     <div className="container">
@@ -27,7 +25,7 @@ export default function SchoolsPage({
           <CreateSchoolSheet />
         </PageActions>
       </PageHeader>
-      <SchoolList />
+      <SchoolList query={query} />
     </div>
   );
 }

@@ -7,18 +7,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  EllipsisVerticalIcon,
-  GraduationCapIcon,
-  SettingsIcon,
-  TrashIcon,
-  UsersIcon,
-} from "lucide-react";
+import { EllipsisVerticalIcon, SettingsIcon, TrashIcon } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -26,6 +19,7 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { DeleteSchoolDialog } from "./delete-school-dialog";
+import Image from "next/image";
 
 export function SchoolCard({ school }: { school: Doc<"schools"> }) {
   const user = useQuery(api.users.getCurrentUser);
@@ -34,22 +28,21 @@ export function SchoolCard({ school }: { school: Doc<"schools"> }) {
     <div className="relative duration-200 hover:shadow-md">
       <Link href={`/schools/${school._id}`} aria-label="school">
         <Card>
-          <CardHeader>
-            <CardTitle>{school.name}</CardTitle>
-            <CardDescription className="line-clamp-4">
-              {school.description}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col items-center justify-center gap-10 md:flex-row">
-              <div className="flex items-center gap-2">
-                <UsersIcon /> 0 students
-              </div>
-              <div className="flex items-center gap-2">
-                <GraduationCapIcon /> 0 teachers
-              </div>
+          <CardHeader className="flex flex-row items-center gap-4">
+            <Image
+              alt="school image"
+              src={school.image}
+              width="35"
+              height="35"
+              className="rounded-md"
+            />
+            <div>
+              <CardTitle>{school.name}</CardTitle>
+              <CardDescription className="line-clamp-4">
+                {school.description}
+              </CardDescription>
             </div>
-          </CardContent>
+          </CardHeader>
         </Card>
       </Link>
       {user?._id === school.creatorId && (

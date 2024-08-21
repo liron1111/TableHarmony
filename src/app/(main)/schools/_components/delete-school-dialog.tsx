@@ -32,9 +32,7 @@ import { Id } from "../../../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 
 const deleteSchema = z.object({
-  confirm: z.string().refine((v) => v === "Delete school", {
-    message: "Please type 'Delete school' to confirm",
-  }),
+  confirm: z.string(),
 });
 
 export function DeleteSchoolDialog({
@@ -91,6 +89,7 @@ export function DeleteSchoolDialog({
                     <Input
                       placeholder="Delete school"
                       disabled={isLoading}
+                      required
                       {...field}
                     />
                   </FormControl>

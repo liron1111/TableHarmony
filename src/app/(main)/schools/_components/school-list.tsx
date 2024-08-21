@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cardStyles, gridStyles } from "@/styles/common";
 import { SchoolCard } from "./school-card";
 
-export function SchoolList() {
+export function SchoolList({ query }: { query: string }) {
   const schools = useQuery(api.schools.getUserSchools);
 
   if (!schools) return <SchoolListSkeleton />;
@@ -27,9 +27,29 @@ export function SchoolList() {
     );
   }
 
+  const displaySchools = schools.filter(
+    (school) =>
+      school.name.toLowerCase().includes(query) ||
+      school.description.toLowerCase().includes(query)
+  );
+
+  if (displaySchools.length === 0) {
+    return (
+      <div className={cardStyles}>
+        <Image
+          src="/assets/no-data.svg"
+          width="200"
+          height="200"
+          alt="no schools placeholder image"
+        />
+        <span className="font-semibold">No schools found</span>
+      </div>
+    );
+  }
+
   return (
     <div className={gridStyles}>
-      {schools.map((school) => (
+      {displaySchools.map((school) => (
         <SchoolCard key={school._id} school={school} />
       ))}
     </div>

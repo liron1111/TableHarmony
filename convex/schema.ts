@@ -27,5 +27,6 @@ export default defineSchema({
     name: v.string(),
     description: v.string(),
     isPublic: v.boolean(),
+    image: v.string(),
   }).index("by_creatorId", ["creatorId"]),
 });
