@@ -39,6 +39,7 @@ export function HeaderLinks({ links }: { links?: React.ReactNode }) {
       {isLoading ? <Skeleton className="h-5 w-28" /> : <Profile />}
 
       {!links && <Links />}
+
       {links}
     </div>
   );

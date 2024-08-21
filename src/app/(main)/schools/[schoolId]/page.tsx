@@ -1,10 +1,4 @@
-import {
-  PageActions,
-  PageHeader,
-  PageHeaderDescription,
-  PageHeaderHeading,
-} from "@/components/page-header";
-import { SchoolsCombobox } from "./schools-combobox";
+import { PageHeader, PageHeaderHeading } from "@/components/page-header";
 import { ComingSoon } from "@/components/coming-soon";
 
 export default function SchoolsPage({
@@ -16,9 +10,6 @@ export default function SchoolsPage({
     <div className="container">
       <PageHeader>
         <PageHeaderHeading>School</PageHeaderHeading>
-        <PageActions>
-          <SchoolsCombobox schoolId={params.schoolId} />
-        </PageActions>
       </PageHeader>
       <ComingSoon />
     </div>

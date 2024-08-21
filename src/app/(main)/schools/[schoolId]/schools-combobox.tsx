@@ -37,7 +37,7 @@ export function SchoolsCombobox({ schoolId }: { schoolId: string }) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           role="combobox"
           aria-expanded={open}
           className="w-[200px] justify-between"
