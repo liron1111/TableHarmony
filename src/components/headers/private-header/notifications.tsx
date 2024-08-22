@@ -37,7 +37,7 @@ export function Notifications() {
           Notifications{" "}
           {/*TODO: Create notifications page - or notifications popover like in vercel*/}
           <Link
-            href="#"
+            href="/notifications"
             onClick={() => setIsOpen(false)}
             className="text-xs text-primary"
           >

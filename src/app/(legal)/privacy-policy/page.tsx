@@ -1,4 +1,4 @@
-import PrivacyPolicy from "@/markdown/legal/privacy-policy.mdx";
+import PrivacyPolicy from "@/markdown/privacy-policy.mdx";
 import {
   PageHeader,
   PageHeaderDescription,

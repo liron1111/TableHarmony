@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { SearchIcon, SlidersHorizontalIcon } from "lucide-react";
 
 const NON_FILTER = ["actions", "picture", "select"];
@@ -83,6 +84,15 @@ export function DataTableFilter({
   );
 }
 
+export function DataTableFilterSkeleton() {
+  return (
+    <div className="flex gap-2">
+      <Skeleton className="h-10 w-full md:w-[300px] lg:w-[350px]" />
+      <Skeleton className="h-10 w-[60px] sm:w-[120px] lg:w-[105px]" />
+    </div>
+  );
+}
+
 export function DataTableViewOptions() {
   const { table } = useContext(DataTableContext);
 
@@ -117,4 +127,8 @@ export function DataTableViewOptions() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
+}
+
+export function DataTableViewOptionsSkeleton() {
+  return <Skeleton className="h-10 w-[90px]" />;
 }

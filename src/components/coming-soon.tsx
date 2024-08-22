@@ -9,7 +9,7 @@ export function ComingSoon() {
         src="/assets/under-construction.svg"
         width="300"
         height="300"
-        alt="no posts"
+        alt="under construction"
       />
 
       <p className="text-balance text-lg font-medium md:text-xl">

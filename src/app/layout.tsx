@@ -18,7 +18,7 @@ const fontSans = FontSans({
 export const metadata = createMetadata({
   title: {
     template: `%s | ${siteConfig.name}`,
-    default: siteConfig.name,
+    default: `${siteConfig.name} | ${siteConfig.description}`,
   },
   description: siteConfig.description,
   metadataBase: new URL(BASE_URL),
@@ -42,7 +42,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
+          fontSans.variable
         )}
       >
         <ContextProvider>

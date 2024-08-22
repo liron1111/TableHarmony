@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { flexRender } from "@tanstack/react-table";
 import { DataTableContext } from "@/components/data-table/data-table-context";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -61,13 +62,13 @@ export function DataTableBody({
             <TableRow>
               <TableCell colSpan={table.getAllColumns().length}>
                 <div className="flex flex-col items-center justify-center space-y-8 py-8">
+                  <span className="font-semibold">No results.</span>
                   <Image
                     src="/assets/no-data.svg"
                     width="200"
                     height="200"
-                    alt="no data placeholder image"
+                    alt="no data"
                   />
-                  <span className="font-semibold">No results.</span>
                 </div>
               </TableCell>
             </TableRow>
@@ -76,4 +77,8 @@ export function DataTableBody({
       </Table>
     </div>
   );
+}
+
+export function DataTableBodySkeleton() {
+  return <Skeleton className="h-64 w-full" />;
 }

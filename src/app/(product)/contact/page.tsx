@@ -1,4 +1,4 @@
-import Contact from "@/markdown/product/contact.mdx";
+import Contact from "@/markdown/contact.mdx";
 import { PageHeader, PageHeaderHeading } from "@/components/page-header";
 
 import { createMetadata } from "@/utils/metadata";

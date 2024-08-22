@@ -1,4 +1,4 @@
-import TermsOfService from "@/markdown/legal/terms-of-service.mdx";
+import TermsOfService from "@/markdown/terms-of-service.mdx";
 import {
   PageHeader,
   PageHeaderDescription,
