@@ -13,7 +13,7 @@ export default function SchoolSettingsPage({
   return (
     <div>
       <div className="space-y-8">
-        <ConfigurationPanel title="Name">
+        <ConfigurationPanel title="School name">
           <div className="flex flex-col gap-4">
             <span>To update school name, please fill the form below</span>
             <UpdateNameForm schoolId={schoolId} />

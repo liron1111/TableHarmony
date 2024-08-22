@@ -61,12 +61,16 @@ function SchoolListSkeleton() {
     <div className={gridStyles}>
       {new Array(6).fill("").map((v, idx) => (
         <div key={idx} className="h-[125px] space-y-6 rounded border p-4">
-          <div className="space-y-2">
-            <Skeleton className="h-[20px] w-[140px] rounded" />
-            <Skeleton className="h-[15px] w-full rounded" />
+          <div className="flex space-x-2">
+            <Skeleton className="size-9 rounded" />
+            <div className="space-y-1">
+              <Skeleton className="h-3 w-24 rounded" />
+              <Skeleton className="h-3 w-16 rounded" />
+            </div>
           </div>
-          <div className="flex justify-center">
-            <Skeleton className="h-[25px] w-[250px] rounded" />
+          <div className="flex flex-col space-y-1">
+            <Skeleton className="h-3 w-16 rounded" />
+            <Skeleton className="h-3 rounded" />
           </div>
         </div>
       ))}
