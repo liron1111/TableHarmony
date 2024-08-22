@@ -30,6 +30,7 @@ import { useMutation } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
+import { Dispatch, SetStateAction } from "react";
 
 const deleteSchema = z.object({
   confirm: z.string(),
@@ -37,10 +38,12 @@ const deleteSchema = z.object({
 
 export function DeleteSchoolDialog({
   schoolId,
-  children,
+  open,
+  setOpen,
 }: {
   schoolId: Id<"schools">;
-  children: React.ReactNode;
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const { toast } = useToast();
 
@@ -67,8 +70,7 @@ export function DeleteSchoolDialog({
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete school</DialogTitle>

@@ -1,5 +1,3 @@
-"use client";
-
 import { PageHeader, PageHeaderHeading } from "@/components/page-header";
 import Image from "next/image";
 

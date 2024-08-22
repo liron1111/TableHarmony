@@ -1,5 +1,7 @@
 "use client";
 
+import "@/styles/tiptap.css";
+
 import { useRef, useState } from "react";
 
 import { useMutation, useQuery } from "convex/react";
@@ -10,6 +12,7 @@ import { LoaderButton } from "@/components/loader-button";
 import { useToast } from "@/components/ui/use-toast";
 
 import { EditorProvider } from "@tiptap/react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function EditBioForm() {
   const user = useQuery(api.users.getCurrentUser);
@@ -33,6 +36,8 @@ export function EditBioForm() {
 
     setIsLoading(false);
   }
+
+  if (!user) return <Skeleton className="h-64 w-full" />;
 
   return (
     <div className="w-full space-y-4">

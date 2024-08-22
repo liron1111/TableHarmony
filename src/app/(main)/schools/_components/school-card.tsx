@@ -22,6 +22,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { DeleteSchoolDialog } from "./delete-school-dialog";
 import Image from "next/image";
+import { useState } from "react";
 
 export function SchoolCard({ school }: { school: Doc<"schools"> }) {
   const user = useQuery(api.users.getCurrentUser);
@@ -59,6 +60,8 @@ export function SchoolCard({ school }: { school: Doc<"schools"> }) {
 }
 
 function MenuButton({ schoolId }: { schoolId: Id<"schools"> }) {
+  const [open, setOpen] = useState(false);
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -66,7 +69,7 @@ function MenuButton({ schoolId }: { schoolId: Id<"schools"> }) {
           <EllipsisVerticalIcon className="size-4" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-fit p-1">
+      <PopoverContent className="min-w-[8rem] max-w-40 p-1">
         <Button
           variant="ghost"
           className="w-full justify-start text-muted-foreground hover:!text-muted-foreground"
@@ -77,15 +80,15 @@ function MenuButton({ schoolId }: { schoolId: Id<"schools"> }) {
           </Link>
         </Button>
         <Separator className="my-1" />
-        <DeleteSchoolDialog schoolId={schoolId}>
-          <Button
-            variant="ghost"
-            className="flex w-full items-center justify-start text-destructive hover:!text-destructive"
-          >
-            <TrashIcon className="mr-2 size-4" /> Delete school
-          </Button>
-        </DeleteSchoolDialog>
+        <Button
+          variant="ghost"
+          className="flex w-full items-center justify-start text-destructive hover:!text-destructive"
+          onClick={() => setOpen(true)}
+        >
+          <TrashIcon className="mr-2 size-4" /> Delete school
+        </Button>
       </PopoverContent>
+      <DeleteSchoolDialog open={open} setOpen={setOpen} schoolId={schoolId} />
     </Popover>
   );
 }

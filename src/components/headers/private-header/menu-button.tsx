@@ -19,9 +19,7 @@ export function MenuButton() {
   const [open, setIsOpen] = useState(false);
 
   if (!isMobile) {
-    return (
-      <UserButton /> // TODO: in order to prevent on refresh disapper use a button that triggers the dropdown
-    );
+    return <UserButton />;
   }
 
   return (

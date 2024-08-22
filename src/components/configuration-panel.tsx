@@ -20,7 +20,7 @@ export function ConfigurationPanel({
         className={cn(
           "rounded-t-md border-b bg-muted/40 px-4 py-2 sm:px-6 md:py-3",
           {
-            "border-destructive bg-destructive/20 text-destructive":
+            "border-destructive bg-destructive/20 text-destructive dark:text-red-500":
               variant === "destructive",
           }
         )}

@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { useMutation, useQuery } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 
 import {
@@ -27,17 +27,15 @@ const updateNameSchema = z.object({
 export function UpdateNameForm() {
   const { toast } = useToast();
   const user = useQuery(api.users.getCurrentUser);
+  const { isLoading } = useConvexAuth();
 
   const updateUser = useMutation(api.users.updateUser);
 
   const form = useForm<z.infer<typeof updateNameSchema>>({
     resolver: zodResolver(updateNameSchema),
-    defaultValues: {
-      name: user?.name,
-    },
   });
 
-  const isLoading = form.formState.isSubmitting;
+  const isPending = form.formState.isSubmitting;
 
   async function onSubmit(values: z.infer<typeof updateNameSchema>) {
     try {
@@ -64,13 +62,18 @@ export function UpdateNameForm() {
             <FormItem className="w-full">
               <FormLabel className="sr-only">Name</FormLabel>
               <FormControl>
-                <Input disabled={isLoading} {...field} required />
+                <Input
+                  defaultValue={!isLoading ? user?.name : ""} //**TODO: I HATE THIS */
+                  disabled={isPending}
+                  {...field}
+                  required
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <LoaderButton isLoading={isLoading}>Save</LoaderButton>
+        <LoaderButton isLoading={isPending}>Save</LoaderButton>
       </form>
     </Form>
   );

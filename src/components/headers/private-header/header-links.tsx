@@ -27,8 +27,6 @@ export function HeaderLinks() {
     );
   }
 
-  // TODO: fix bug on mobile this appears
-
   return (
     <div className="flex items-center gap-4">
       <Link href="/schools">
@@ -47,12 +45,14 @@ export function HeaderLinks() {
 function Profile() {
   const user = useQuery(api.users.getCurrentUser);
 
+  if (!user) return <Skeleton className="h-5 w-28" />;
+
   return (
     <Link href="/schools" className="flex items-center gap-2">
       <Avatar className="size-6">
         <AvatarImage src={user?.image} alt="profile" />
       </Avatar>
-      <span className="text-sm">{user?.name}</span>
+      <span className="text-sm">{user.name}</span>
     </Link>
   );
 }

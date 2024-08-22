@@ -1,8 +1,8 @@
 import { ConfigurationPanel } from "@/components/configuration-panel";
 
-import { DeleteSchoolDialog } from "../../../_components/delete-school-dialog";
-import { Button } from "@/components/ui/button";
 import { Id } from "../../../../../../../convex/_generated/dataModel";
+
+import { DeleteSchoolButton } from "./delete-school-button";
 
 export default function DangerPage({
   params,
@@ -16,11 +16,7 @@ export default function DangerPage({
       <ConfigurationPanel variant="destructive" title="Delete school">
         <div className="flex flex-col gap-4">
           <span>You can delete your project if you&apos;re done with it </span>
-          <DeleteSchoolDialog schoolId={schoolId}>
-            <Button className="w-fit" variant="destructive">
-              Delete school
-            </Button>
-          </DeleteSchoolDialog>
+          <DeleteSchoolButton schoolId={schoolId} />
         </div>
       </ConfigurationPanel>
     </div>
