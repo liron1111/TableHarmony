@@ -1,7 +1,5 @@
 "use client";
 
-import "@/styles/tiptap.css";
-
 import { useRef, useState } from "react";
 
 import { useMutation, useQuery } from "convex/react";
@@ -55,7 +53,7 @@ export function EditBioForm() {
           isLoading={isLoading}
           className="self-end"
         >
-          Save Changes
+          Save
         </LoaderButton>
       </div>
     </div>
