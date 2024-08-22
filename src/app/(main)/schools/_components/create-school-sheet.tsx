@@ -25,13 +25,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
 import { LoaderButton } from "@/components/loader-button";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { useMutation } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   name: z
@@ -50,7 +50,6 @@ function CreateSchoolForm({
 }: {
   setShowSheet: Dispatch<SetStateAction<boolean>>;
 }) {
-  const { toast } = useToast();
   const createSchool = useMutation(api.schools.createSchool);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -69,13 +68,10 @@ function CreateSchoolForm({
         description: values.description,
         isPublic: values.isPublic,
       });
-      toast({
-        description: "School successfully created!",
-        variant: "success",
-      });
+      toast.success("Created school successfully!");
     } catch (error) {
       console.error(error);
-      toast({ description: "Something went wrong", variant: "destructive" });
+      toast.error("Something went wrong");
     }
 
     setShowSheet(false);

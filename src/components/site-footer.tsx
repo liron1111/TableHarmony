@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
-import { LogoIcon, LinkedinIcon, GithubIcon } from "@/components/icons";
+import { LinkedinIcon, GithubIcon } from "@/components/icons";
 import { Logo } from "./logo";
 
 export function SiteFooter() {

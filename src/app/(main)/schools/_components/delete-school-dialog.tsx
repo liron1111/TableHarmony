@@ -12,10 +12,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
 import {
   Form,
   FormControl,
@@ -31,6 +29,7 @@ import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Dispatch, SetStateAction } from "react";
+import { toast } from "sonner";
 
 const deleteSchema = z.object({
   confirm: z.string(),
@@ -45,8 +44,6 @@ export function DeleteSchoolDialog({
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  const { toast } = useToast();
-
   const deleteSchool = useMutation(api.schools.deleteSchool);
 
   const form = useForm<z.infer<typeof deleteSchema>>({
@@ -59,13 +56,10 @@ export function DeleteSchoolDialog({
   const onSubmit = async () => {
     try {
       await deleteSchool({ schoolId: schoolId });
-      toast({
-        description: "School successfully deleted!",
-        variant: "success",
-      });
+      toast.success("Deleted school successfully!");
     } catch (error) {
       console.error(error);
-      toast({ description: "Something went wrong", variant: "destructive" });
+      toast.error("Something went wrong");
     }
   };
 

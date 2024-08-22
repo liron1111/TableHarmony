@@ -52,7 +52,7 @@ function Profile() {
       <Avatar className="size-6">
         <AvatarImage src={user?.image} alt="profile" />
       </Avatar>
-      <span className="text-sm">{user.name}</span>
+      <span className="max-w-32 truncate text-sm">{user.name}</span>
     </Link>
   );
 }

@@ -9,17 +9,16 @@ import { api } from "../../../../convex/_generated/api";
 
 import { MenuBar, extensions } from "@/components/tiptap";
 import { LoaderButton } from "@/components/loader-button";
-import { useToast } from "@/components/ui/use-toast";
 
 import { EditorProvider } from "@tiptap/react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 
 export function EditBioForm() {
   const user = useQuery(api.users.getCurrentUser);
   const updateUser = useMutation(api.users.updateUser);
 
   const htmlRef = useRef<string>(user?.bio ?? "");
-  const { toast } = useToast();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,10 +27,10 @@ export function EditBioForm() {
 
     try {
       await updateUser({ userId: user?._id!, bio: htmlRef.current });
-      toast({ description: "Bio successfully updated!", variant: "success" });
+      toast.success("Updated successfully!");
     } catch (error) {
       console.error(error);
-      toast({ description: "Something went wrong", variant: "destructive" });
+      toast.error("Something went wrong");
     }
 
     setIsLoading(false);

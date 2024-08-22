@@ -27,7 +27,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -39,6 +38,7 @@ import {
 import { LoaderButton } from "@/components/loader-button";
 import { Button } from "@/components/ui/button";
 import { MessageCircleIcon } from "lucide-react";
+import { toast } from "sonner";
 
 const LABELS = [
   "Issue",
@@ -64,7 +64,6 @@ function SendFeedbackForm({
 }: {
   setShowSheet: Dispatch<SetStateAction<boolean>>;
 }) {
-  const { toast } = useToast();
   const createFeedback = useMutation(api.feedbacks.createFeedback);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -81,10 +80,10 @@ function SendFeedbackForm({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       await createFeedback(values);
-      toast({ description: "Feedback sent!", variant: "success" });
+      toast.success("Feedback successfully sent!");
     } catch (error) {
       console.error(error);
-      toast({ description: "Something went wrong", variant: "destructive" });
+      toast.error("Something went wrong");
     }
 
     form.reset();

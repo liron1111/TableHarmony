@@ -18,16 +18,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
 import { LoaderButton } from "@/components/loader-button";
+import { toast } from "sonner";
 
 const updateNameSchema = z.object({
   name: z.string(),
 });
 
 export function UpdateNameForm({ schoolId }: { schoolId: Id<"schools"> }) {
-  const { toast } = useToast();
-
   const updateSchool = useMutation(api.schools.updateSchool);
 
   const form = useForm<z.infer<typeof updateNameSchema>>({
@@ -42,10 +40,10 @@ export function UpdateNameForm({ schoolId }: { schoolId: Id<"schools"> }) {
   async function onSubmit(values: z.infer<typeof updateNameSchema>) {
     try {
       await updateSchool({ schoolId, name: values.name });
-      toast({ description: "Name successfully updated!", variant: "success" });
+      toast.success("Updated school name!");
     } catch (error) {
       console.error(error);
-      toast({ description: "Something went wrong", variant: "destructive" });
+      toast.error("Something went wrong");
 
       form.reset();
     }

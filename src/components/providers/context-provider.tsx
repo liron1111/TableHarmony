@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ConvexProvider } from "@/components/providers/convex-provider";
 import { ClerkProvider } from "@/components/providers/clerk-provider";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 
 export async function ContextProvider({
   children,

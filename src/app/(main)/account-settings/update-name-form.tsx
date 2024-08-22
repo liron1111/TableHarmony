@@ -17,15 +17,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
 import { LoaderButton } from "@/components/loader-button";
+import { toast } from "sonner";
 
 const updateNameSchema = z.object({
   name: z.string(),
 });
 
 export function UpdateNameForm() {
-  const { toast } = useToast();
   const user = useQuery(api.users.getCurrentUser);
   const { isLoading } = useConvexAuth();
 
@@ -40,10 +39,10 @@ export function UpdateNameForm() {
   async function onSubmit(values: z.infer<typeof updateNameSchema>) {
     try {
       await updateUser({ userId: user?._id!, name: values.name });
-      toast({ description: "Name successfully updated!", variant: "success" });
+      toast.success("Updated successfully!");
     } catch (error) {
       console.error(error);
-      toast({ description: "Something went wrong", variant: "destructive" });
+      toast.error("Something went wrong");
 
       form.reset();
     }
@@ -63,7 +62,7 @@ export function UpdateNameForm() {
               <FormLabel className="sr-only">Name</FormLabel>
               <FormControl>
                 <Input
-                  defaultValue={!isLoading ? user?.name : ""} //**TODO: I HATE THIS */
+                  defaultValue={!isLoading ? user?.name : ""} //**TODO: I HATE THIS - doesn't work, submit before updating default value */
                   disabled={isPending}
                   {...field}
                   required
