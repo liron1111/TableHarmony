@@ -20,9 +20,9 @@ export function ConfigurationPanel({
         className={cn(
           "rounded-t-md border-b bg-muted/40 px-4 py-2 sm:px-6 md:py-3",
           {
-            "bg-destructive text-destructive-foreground":
+            "border-destructive bg-destructive/20 text-destructive":
               variant === "destructive",
-          },
+          }
         )}
       >
         <span className="mb-4 text-base font-medium sm:text-lg">{title}</span>

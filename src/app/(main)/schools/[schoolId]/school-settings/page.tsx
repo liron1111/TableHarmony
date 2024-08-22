@@ -1,13 +1,25 @@
-import { PageHeader, PageHeaderHeading } from "@/components/page-header";
-import { ComingSoon } from "@/components/coming-soon";
+import { ConfigurationPanel } from "@/components/configuration-panel";
 
-export default function SchoolsSettingsPage() {
+import { UpdateNameForm } from "./_components/update-name-form";
+import { Id } from "../../../../../../convex/_generated/dataModel";
+
+export default function SchoolSettingsPage({
+  params,
+}: {
+  params: { schoolId: string };
+}) {
+  const schoolId = params.schoolId as Id<"schools">;
+
   return (
-    <div className="container">
-      <PageHeader>
-        <PageHeaderHeading>School settings</PageHeaderHeading>
-      </PageHeader>
-      <ComingSoon />
+    <div>
+      <div className="space-y-8">
+        <ConfigurationPanel title="Name">
+          <div className="flex flex-col gap-4">
+            <span>To update school name, please fill the form below</span>
+            <UpdateNameForm schoolId={schoolId} />
+          </div>
+        </ConfigurationPanel>
+      </div>
     </div>
   );
 }

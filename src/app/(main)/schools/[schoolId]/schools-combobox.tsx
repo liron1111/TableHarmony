@@ -73,7 +73,7 @@ export function SchoolsCombobox({ schoolId }: { schoolId: string }) {
                   onSelect={(currentValue: string) => {
                     setValue(currentValue);
                     setOpen(false);
-                    router.push(currentValue);
+                    router.push(`/schools/${currentValue}`);
                   }}
                   className="flex items-center justify-between"
                 >

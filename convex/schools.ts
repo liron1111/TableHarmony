@@ -72,3 +72,41 @@ export const deleteSchool = mutation({
     await ctx.db.delete(school._id);
   },
 });
+
+export const updateSchool = mutation({
+  args: {
+    schoolId: v.id("schools"),
+    image: v.optional(v.string()),
+    name: v.optional(v.string()),
+  },
+  async handler(ctx, args) {
+    const school = await assertSchoolOwner(ctx, { schoolId: args.schoolId });
+
+    await ctx.db.patch(school._id, {
+      image: args.image || school.image,
+      name: args.name || school.name,
+    });
+  },
+});
+
+export const assertSchoolOwner = query({
+  args: {
+    schoolId: v.id("schools"),
+  },
+  async handler(ctx, args) {
+    const user = await getCurrentUser(ctx, {});
+
+    if (!user) throw new ConvexError("Unauthorized");
+
+    const school = await ctx.db
+      .query("schools")
+      .withIndex("by_id", (q) => q.eq("_id", args.schoolId))
+      .first();
+
+    if (!school) throw new ConvexError("Could not find school");
+
+    if (school.creatorId !== user._id) throw new ConvexError("Unauthorized");
+
+    return school;
+  },
+});
