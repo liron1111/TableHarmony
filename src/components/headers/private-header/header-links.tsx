@@ -18,18 +18,18 @@ import { SchoolsCombobox } from "@/app/(main)/schools/[schoolId]/schools-combobo
 export function HeaderLinks() {
   const { isMobile } = useMediaQuery();
   const { isLoading } = useConvexAuth();
-
   if (isMobile) {
     return (
-      <Link href="/">
+      <Link href="/schools">
         <LogoIcon />
       </Link>
     );
   }
+  //TODO: bug appears for a sec in mobile
 
   return (
     <div className="flex items-center gap-4">
-      <Link href="/">
+      <Link href="/schools">
         <LogoIcon />
       </Link>
 
@@ -45,7 +45,7 @@ export function HeaderLinks() {
 function Profile() {
   const user = useQuery(api.users.getCurrentUser);
 
-  if (!user) return <Skeleton className="h-5 w-28" />;
+  if (!user) return <Skeleton className="h-6 w-28" />;
 
   return (
     <Link href="/schools" className="flex items-center gap-2">
@@ -79,10 +79,6 @@ function Links() {
       </div>
     );
   }
-
-  const schoolId = segments.at(1);
-
-  if (!schoolId) return;
 
   return (
     <div className="flex items-center gap-3">

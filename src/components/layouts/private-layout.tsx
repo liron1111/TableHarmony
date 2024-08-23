@@ -2,8 +2,10 @@ import { PrivateHeader } from "@/components/headers";
 
 export default function PrivateLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: any;
 }) {
   return (
     <>

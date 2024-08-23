@@ -1,6 +1,6 @@
 "use client";
 
-import { MenuIcon } from "lucide-react";
+import { ExternalLinkIcon, MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -46,6 +46,13 @@ export function MenuButton() {
             Account settings
           </Link>
           <Separator />
+          <Link
+            href="/"
+            className="flex items-center justify-between hover:text-neutral-700 dark:hover:text-neutral-200"
+            onClick={() => setIsOpen(false)}
+          >
+            Homepage <ExternalLinkIcon className="size-4" />
+          </Link>
           <div className="flex items-center justify-between">
             Theme <ModeToggle />
           </div>

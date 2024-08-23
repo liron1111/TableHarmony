@@ -23,6 +23,7 @@ import { api } from "../../../../../convex/_generated/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
+import useMediaQuery from "@/hooks/use-media-query";
 
 const School = ({ name, image }: { name: string; image: string }) => (
   <div className="flex items-center gap-2">
@@ -40,14 +41,22 @@ const School = ({ name, image }: { name: string; image: string }) => (
 );
 
 export function SchoolsCombobox() {
-  const router = useRouter();
   const pathname = usePathname();
 
   const schoolId = pathname.split("/").at(2);
 
+  if (!schoolId) return;
+
+  return <ActualCombobox schoolId={schoolId} />;
+}
+
+function ActualCombobox({ schoolId }: { schoolId: string }) {
+  const router = useRouter();
+
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(schoolId);
   const [query, setQuery] = React.useState("");
+  const { isMobile } = useMediaQuery();
 
   const schools = useQuery(api.schools.getUserSchools);
 
@@ -58,19 +67,35 @@ export function SchoolsCombobox() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          role="combobox"
-          aria-expanded={open}
-          className="w-fit justify-between"
-        >
-          {!selectedSchool ? (
-            "Schools"
-          ) : (
-            <School name={selectedSchool.name} image={selectedSchool.image} />
-          )}
-          <ChevronsUpDown className="ml-4 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
+        {!isMobile ? (
+          <Button
+            variant="ghost"
+            role="combobox"
+            aria-expanded={open}
+            className="w-fit justify-between"
+          >
+            {!selectedSchool ? (
+              "Schools"
+            ) : (
+              <School name={selectedSchool.name} image={selectedSchool.image} />
+            )}
+            <ChevronsUpDown className="ml-4 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-full justify-between"
+          >
+            {!selectedSchool ? (
+              "Schools"
+            ) : (
+              <School name={selectedSchool.name} image={selectedSchool.image} />
+            )}
+            <ChevronsUpDown className="ml-4 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        )}
       </PopoverTrigger>
       <PopoverContent className="max-w-72 p-0">
         <Command>

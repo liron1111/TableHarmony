@@ -29,7 +29,7 @@ export function DataTableFilter({
   const { table } = useContext(DataTableContext);
   const [searchColumn, setSearchColumn] = useState(
     table.getAllColumns().filter((column) => !NON_FILTER.includes(column.id))[0]
-      ?.id,
+      ?.id
   );
 
   if (
@@ -111,7 +111,7 @@ export function DataTableViewOptions() {
           .getAllColumns()
           .filter(
             (column) =>
-              typeof column.accessorFn !== "undefined" && column.getCanHide(),
+              typeof column.accessorFn !== "undefined" && column.getCanHide()
           )
           .map((column) => {
             return (

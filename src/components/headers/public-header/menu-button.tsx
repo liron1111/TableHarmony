@@ -18,7 +18,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { MenuIcon } from "lucide-react";
+import { ExternalLinkIcon, MenuIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ModeToggle } from "@/components/mode-toggle";
 
@@ -67,6 +67,13 @@ export function MenuButton() {
                 Contact
               </Link>
               <Separator />
+              <Link
+                href="/"
+                className="flex items-center justify-between hover:text-neutral-700 dark:hover:text-neutral-200"
+                onClick={() => setIsOpen(false)}
+              >
+                Homepage <ExternalLinkIcon className="size-4" />
+              </Link>
               <div className="flex items-center justify-between">
                 Theme <ModeToggle />
               </div>
