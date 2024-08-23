@@ -5,6 +5,8 @@ import { Id } from "../../../../../../convex/_generated/dataModel";
 import { api } from "../../../../../../convex/_generated/api";
 
 import { createContext } from "react";
+import { ConvexError } from "convex/values";
+import { redirect } from "next/navigation";
 
 interface School {
   _id: Id<"schools">;
@@ -31,13 +33,19 @@ export function School({
   children: React.ReactNode;
   schoolId: string;
 }) {
-  const school = useQuery(api.schools.getSchool, {
-    schoolId: schoolId as Id<"schools">,
-  })!;
+  try {
+    const school = useQuery(api.schools.getSchool, {
+      schoolId: schoolId as Id<"schools">,
+    });
 
-  return (
-    <SchoolContext.Provider value={{ school }}>
-      {children}
-    </SchoolContext.Provider>
-  );
+    if (!school) return;
+
+    return (
+      <SchoolContext.Provider value={{ school }}>
+        {children}
+      </SchoolContext.Provider>
+    );
+  } catch (e) {
+    if (e instanceof ConvexError) redirect("/schools");
+  }
 }

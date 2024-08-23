@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "convex/react";
+import { useConvexAuth, useQuery } from "convex/react";
 import { api } from "../../../../../../../convex/_generated/api";
 
 import { useContext } from "react";
@@ -11,7 +11,9 @@ export function AssertSchoolOwner() {
   const { school } = useContext(SchoolContext);
   const user = useQuery(api.users.getCurrentUser);
 
-  if (!user) return;
+  const { isLoading } = useConvexAuth();
+
+  if (isLoading || !user) return;
 
   if (user._id === school.creatorId) return school;
 

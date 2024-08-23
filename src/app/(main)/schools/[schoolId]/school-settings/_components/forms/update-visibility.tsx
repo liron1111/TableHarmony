@@ -27,5 +27,11 @@ export function UpdateVisibilityForm() {
     }
   }
 
-  return <Switch checked={checked} onCheckedChange={handleCheckedChange} />;
+  return (
+    <Switch
+      aria-label="visibility"
+      checked={checked}
+      onCheckedChange={handleCheckedChange}
+    />
+  );
 }

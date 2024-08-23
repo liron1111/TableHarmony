@@ -14,15 +14,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { EllipsisVerticalIcon, SettingsIcon, TrashIcon } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
 import { DeleteSchoolDialog } from "./delete-school-dialog";
 import Image from "next/image";
 import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function SchoolCard({ school }: { school: Doc<"schools"> }) {
   const user = useQuery(api.users.getCurrentUser);
@@ -63,32 +64,27 @@ function MenuButton({ schoolId }: { schoolId: Id<"schools"> }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
+    <DropdownMenu>
+      <DropdownMenuTrigger>
         <Button size="icon" variant="ghost" aria-label="menu">
           <EllipsisVerticalIcon className="size-4" />
         </Button>
-      </PopoverTrigger>
-      <PopoverContent className="min-w-[8rem] max-w-40 p-1">
-        <Button
-          variant="ghost"
-          className="w-full justify-start text-muted-foreground hover:!text-muted-foreground"
-          asChild
-        >
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem asChild>
           <Link href={`/schools/${schoolId}/school-settings`}>
             <SettingsIcon className="mr-2 size-4" /> Settings
           </Link>
-        </Button>
-        <Separator className="my-1" />
-        <Button
-          variant="ghost"
-          className="flex w-full items-center justify-start text-destructive hover:!text-destructive"
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          className="text-red-500 hover:!text-red-500"
           onClick={() => setOpen(true)}
         >
           <TrashIcon className="mr-2 size-4" /> Delete school
-        </Button>
-      </PopoverContent>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
       <DeleteSchoolDialog open={open} setOpen={setOpen} schoolId={schoolId} />
-    </Popover>
+    </DropdownMenu>
   );
 }
