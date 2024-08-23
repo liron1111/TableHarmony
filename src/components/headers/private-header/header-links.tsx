@@ -21,7 +21,7 @@ export function HeaderLinks() {
 
   if (isMobile) {
     return (
-      <Link href="/schools">
+      <Link href="/">
         <LogoIcon />
       </Link>
     );
@@ -29,7 +29,7 @@ export function HeaderLinks() {
 
   return (
     <div className="flex items-center gap-4">
-      <Link href="/schools">
+      <Link href="/">
         <LogoIcon />
       </Link>
 
@@ -85,9 +85,9 @@ function Links() {
   if (!schoolId) return;
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-3">
       <SlashIcon className="size-3 -rotate-12 text-muted-foreground" />
-      <SchoolsCombobox schoolId={schoolId} />
+      <SchoolsCombobox />
     </div>
   );
 }

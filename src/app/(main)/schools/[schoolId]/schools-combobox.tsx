@@ -21,17 +21,39 @@ import {
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 
-export function SchoolsCombobox({ schoolId }: { schoolId: string }) {
+const School = ({ name, image }: { name: string; image: string }) => (
+  <div className="flex items-center gap-2">
+    <div className="relative size-5">
+      <Image
+        alt={`${name} logo`}
+        src={image}
+        layout="fill"
+        objectFit="cover"
+        className="rounded-full"
+      />
+    </div>
+    <span className="font-medium">{name}</span>
+  </div>
+);
+
+export function SchoolsCombobox() {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const schoolId = pathname.split("/").at(2);
+
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(schoolId);
-  const router = useRouter();
+  const [query, setQuery] = React.useState("");
 
   const schools = useQuery(api.schools.getUserSchools);
 
   if (!schools) return <Skeleton className="h-6 w-28" />;
+
+  const selectedSchool = schools.find((school) => school._id === schoolId);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -42,55 +64,43 @@ export function SchoolsCombobox({ schoolId }: { schoolId: string }) {
           aria-expanded={open}
           className="w-fit justify-between"
         >
-          {!value ? (
-            "Select schools..."
+          {!selectedSchool ? (
+            "Schools"
           ) : (
-            <div className="flex items-center gap-2">
-              <Image
-                alt="school image"
-                src={
-                  schools.find((schools) => schools._id === value)?.image ?? ""
-                }
-                width="20"
-                height="20"
-              />
-              {schools.find((schools) => schools._id === value)?.name}
-            </div>
+            <School name={selectedSchool.name} image={selectedSchool.image} />
           )}
           <ChevronsUpDown className="ml-4 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="max-w-72 p-0">
         <Command>
-          <CommandInput placeholder="Search schools..." />
+          <CommandInput
+            value={query}
+            onValueChange={setQuery}
+            placeholder="Search schools..."
+          />
           <CommandList>
             <CommandEmpty>No school found.</CommandEmpty>
             <CommandGroup>
               {schools.map((school) => (
                 <CommandItem
                   key={school._id}
-                  value={school._id}
+                  value={school.name}
                   onSelect={(currentValue: string) => {
                     setValue(currentValue);
                     setOpen(false);
-                    router.push(`/schools/${currentValue}`);
+                    router.push(`/schools/${school._id}`);
                   }}
-                  className="flex items-center justify-between"
+                  className="p-2"
                 >
-                  <div className="flex items-center gap-2">
-                    <Image
-                      alt="school image"
-                      src={school.image}
-                      width="20"
-                      height="20"
-                    />
-                    {school.name}
-                  </div>
+                  <School name={school.name} image={school.image} />
 
                   <Check
                     className={cn(
-                      "size-4",
-                      value === school._id ? "block" : "hidden"
+                      "ml-auto size-4",
+                      selectedSchool?._id === school._id
+                        ? "opacity-100"
+                        : "opacity-0"
                     )}
                   />
                 </CommandItem>

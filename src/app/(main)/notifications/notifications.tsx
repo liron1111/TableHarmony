@@ -15,9 +15,7 @@ export function Notifications() {
           alt="no notifications"
         />
 
-        <p className="text-balance text-lg font-medium md:text-xl">
-          No unread notifications
-        </p>
+        <p className="text-balance font-medium">No unread notifications</p>
       </div>
     );
 }
