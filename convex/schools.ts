@@ -54,7 +54,7 @@ export const getPublicSchools = query({
   },
 });
 
-export const getSchool = internalQuery({
+export const getSchool = query({
   args: {
     schoolId: v.id("schools"),
   },
@@ -92,13 +92,17 @@ export const updateSchool = mutation({
     schoolId: v.id("schools"),
     image: v.optional(v.string()),
     name: v.optional(v.string()),
+    description: v.optional(v.string()),
+    isPublic: v.optional(v.boolean()),
   },
   async handler(ctx, args) {
     const school = await assertSchoolOwner(ctx, { schoolId: args.schoolId });
 
     await ctx.db.patch(school._id, {
-      image: args.image || school.image,
-      name: args.name || school.name,
+      image: args.image ?? school.image,
+      name: args.name ?? school.name,
+      description: args.description ?? school.description,
+      isPublic: args.isPublic ?? school.isPublic,
     });
   },
 });

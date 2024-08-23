@@ -4,10 +4,11 @@ import { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useContext } from "react";
 
 import { useMutation } from "convex/react";
-import { api } from "../../../../../../../convex/_generated/api";
-import { Id } from "../../../../../../../convex/_generated/dataModel";
+import { api } from "../../../../../../../../convex/_generated/api";
+import { SchoolContext } from "../../../_components/school-context";
 
 import {
   Form,
@@ -25,13 +26,14 @@ const updateNameSchema = z.object({
   name: z.string(),
 });
 
-export function UpdateNameForm({ schoolId }: { schoolId: Id<"schools"> }) {
+export function UpdateNameForm() {
+  const { school } = useContext(SchoolContext);
   const updateSchool = useMutation(api.schools.updateSchool);
 
   const form = useForm<z.infer<typeof updateNameSchema>>({
     resolver: zodResolver(updateNameSchema),
     defaultValues: {
-      name: "", //TODO: default value
+      name: school.name,
     },
   });
 
@@ -39,7 +41,7 @@ export function UpdateNameForm({ schoolId }: { schoolId: Id<"schools"> }) {
 
   async function onSubmit(values: z.infer<typeof updateNameSchema>) {
     try {
-      await updateSchool({ schoolId, name: values.name });
+      await updateSchool({ schoolId: school._id, name: values.name });
       toast.success("Updated school name!");
     } catch (error) {
       console.error(error);

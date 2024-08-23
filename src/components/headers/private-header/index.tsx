@@ -1,4 +1,4 @@
-import { SchoolsCombobox } from "@/app/(main)/schools/[schoolId]/schools-combobox";
+import { SchoolsCombobox } from "@/app/(main)/schools/[schoolId]/_components/schools-combobox";
 import { HeaderActions } from "./header-actions";
 import { HeaderLinks } from "./header-links";
 

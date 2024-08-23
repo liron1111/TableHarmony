@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
-
-import { Id } from "../../../../../../../convex/_generated/dataModel";
+import { useContext, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { DeleteSchoolDialog } from "../../../_components/delete-school-dialog";
+import { SchoolContext } from "../../_components/school-context";
 
-export function DeleteSchoolButton({ schoolId }: { schoolId: Id<"schools"> }) {
+export function DeleteSchoolButton() {
+  const { school } = useContext(SchoolContext);
   const [open, setOpen] = useState(false);
 
   return (
@@ -19,7 +19,7 @@ export function DeleteSchoolButton({ schoolId }: { schoolId: Id<"schools"> }) {
       >
         Delete school
       </Button>
-      <DeleteSchoolDialog open={open} setOpen={setOpen} schoolId={schoolId} />
+      <DeleteSchoolDialog open={open} setOpen={setOpen} schoolId={school._id} />
     </>
   );
 }

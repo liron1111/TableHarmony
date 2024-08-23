@@ -11,9 +11,9 @@ import Link from "next/link";
 import { LogoIcon } from "@/components/icons";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SchoolsCombobox } from "@/app/(main)/schools/[schoolId]/_components/schools-combobox";
 import { Button } from "@/components/ui/button";
 import { SearchIcon, SettingsIcon, SlashIcon } from "lucide-react";
-import { SchoolsCombobox } from "@/app/(main)/schools/[schoolId]/schools-combobox";
 
 export function HeaderLinks() {
   const { isMobile } = useMediaQuery();

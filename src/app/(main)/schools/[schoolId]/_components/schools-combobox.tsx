@@ -3,6 +3,9 @@
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 
+import { api } from "../../../../../../convex/_generated/api";
+import { Id } from "../../../../../../convex/_generated/dataModel";
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,12 +22,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useQuery } from "convex/react";
-import { api } from "../../../../../convex/_generated/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import useMediaQuery from "@/hooks/use-media-query";
-import { Id } from "../../../../../convex/_generated/dataModel";
 
 const School = ({ name, image }: { name: string; image: string }) => (
   <div className="flex items-center gap-2">

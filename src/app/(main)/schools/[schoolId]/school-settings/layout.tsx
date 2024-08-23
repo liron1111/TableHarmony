@@ -10,7 +10,6 @@ import { useQuery } from "convex/react";
 
 import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
-import { redirect } from "next/navigation";
 
 export default function SettingsLayout({
   children,
@@ -19,6 +18,7 @@ export default function SettingsLayout({
   children: React.ReactNode;
   params: { schoolId: string };
 }) {
+  //TODO: use context
   const schoolId = params.schoolId as Id<"schools">;
   const school = useQuery(api.schools.assertSchoolOwner, { schoolId });
 
