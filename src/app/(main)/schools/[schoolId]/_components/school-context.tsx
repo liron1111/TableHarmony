@@ -5,9 +5,11 @@ import { Id } from "../../../../../../convex/_generated/dataModel";
 import { api } from "../../../../../../convex/_generated/api";
 
 import { createContext } from "react";
-import { redirect } from "next/navigation";
+
 interface School {
   _id: Id<"schools">;
+  _creationTime: number;
+  creatorId: Id<"users">;
   name: string;
   description: string;
   isPublic: boolean;
@@ -32,8 +34,6 @@ export function School({
   const school = useQuery(api.schools.getSchool, {
     schoolId: schoolId as Id<"schools">,
   })!;
-
-  //TODO: no school redirect to /schools
 
   return (
     <SchoolContext.Provider value={{ school }}>

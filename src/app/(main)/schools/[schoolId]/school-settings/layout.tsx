@@ -3,13 +3,12 @@
 import {
   PageActions,
   PageHeader,
+  PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
 import { SettingsTabs } from "./_components/tabs-section";
-import { useQuery } from "convex/react";
 
-import { api } from "../../../../../../convex/_generated/api";
-import { Id } from "../../../../../../convex/_generated/dataModel";
+import { AssertSchoolOwner } from "./_components/middleware";
 
 export default function SettingsLayout({
   children,
@@ -18,9 +17,7 @@ export default function SettingsLayout({
   children: React.ReactNode;
   params: { schoolId: string };
 }) {
-  //TODO: use context
-  const schoolId = params.schoolId as Id<"schools">;
-  const school = useQuery(api.schools.assertSchoolOwner, { schoolId });
+  const school = AssertSchoolOwner();
 
   if (!school) return;
 
@@ -28,6 +25,9 @@ export default function SettingsLayout({
     <div className="container">
       <PageHeader>
         <PageHeaderHeading>School settings</PageHeaderHeading>
+        <PageHeaderDescription>
+          Manage your school&apos;s settings and set preferences.
+        </PageHeaderDescription>
         <PageActions>
           <SettingsTabs schoolId={school?._id} />
         </PageActions>
