@@ -12,7 +12,7 @@ import { LogoIcon } from "@/components/icons";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { SettingsIcon, SlashIcon } from "lucide-react";
+import { SearchIcon, SettingsIcon, SlashIcon } from "lucide-react";
 import { SchoolsCombobox } from "@/app/(main)/schools/[schoolId]/schools-combobox";
 
 export function HeaderLinks() {
@@ -66,6 +66,16 @@ function Links() {
   if (!hasIds) {
     return (
       <div className="hidden items-center gap-2 md:flex">
+        <Button
+          variant="ghost"
+          className={path === "/browse" ? "bg-muted" : ""}
+          asChild
+        >
+          <Link className="flex items-center gap-2" href="/browse">
+            <SearchIcon className="size-4" />
+            <span>Browse</span>
+          </Link>
+        </Button>
         <Button
           variant="ghost"
           className={path === "/account-settings" ? "bg-muted" : ""}

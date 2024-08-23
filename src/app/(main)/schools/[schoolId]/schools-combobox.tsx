@@ -24,6 +24,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import useMediaQuery from "@/hooks/use-media-query";
+import { Id } from "../../../../../convex/_generated/dataModel";
 
 const School = ({ name, image }: { name: string; image: string }) => (
   <div className="flex items-center gap-2">
@@ -43,7 +44,7 @@ const School = ({ name, image }: { name: string; image: string }) => (
 export function SchoolsCombobox() {
   const pathname = usePathname();
 
-  const schoolId = pathname.split("/").at(2);
+  const schoolId = pathname.split("/").at(2) as Id<"schools">;
 
   if (!schoolId) return;
 
@@ -116,7 +117,7 @@ function ActualCombobox({ schoolId }: { schoolId: string }) {
                     setOpen(false);
                     router.push(`/schools/${school._id}`);
                   }}
-                  className="p-2"
+                  className="cursor-pointer p-2"
                 >
                   <School name={school.name} image={school.image} />
 

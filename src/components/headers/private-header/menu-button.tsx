@@ -39,6 +39,13 @@ export function MenuButton() {
             Schools
           </Link>
           <Link
+            href="/browse"
+            className="hover:text-neutral-700 dark:hover:text-neutral-200"
+            onClick={() => setIsOpen(false)}
+          >
+            Browse
+          </Link>
+          <Link
             href="/account-settings"
             className="hover:text-neutral-700 dark:hover:text-neutral-200"
             onClick={() => setIsOpen(false)}

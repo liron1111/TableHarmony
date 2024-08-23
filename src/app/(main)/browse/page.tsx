@@ -4,18 +4,18 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
-import { CreateSchoolSheet } from "./_components/create-school-sheet";
-import { UserSchoolListWrapper } from "./_components/school-list";
-import { SearchForm } from "./_components/search-form";
 
 import { createMetadata } from "@/utils/metadata";
+import { SearchForm } from "../schools/_components/search-form";
+
+import { PubliSchoolListWrapper } from "./public-school-list-wrapper";
 
 export const metadata = createMetadata({
-  title: "Schools",
-  description: "Manage your schools.",
+  title: "Browse",
+  description: "Explore publicly available schools.",
 });
 
-export default function SchoolsPage({
+export default function BrowsePage({
   searchParams,
 }: {
   searchParams?: {
@@ -27,14 +27,15 @@ export default function SchoolsPage({
   return (
     <div className="container">
       <PageHeader>
-        <PageHeaderHeading>Schools</PageHeaderHeading>
-        <PageHeaderDescription>Manage your schools.</PageHeaderDescription>
+        <PageHeaderHeading>Browse</PageHeaderHeading>
+        <PageHeaderDescription>
+          Explore publicly available schools.
+        </PageHeaderDescription>
         <PageActions className="flex w-full flex-row">
           <SearchForm />
-          <CreateSchoolSheet />
         </PageActions>
       </PageHeader>
-      <UserSchoolListWrapper searchQuery={searchQuery} />
+      <PubliSchoolListWrapper searchQuery={searchQuery} />
     </div>
   );
 }

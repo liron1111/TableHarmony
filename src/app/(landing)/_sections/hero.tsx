@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { siteConfig } from "@/config/site";
 
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "lucide-react";
@@ -18,11 +18,11 @@ export function HeroSection() {
           {siteConfig.description}
         </p>
         <SignedOut>
-          <Button className="w-56" asChild>
-            <Link href="/sign-in">
+          <SignInButton mode="modal">
+            <Button className="w-56">
               Get started <ArrowRightIcon className="ml-2 size-4" />
-            </Link>
-          </Button>
+            </Button>
+          </SignInButton>
         </SignedOut>
         <SignedIn>
           <Button className="w-56" asChild>

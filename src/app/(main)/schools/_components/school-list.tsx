@@ -1,6 +1,8 @@
 "use client";
 
 import { api } from "../../../../../convex/_generated/api";
+import { Id } from "../../../../../convex/_generated/dataModel";
+import { FunctionReference } from "convex/server";
 import { useQuery } from "convex/react";
 
 import Image from "next/image";
@@ -8,8 +10,31 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cardStyles, gridStyles } from "@/styles/common";
 import { SchoolCard } from "./school-card";
 
-export function SchoolList({ query }: { query: string }) {
-  const schools = useQuery(api.schools.getUserSchools);
+type Query = FunctionReference<
+  "query",
+  "public",
+  {},
+  | {
+      _id: Id<"schools">;
+      _creationTime: number;
+      image: string;
+      name: string;
+      creatorId: Id<"users">;
+      description: string;
+      isPublic: boolean;
+    }[]
+  | null,
+  string | undefined
+>;
+
+export function SchoolList({
+  searchQuery,
+  query,
+}: {
+  searchQuery: string;
+  query: Query;
+}) {
+  const schools = useQuery(query);
 
   if (!schools) return <SchoolListSkeleton />;
 
@@ -22,15 +47,15 @@ export function SchoolList({ query }: { query: string }) {
           height="200"
           alt="no schools placeholder image"
         />
-        <span className="font-semibold">Uhoh, you do not own any school</span>
+        <span className="font-semibold">Uhoh, no schools available</span>
       </div>
     );
   }
 
   const displaySchools = schools.filter(
     (school) =>
-      school.name.toLowerCase().includes(query) ||
-      school.description.toLowerCase().includes(query)
+      school.name.toLowerCase().includes(searchQuery) ||
+      school.description.toLowerCase().includes(searchQuery)
   );
 
   if (displaySchools.length === 0) {
@@ -53,6 +78,16 @@ export function SchoolList({ query }: { query: string }) {
         <SchoolCard key={school._id} school={school} />
       ))}
     </div>
+  );
+}
+
+export function UserSchoolListWrapper({
+  searchQuery,
+}: {
+  searchQuery: string;
+}) {
+  return (
+    <SchoolList query={api.schools.getUserSchools} searchQuery={searchQuery} />
   );
 }
 
