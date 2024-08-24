@@ -2,8 +2,8 @@
 
 import { Dispatch, SetStateAction, useState } from "react";
 
-import { api } from "../../../../../../convex/_generated/api";
-import { Id } from "../../../../../../convex/_generated/dataModel";
+import { api } from "../../../../../convex/_generated/api";
+import { Id } from "../../../../../convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 
 import {
@@ -84,13 +84,11 @@ export function DeleteNotificationsSheet({
       <SheetTrigger>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="destructive" size="icon" aria-label="delete">
+            <Button variant="ghost" size="icon" aria-label="delete">
               <TrashIcon className="size-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent className="bg-destructive text-destructive-foreground">
-            Delete notifications
-          </TooltipContent>
+          <TooltipContent>Delete</TooltipContent>
         </Tooltip>
       </SheetTrigger>
 

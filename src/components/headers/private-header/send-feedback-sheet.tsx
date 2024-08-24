@@ -184,7 +184,7 @@ export function SendFeedbackSheet() {
               <MessageCircleIcon className="size-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Feedbacks</TooltipContent>
+          <TooltipContent>Feedback</TooltipContent>
         </Tooltip>
       </SheetTrigger>
 

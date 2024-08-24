@@ -66,8 +66,7 @@ export function Notifications() {
         align="end"
       >
         <div className="flex items-center justify-between text-sm font-semibold">
-          Notifications{" "}
-          {/*TODO: Create notifications page - or notifications popover like in vercel*/}
+          Notifications
           <Link
             href="/notifications"
             onClick={() => setIsOpen(false)}

@@ -2,22 +2,18 @@
 
 import { useState } from "react";
 
-import { api } from "../../../../../../convex/_generated/api";
-import { Id } from "../../../../../../convex/_generated/dataModel";
+import { api } from "../../../../../convex/_generated/api";
+import { Id } from "../../../../../convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 
 import { toast } from "sonner";
 import { LoaderButton } from "@/components/loader-button";
-import { MailIcon } from "lucide-react";
+import { ArchiveIcon } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 export function UpdateNotificationsButton({
   notificationsIds,
@@ -49,11 +45,10 @@ export function UpdateNotificationsButton({
         <TooltipTrigger>
           <LoaderButton
             isLoading={isPending}
-            className="w-full"
-            variant="outline"
+            variant="ghost"
             size="icon"
             onClick={onSubmit}
-            icon={<MailIcon className="size-4" />}
+            icon={<ArchiveIcon className="size-4" />}
           >
             <span className="sr-only"></span>
           </LoaderButton>

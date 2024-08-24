@@ -3,8 +3,6 @@
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { DeleteNotificationForm } from "./forms/delete-notification-form";
-import { SwitchReadNotificationForm } from "./forms/switch-read-notification-form";
 
 type Notification = any;
 
@@ -70,22 +68,4 @@ export const columns: ColumnDef<Notification>[] = [
     ),
     filterFn: "includesString",
   },
-  {
-    accessorKey: "actions",
-    header: ({ column }) => <span className="sr-only">actions</span>,
-    cell: ({ row }) => <Actions row={row} />,
-    enableSorting: false,
-  },
 ];
-
-function Actions({ row }: { row: Row<Notification> }) {
-  return (
-    <div className="flex items-center gap-2">
-      <SwitchReadNotificationForm
-        notificationId={row.getValue("_id")}
-        isRead={row.getValue("isRead")}
-      />
-      <DeleteNotificationForm notificationId={row.getValue("_id")} />
-    </div>
-  );
-}

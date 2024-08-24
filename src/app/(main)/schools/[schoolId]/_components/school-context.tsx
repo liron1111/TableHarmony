@@ -46,6 +46,6 @@ export function School({
       </SchoolContext.Provider>
     );
   } catch (e) {
-    if (e instanceof ConvexError) redirect("/schools");
+    redirect("/schools");
   }
 }

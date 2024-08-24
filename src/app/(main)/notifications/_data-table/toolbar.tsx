@@ -6,8 +6,8 @@ import {
   DataTableViewOptions,
 } from "@/components/data-table";
 import { useContext } from "react";
-import { DeleteNotificationsSheet } from "./sheets/delete-notifications-sheet";
-import { UpdateNotificationsButton } from "./forms/update-notifications-form";
+import { DeleteNotificationsSheet } from "./delete-notifications-sheet";
+import { UpdateNotificationsButton } from "./update-notifications-form";
 
 export function NotificationsDataTableToolbar() {
   const { table } = useContext(DataTableContext);
