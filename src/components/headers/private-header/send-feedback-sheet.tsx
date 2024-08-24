@@ -39,6 +39,11 @@ import { LoaderButton } from "@/components/loader-button";
 import { Button } from "@/components/ui/button";
 import { MessageCircleIcon } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const LABELS = [
   "Issue",
@@ -173,9 +178,14 @@ export function SendFeedbackSheet() {
   return (
     <Sheet open={showSheet} onOpenChange={setShowSheet}>
       <SheetTrigger>
-        <Button size="icon" variant="ghost" aria-label="feedback">
-          <MessageCircleIcon className="size-4" />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button size="icon" variant="ghost" aria-label="feedback">
+              <MessageCircleIcon className="size-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Feedbacks</TooltipContent>
+        </Tooltip>
       </SheetTrigger>
 
       <SheetContent>

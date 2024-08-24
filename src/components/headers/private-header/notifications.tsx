@@ -15,8 +15,12 @@ import {
 import { BellIcon, EyeIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 import { LoaderButton } from "@/components/loader-button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function Notifications() {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,22 +29,37 @@ export function Notifications() {
     limit: 3,
   });
 
-  if (!notifications) return <Skeleton className="size-10" />;
+  if (!notifications)
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        className="relative"
+        aria-label="notifications"
+      >
+        <BellIcon className="size-4" />
+      </Button>
+    );
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="relative"
-          aria-label="notifications"
-        >
-          <BellIcon className="size-4" />
-          {notifications.length > 0 && (
-            <span className="absolute right-[1px] top-1 size-2 rounded-full bg-blue-500" />
-          )}
-        </Button>
+      <PopoverTrigger>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative"
+              aria-label="notifications"
+            >
+              <BellIcon className="size-4" />
+              {notifications.length > 0 && (
+                <span className="absolute right-[1px] top-1 size-2 rounded-full bg-blue-500" />
+              )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Notifications</TooltipContent>
+        </Tooltip>
       </PopoverTrigger>
       <PopoverContent
         className="m-2 grid max-w-sm space-y-4 md:m-0 md:w-96"
@@ -67,7 +86,7 @@ export function Notifications() {
           {notifications.map((notification) => (
             <div
               key={notification._id}
-              className="flex items-center justify-between rounded-md border p-1 px-2 hover:!bg-inherit"
+              className="flex items-center justify-between rounded-md border p-1 px-2"
             >
               <span className="w-36 truncate">{notification.title}</span>
               <Toolbar notificationId={notification._id} />

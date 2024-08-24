@@ -47,12 +47,15 @@ export const columns: ColumnDef<Notification>[] = [
       <DataTableColumnHeader column={column} title="_creationTime" />
     ),
     cell: ({ row }) => {
-      if (!row.getValue("_creationTime")) return <></>;
       return new Date(row.getValue("_creationTime")).toLocaleDateString(
         "en-GB"
       );
     },
-    filterFn: "includesString",
+    filterFn: (row, columnId, filterValue) => {
+      const date = new Date(row.getValue(columnId));
+      const dateString = date.toLocaleDateString("en-GB");
+      return dateString.toLowerCase().includes(filterValue.toLowerCase());
+    },
   },
   {
     accessorKey: "title",
@@ -69,6 +72,7 @@ export const columns: ColumnDef<Notification>[] = [
   },
   {
     accessorKey: "actions",
+    header: ({ column }) => <span className="sr-only">actions</span>,
     cell: ({ row }) => <Actions row={row} />,
     enableSorting: false,
   },

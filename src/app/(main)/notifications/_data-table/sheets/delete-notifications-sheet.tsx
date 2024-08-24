@@ -17,6 +17,12 @@ import {
 import { toast } from "sonner";
 import { LoaderButton } from "@/components/loader-button";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { TrashIcon } from "lucide-react";
 
 function DeleteNotificationsForm({
   notificationsIds,
@@ -75,10 +81,17 @@ export function DeleteNotificationsSheet({
 
   return (
     <Sheet open={showSheet} onOpenChange={setShowSheet}>
-      <SheetTrigger asChild>
-        <Button variant="destructive">
-          Delete {notificationsIds.length} notifications
-        </Button>
+      <SheetTrigger>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="destructive" size="icon" aria-label="delete">
+              <TrashIcon className="size-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent className="bg-destructive text-destructive-foreground">
+            Delete notifications
+          </TooltipContent>
+        </Tooltip>
       </SheetTrigger>
 
       <SheetContent>

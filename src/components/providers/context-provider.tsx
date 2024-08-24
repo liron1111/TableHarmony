@@ -2,6 +2,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ConvexProvider } from "@/components/providers/convex-provider";
 import { ClerkProvider } from "@/components/providers/clerk-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export async function ContextProvider({
   children,
@@ -17,8 +18,10 @@ export async function ContextProvider({
     >
       <ClerkProvider>
         <ConvexProvider>
-          {children}
-          <Toaster />
+          <TooltipProvider delayDuration={100}>
+            {children}
+            <Toaster />
+          </TooltipProvider>
         </ConvexProvider>
       </ClerkProvider>
     </ThemeProvider>

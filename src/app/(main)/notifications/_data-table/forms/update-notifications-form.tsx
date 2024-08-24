@@ -12,7 +12,6 @@ import { MailIcon } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
@@ -46,23 +45,21 @@ export function UpdateNotificationsButton({
 
   return (
     <div>
-      <TooltipProvider>
-        <Tooltip delayDuration={100}>
-          <TooltipTrigger>
-            <LoaderButton
-              isLoading={isPending}
-              className="w-full"
-              variant="outline"
-              size="icon"
-              onClick={onSubmit}
-              icon={<MailIcon className="size-4" />}
-            >
-              <span className="sr-only"></span>
-            </LoaderButton>
-          </TooltipTrigger>
-          <TooltipContent>Mark as read</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger>
+          <LoaderButton
+            isLoading={isPending}
+            className="w-full"
+            variant="outline"
+            size="icon"
+            onClick={onSubmit}
+            icon={<MailIcon className="size-4" />}
+          >
+            <span className="sr-only"></span>
+          </LoaderButton>
+        </TooltipTrigger>
+        <TooltipContent>Mark as read</TooltipContent>
+      </Tooltip>
     </div>
   );
 }
