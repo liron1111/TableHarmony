@@ -6,13 +6,23 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://devharmony.io/terms-of-service</loc>
+    <loc>https://devharmony.io/changelog</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://devharmony.io/privacy-policy</loc>
-    <changefreq>weekly</changefreq>
+    <changefreq>yearly</changefreq>
     <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://devharmony.io/terms-of-service</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://devharmony.io/contact</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

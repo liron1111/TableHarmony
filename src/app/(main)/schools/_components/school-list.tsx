@@ -35,6 +35,7 @@ export function SchoolList({
   query: Query;
 }) {
   const schools = useQuery(query);
+  //TODO: add pagination
 
   if (!schools) return <SchoolListSkeleton />;
 

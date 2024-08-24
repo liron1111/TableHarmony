@@ -27,7 +27,7 @@ export default function AccountSettingsPage() {
 
       <div className="space-y-8">
         <ConfigurationPanel title="Display name">
-          <div className="flex flex-col gap-4">
+          <div className="flex w-full flex-col gap-4">
             <span>To update your display name, please fill the form below</span>
             <UpdateNameForm />
           </div>

@@ -71,14 +71,14 @@ function MenuButton({ schoolId }: { schoolId: Id<"schools"> }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem asChild>
+        <DropdownMenuItem className="cursor-pointer" asChild>
           <Link href={`/schools/${schoolId}/school-settings`}>
             <SettingsIcon className="mr-2 size-4" /> Settings
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          className="text-red-500 hover:!text-red-500"
+          className="cursor-pointer text-red-500 hover:!text-red-500"
           onClick={() => setOpen(true)}
         >
           <TrashIcon className="mr-2 size-4" /> Delete school

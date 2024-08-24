@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { useConvexAuth, useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 
 import {
@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoaderButton } from "@/components/loader-button";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 const updateNameSchema = z.object({
   name: z.string(),
@@ -26,13 +27,20 @@ const updateNameSchema = z.object({
 
 export function UpdateNameForm() {
   const user = useQuery(api.users.getCurrentUser);
-  const { isLoading } = useConvexAuth();
-
   const updateUser = useMutation(api.users.updateUser);
 
   const form = useForm<z.infer<typeof updateNameSchema>>({
     resolver: zodResolver(updateNameSchema),
+    defaultValues: {
+      name: user?.name,
+    },
   });
+
+  useEffect(() => {
+    if (user?.name && user.name !== form.getValues().name) {
+      form.reset({ name: user.name });
+    }
+  }, [user?.name, form]);
 
   const isPending = form.formState.isSubmitting;
 
@@ -61,12 +69,7 @@ export function UpdateNameForm() {
             <FormItem className="w-full">
               <FormLabel className="sr-only">Name</FormLabel>
               <FormControl>
-                <Input
-                  defaultValue={!isLoading ? user?.name : ""} //**TODO: I HATE THIS - doesn't work, submit before updating default value */
-                  disabled={isPending}
-                  {...field}
-                  required
-                />
+                <Input disabled={isPending} {...field} required />
               </FormControl>
               <FormMessage />
             </FormItem>
