@@ -9,6 +9,7 @@ import { BASE_URL, createMetadata } from "@/utils/metadata";
 
 import { ContextProvider } from "@/components/providers/context-provider";
 import NextTopLoader from "nextjs-toploader";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           </div>
         </ContextProvider>
       </body>
+      <GoogleAnalytics gaId="G-NR0993PRRP" />
     </html>
   );
 }
