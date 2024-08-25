@@ -136,7 +136,7 @@ function CreateSchoolForm({
           )}
         />
         <div className="flex w-full sm:justify-end">
-          <LoaderButton isLoading={isLoading} className="w-full sm:w-auto">
+          <LoaderButton isLoading={isLoading} className="w-full md:w-auto">
             Create
           </LoaderButton>
         </div>

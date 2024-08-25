@@ -163,7 +163,7 @@ function SendFeedbackForm({
           )}
         />
         <div className="flex w-full sm:justify-end">
-          <LoaderButton isLoading={isLoading} className="w-full sm:w-auto">
+          <LoaderButton isLoading={isLoading} className="w-full md:w-auto">
             Send
           </LoaderButton>
         </div>

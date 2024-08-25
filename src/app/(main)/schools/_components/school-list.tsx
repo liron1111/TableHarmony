@@ -35,7 +35,6 @@ export function SchoolList({
   query: Query;
 }) {
   const schools = useQuery(query);
-  //TODO: add pagination
 
   if (!schools) return <SchoolListSkeleton />;
 
@@ -74,10 +73,12 @@ export function SchoolList({
   }
 
   return (
-    <div className={gridStyles}>
-      {displaySchools.map((school) => (
-        <SchoolCard key={school._id} school={school} />
-      ))}
+    <div className="space-y-4">
+      <div className={gridStyles}>
+        {displaySchools.map((school) => (
+          <SchoolCard key={school._id} school={school} />
+        ))}
+      </div>
     </div>
   );
 }

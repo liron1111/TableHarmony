@@ -6,14 +6,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogClose,
-} from "@/components/ui/dialog";
+  Credenza,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaFooter,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaClose,
+  CredenzaBody,
+} from "@/components/ui/credenza";
 import {
   Form,
   FormControl,
@@ -64,58 +65,59 @@ export function DeleteSchoolDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Delete school</DialogTitle>
-          <DialogDescription>
+    <Credenza open={open} onOpenChange={setOpen}>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>Delete school</CredenzaTitle>
+          <CredenzaDescription>
             Please type <span className="font-semibold">Delete school</span> to
             delete this school. After deletion, it can not be recovered.
-          </DialogDescription>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="confirm"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="sr-only">Delete school</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Delete school"
-                      disabled={isLoading}
-                      required
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <DialogFooter>
-              <DialogClose
-                onClick={() => {
-                  form.reset();
-                }}
-                asChild
-              >
-                <Button variant="outline" className="w-full">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <LoaderButton
-                variant="destructive"
-                className="w-full"
-                isLoading={isLoading}
-              >
-                Confirm
-              </LoaderButton>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+          </CredenzaDescription>
+        </CredenzaHeader>
+        <CredenzaBody>
+          <Form {...form}>
+            <form>
+              <FormField
+                control={form.control}
+                name="confirm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="sr-only">Delete school</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Delete school"
+                        disabled={isLoading}
+                        required
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+        </CredenzaBody>
+        <CredenzaFooter className="flex flex-row">
+          <CredenzaClose asChild>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => form.reset()}
+            >
+              Cancel
+            </Button>
+          </CredenzaClose>
+          <LoaderButton
+            variant="destructive"
+            className="w-full"
+            isLoading={isLoading}
+            onClick={form.handleSubmit(onSubmit)}
+          >
+            Confirm
+          </LoaderButton>
+        </CredenzaFooter>
+      </CredenzaContent>
+    </Credenza>
   );
 }

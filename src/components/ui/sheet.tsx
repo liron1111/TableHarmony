@@ -62,12 +62,15 @@ const SheetContent = React.forwardRef<
 
   side = side ? side : isMobile ? "bottom" : "right";
 
+  const autoFocus = isMobile ? false : true;
+
   return (
     <SheetPortal>
       <SheetOverlay />
       <SheetPrimitive.Content
         ref={ref}
         className={cn(sheetVariants({ side }), className)}
+        onOpenAutoFocus={(e) => !autoFocus && e.preventDefault()}
         {...props}
       >
         {children}
