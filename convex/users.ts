@@ -21,6 +21,16 @@ export const getCurrentUser = query({
   },
 });
 
+export const assertAuthenticated = internalQuery({
+  async handler(ctx, args_0) {
+    const user = await getCurrentUser(ctx, {});
+
+    if (!user) throw new ConvexError("Unauthorized");
+
+    return user;
+  },
+});
+
 export const getUserById = internalQuery({
   args: { userId: v.id("users") },
   async handler(ctx, args) {

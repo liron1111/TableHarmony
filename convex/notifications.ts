@@ -1,6 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { internalQuery, mutation, query } from "./_generated/server";
-import { getCurrentUser } from "./users";
+import { assertAuthenticated } from "./users";
 
 export const getNotification = internalQuery({
   args: {
@@ -23,9 +23,7 @@ export const assertNotificationOwner = internalQuery({
     notificationId: v.id("notifications"),
   },
   async handler(ctx, args) {
-    const user = await getCurrentUser(ctx, {});
-
-    if (!user) throw new ConvexError("Unauthorized");
+    const user = await assertAuthenticated(ctx, {});
 
     const notification = await getNotification(ctx, {
       notificationId: args.notificationId,
@@ -42,9 +40,7 @@ export const getUserNotifications = query({
     limit: v.optional(v.number()),
   },
   async handler(ctx, args) {
-    const user = await getCurrentUser(ctx, {});
-
-    if (!user) return null;
+    const user = await assertAuthenticated(ctx, {});
 
     const notifications = ctx.db
       .query("notifications")
@@ -61,9 +57,7 @@ export const getUnReadNotifications = query({
     limit: v.optional(v.number()),
   },
   async handler(ctx, args) {
-    const user = await getCurrentUser(ctx, {});
-
-    if (!user) return null;
+    const user = await assertAuthenticated(ctx, {});
 
     const notifications = ctx.db
       .query("notifications")
@@ -94,9 +88,7 @@ export const deleteNotifications = mutation({
     notificationsIds: v.array(v.id("notifications")),
   },
   async handler(ctx, args) {
-    const user = await getCurrentUser(ctx, {});
-
-    if (!user) throw new ConvexError("Unauthorized");
+    await assertAuthenticated(ctx, {});
 
     const deletionPromises = args.notificationsIds.map(
       async (notificationId) => {
@@ -137,9 +129,7 @@ export const updateNotifications = mutation({
     isRead: v.optional(v.boolean()),
   },
   async handler(ctx, args) {
-    const user = await getCurrentUser(ctx, {});
-
-    if (!user) throw new ConvexError("Unauthorized");
+    await assertAuthenticated(ctx, {});
 
     const updatePromises = args.notificationsIds.map(async (notificationId) => {
       try {

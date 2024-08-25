@@ -1,30 +1,18 @@
 "use client";
 
 import { useQuery } from "convex/react";
-import { Id } from "../../../../../../convex/_generated/dataModel";
+import { Doc, Id } from "../../../../../../convex/_generated/dataModel";
 import { api } from "../../../../../../convex/_generated/api";
 
 import { createContext } from "react";
-import { ConvexError } from "convex/values";
 import { redirect } from "next/navigation";
-import { Skeleton } from "@/components/ui/skeleton";
-
-interface School {
-  _id: Id<"schools">;
-  _creationTime: number;
-  creatorId: Id<"users">;
-  name: string;
-  description: string;
-  isPublic: boolean;
-  image: string;
-}
 
 interface SchoolContext {
-  school: School;
+  school: Doc<"schools">;
 }
 
 export const SchoolContext = createContext<SchoolContext>({
-  school: {} as School,
+  school: {} as Doc<"schools">,
 });
 
 export function School({

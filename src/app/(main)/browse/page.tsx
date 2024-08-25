@@ -8,7 +8,7 @@ import {
 import { createMetadata } from "@/utils/metadata";
 import { SearchForm } from "../schools/_components/search-form";
 
-import { PubliSchoolListWrapper } from "./public-school-list-wrapper";
+import { PublicSchoolList } from "./public-school-list";
 
 export const metadata = createMetadata({
   title: "Browse",
@@ -35,7 +35,7 @@ export default function BrowsePage({
           <SearchForm />
         </PageActions>
       </PageHeader>
-      <PubliSchoolListWrapper searchQuery={searchQuery} />
+      <PublicSchoolList searchQuery={searchQuery} />
     </div>
   );
 }

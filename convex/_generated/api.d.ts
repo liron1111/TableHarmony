@@ -19,6 +19,7 @@ import type * as feedbacks from "../feedbacks.js";
 import type * as http from "../http.js";
 import type * as notifications from "../notifications.js";
 import type * as schools from "../schools.js";
+import type * as schoolsMembers from "../schoolsMembers.js";
 import type * as users from "../users.js";
 import type * as util from "../util.js";
 
@@ -36,6 +37,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   notifications: typeof notifications;
   schools: typeof schools;
+  schoolsMembers: typeof schoolsMembers;
   users: typeof users;
   util: typeof util;
 }>;

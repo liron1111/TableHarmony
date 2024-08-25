@@ -1,40 +1,16 @@
 "use client";
 
 import { api } from "../../../../../convex/_generated/api";
-import { Id } from "../../../../../convex/_generated/dataModel";
-import { FunctionReference } from "convex/server";
 import { useQuery } from "convex/react";
 
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cardStyles, gridStyles } from "@/styles/common";
 import { SchoolCard } from "./school-card";
+import { Doc } from "../../../../../convex/_generated/dataModel";
 
-type Query = FunctionReference<
-  "query",
-  "public",
-  {},
-  | {
-      _id: Id<"schools">;
-      _creationTime: number;
-      image: string;
-      name: string;
-      creatorId: Id<"users">;
-      description: string;
-      isPublic: boolean;
-    }[]
-  | null,
-  string | undefined
->;
-
-export function SchoolList({
-  searchQuery,
-  query,
-}: {
-  searchQuery: string;
-  query: Query;
-}) {
-  const schools = useQuery(query);
+export function SchoolList({ searchQuery }: { searchQuery: string }) {
+  const schools = useQuery(api.schools.getUserSchools);
 
   if (!schools) return <SchoolListSkeleton />;
 
@@ -58,13 +34,40 @@ export function SchoolList({
       school.description.toLowerCase().includes(searchQuery)
   );
 
-  if (displaySchools.length === 0) {
+  //TODO: optimize using useMemo ?
+
+  return (
+    <div className="space-y-8">
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">Owned schools</h2>
+        <CategorySchoolList
+          schools={displaySchools.filter((school) => school.role === "manager")}
+        />
+      </div>
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">Teaching schools</h2>
+        <CategorySchoolList
+          schools={displaySchools.filter((school) => school.role === "teacher")}
+        />
+      </div>
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold">Student schools</h2>
+        <CategorySchoolList
+          schools={displaySchools.filter((school) => school.role === "student")}
+        />
+      </div>
+    </div>
+  );
+}
+
+function CategorySchoolList({ schools }: { schools: Doc<"schools">[] }) {
+  if (schools.length === 0) {
     return (
       <div className={cardStyles}>
         <Image
           src="/assets/no-data.svg"
-          width="200"
-          height="200"
+          width="150"
+          height="150"
           alt="no schools placeholder image"
         />
         <span className="font-semibold">No schools found</span>
@@ -73,27 +76,15 @@ export function SchoolList({
   }
 
   return (
-    <div className="space-y-4">
-      <div className={gridStyles}>
-        {displaySchools.map((school) => (
-          <SchoolCard key={school._id} school={school} />
-        ))}
-      </div>
+    <div className={gridStyles}>
+      {schools.map((school) => (
+        <SchoolCard key={school._id} school={school} />
+      ))}
     </div>
   );
 }
 
-export function UserSchoolListWrapper({
-  searchQuery,
-}: {
-  searchQuery: string;
-}) {
-  return (
-    <SchoolList query={api.schools.getUserSchools} searchQuery={searchQuery} />
-  );
-}
-
-function SchoolListSkeleton() {
+export function SchoolListSkeleton() {
   return (
     <div className={gridStyles}>
       {new Array(6).fill("").map((v, idx) => (

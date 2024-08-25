@@ -5,7 +5,7 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import { CreateSchoolSheet } from "./_components/create-school-sheet";
-import { UserSchoolListWrapper } from "./_components/school-list";
+import { SchoolList } from "./_components/school-list";
 import { SearchForm } from "./_components/search-form";
 
 import { createMetadata } from "@/utils/metadata";
@@ -34,7 +34,7 @@ export default function SchoolsPage({
           <CreateSchoolSheet />
         </PageActions>
       </PageHeader>
-      <UserSchoolListWrapper searchQuery={searchQuery} />
+      <SchoolList searchQuery={searchQuery} />
     </div>
   );
 }

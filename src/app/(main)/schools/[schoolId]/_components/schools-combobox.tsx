@@ -45,7 +45,7 @@ const School = ({ name, image }: { name: string; image: string }) => (
 export function SchoolsCombobox() {
   const pathname = usePathname();
 
-  const schoolId = pathname.split("/").at(2) as Id<"schools">;
+  const schoolId = pathname.split("/").at(2);
 
   if (!schoolId) return;
 

@@ -1,6 +1,12 @@
 import { ConvexError, v } from "convex/values";
 import { internalQuery, mutation, query } from "./_generated/server";
-import { getCurrentUser } from "./users";
+
+import { assertAuthenticated } from "./users";
+import {
+  createMembership,
+  getUserMemberships,
+  getSchoolMemberships,
+} from "./schoolsMembers";
 
 export const createSchool = mutation({
   args: {
@@ -9,41 +15,48 @@ export const createSchool = mutation({
     isPublic: v.boolean(),
   },
   async handler(ctx, args) {
-    const user = await getCurrentUser(ctx, {});
+    const user = await assertAuthenticated(ctx, {});
 
-    if (!user)
-      throw new ConvexError("User must be logged in to view this content");
-
-    await ctx.db.insert("schools", {
+    const schoolId = await ctx.db.insert("schools", {
       name: args.name,
       description: args.description,
       isPublic: args.isPublic,
       creatorId: user._id,
       image: "/assets/school.jpeg",
     });
+
+    await createMembership(ctx, {
+      schoolId: schoolId,
+      userId: user._id,
+      role: "manager",
+    });
   },
 });
 
 export const getUserSchools = query({
   async handler(ctx) {
-    const user = await getCurrentUser(ctx, {});
+    const memberships = await getUserMemberships(ctx, {});
 
-    if (!user) return null;
+    const schools = await Promise.all(
+      memberships.map(async (membership) => {
+        try {
+          const school = await getSchool(ctx, {
+            schoolId: membership.schoolId,
+          });
+          return { role: membership.role, ...school };
+        } catch (e) {
+          return;
+        }
+      })
+    );
 
-    const schools = await ctx.db
-      .query("schools")
-      .withIndex("by_creatorId", (q) => q.eq("creatorId", user._id))
-      .collect();
-
-    return schools;
+    return schools.filter((school) => school !== undefined);
   },
 });
 
 export const getPublicSchools = query({
   async handler(ctx) {
-    const user = await getCurrentUser(ctx, {});
-
-    if (!user) return null;
+    await assertAuthenticated(ctx, {});
 
     const schools = await ctx.db
       .query("schools")
@@ -75,13 +88,17 @@ export const deleteSchool = mutation({
     schoolId: v.id("schools"),
   },
   async handler(ctx, args) {
-    const user = await getCurrentUser(ctx, {});
+    const school = await assertSchoolOwner(ctx, { schoolId: args.schoolId });
 
-    if (!user) throw new ConvexError("Unauthorized");
+    const memberships = await getSchoolMemberships(ctx, {
+      schoolId: args.schoolId,
+    });
 
-    const school = await getSchool(ctx, args);
-
-    if (school.creatorId !== user._id) throw new ConvexError("Unauthorized");
+    await Promise.all(
+      memberships.map(async (membership) => {
+        await ctx.db.delete(membership._id);
+      })
+    );
 
     await ctx.db.delete(school._id);
   },
@@ -107,14 +124,12 @@ export const updateSchool = mutation({
   },
 });
 
-export const assertSchoolOwner = query({
+export const assertSchoolOwner = internalQuery({
   args: {
     schoolId: v.id("schools"),
   },
   async handler(ctx, args) {
-    const user = await getCurrentUser(ctx, {});
-
-    if (!user) throw new ConvexError("Unauthorized");
+    const user = await assertAuthenticated(ctx, {});
 
     const school = await ctx.db
       .query("schools")
