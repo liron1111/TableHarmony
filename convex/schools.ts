@@ -6,7 +6,8 @@ import {
   createMembership,
   getUserMemberships,
   getSchoolMemberships,
-} from "./schoolsMembers";
+} from "./schoolMemberships";
+import { schoolEnrollmentRoleType } from "./schema";
 
 export const createSchool = mutation({
   args: {
@@ -141,5 +142,63 @@ export const assertSchoolOwner = internalQuery({
     if (school.creatorId !== user._id) throw new ConvexError("Unauthorized");
 
     return school;
+  },
+});
+
+export const enroll = mutation({
+  args: {
+    schoolId: v.id("schools"),
+    role: schoolEnrollmentRoleType,
+  },
+  async handler(ctx, args) {
+    const user = await assertAuthenticated(ctx, {});
+
+    const enrollment = await ctx.db
+      .query("schoolEnrollments")
+      .withIndex("by_schoolId_userId", (q) =>
+        q.eq("schoolId", args.schoolId).eq("userId", user._id)
+      )
+      .first();
+
+    if (enrollment) throw new ConvexError("Already enrolled");
+
+    await ctx.db.insert("schoolEnrollments", {
+      userId: user._id,
+      schoolId: args.schoolId,
+      role: args.role,
+    });
+  },
+});
+
+export const getEnrollments = query({
+  args: { schoolId: v.id("schools") },
+  async handler(ctx, args) {
+    const enrollments = await ctx.db
+      .query("schoolEnrollments")
+      .withIndex("by_schoolId", (q) => q.eq("schoolId", args.schoolId))
+      .collect();
+
+    return enrollments;
+  },
+});
+
+export const deleteEnrollment = mutation({
+  args: {
+    schoolId: v.id("schools"),
+    userId: v.id("users"),
+  },
+  async handler(ctx, args) {
+    await assertSchoolOwner(ctx, { schoolId: args.schoolId });
+
+    const enrollment = await ctx.db
+      .query("schoolEnrollments")
+      .withIndex("by_schoolId_userId", (q) =>
+        q.eq("schoolId", args.schoolId).eq("userId", args.userId)
+      )
+      .first();
+
+    if (!enrollment) throw new ConvexError("Could not find enrollment");
+
+    await ctx.db.delete(enrollment._id);
   },
 });

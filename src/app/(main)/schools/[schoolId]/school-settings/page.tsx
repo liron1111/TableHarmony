@@ -6,10 +6,11 @@ import { UpdateVisibilityForm } from "./_components/forms/update-visibility";
 
 export default function SchoolSettingsPage() {
   //TODO: add update image
+
   return (
     <div className="space-y-8">
       <ConfigurationPanel title="School name">
-        <div className="flex flex-col gap-4">
+        <div className="flex w-full flex-col gap-4">
           <span>To update school name, please fill the form below</span>
           <UpdateNameForm />
         </div>

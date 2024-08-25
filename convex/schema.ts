@@ -7,6 +7,11 @@ export const schoolRoleType = v.union(
   v.literal("student")
 );
 
+export const schoolEnrollmentRoleType = v.union(
+  v.literal("teacher"),
+  v.literal("student")
+);
+
 export default defineSchema({
   users: defineTable({
     clerkId: v.string(),
@@ -35,10 +40,18 @@ export default defineSchema({
     isPublic: v.boolean(),
     image: v.string(),
   }).index("by_creatorId", ["creatorId"]),
-  schoolMembers: defineTable({
+  schoolMemberships: defineTable({
     schoolId: v.id("schools"),
     userId: v.id("users"),
     role: schoolRoleType,
+  })
+    .index("by_schoolId_userId", ["schoolId", "userId"])
+    .index("by_schoolId", ["schoolId"])
+    .index("by_userId", ["userId"]),
+  schoolEnrollments: defineTable({
+    schoolId: v.id("schools"),
+    userId: v.id("users"),
+    role: schoolEnrollmentRoleType,
   })
     .index("by_schoolId_userId", ["schoolId", "userId"])
     .index("by_schoolId", ["schoolId"])

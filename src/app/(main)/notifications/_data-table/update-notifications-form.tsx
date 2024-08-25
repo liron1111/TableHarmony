@@ -50,7 +50,7 @@ export function UpdateNotificationsButton({
             onClick={onSubmit}
             icon={<ArchiveIcon className="size-4" />}
           >
-            <span className="sr-only"></span>
+            <span className="sr-only">Notifications</span>
           </LoaderButton>
         </TooltipTrigger>
         <TooltipContent>Mark as read</TooltipContent>
