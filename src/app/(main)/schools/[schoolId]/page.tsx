@@ -1,5 +1,5 @@
-import { PageHeader, PageHeaderHeading } from "@/components/page-header";
 import { ComingSoon } from "@/components/coming-soon";
+import { SchoolHeader } from "./_components/school-header";
 
 export default function SchoolsPage({
   params,
@@ -8,9 +8,7 @@ export default function SchoolsPage({
 }) {
   return (
     <div className="container">
-      <PageHeader>
-        <PageHeaderHeading>School</PageHeaderHeading>
-      </PageHeader>
+      <SchoolHeader />
       <ComingSoon />
     </div>
   );

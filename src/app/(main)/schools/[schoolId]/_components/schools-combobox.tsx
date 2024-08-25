@@ -38,7 +38,7 @@ const School = ({ name, image }: { name: string; image: string }) => (
         className="rounded-full"
       />
     </div>
-    <span className="font-medium">{name}</span>
+    <span className="max-w-[150px] truncate font-medium">{name}</span>
   </div>
 );
 

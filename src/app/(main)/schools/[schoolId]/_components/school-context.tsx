@@ -7,6 +7,7 @@ import { api } from "../../../../../../convex/_generated/api";
 import { createContext } from "react";
 import { ConvexError } from "convex/values";
 import { redirect } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface School {
   _id: Id<"schools">;
@@ -38,7 +39,8 @@ export function School({
       schoolId: schoolId as Id<"schools">,
     });
 
-    if (!school) return;
+    //TODO: add a skeleton
+    if (!school) return <></>;
 
     return (
       <SchoolContext.Provider value={{ school }}>

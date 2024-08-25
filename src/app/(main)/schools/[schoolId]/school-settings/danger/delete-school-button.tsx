@@ -13,7 +13,7 @@ export function DeleteSchoolButton() {
   return (
     <>
       <Button
-        className="w-fit"
+        className="w-full md:w-fit"
         variant="destructive"
         onClick={() => setOpen(true)}
       >

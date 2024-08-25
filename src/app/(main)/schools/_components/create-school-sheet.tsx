@@ -40,9 +40,11 @@ const formSchema = z.object({
     })
     .min(2),
   isPublic: z.boolean().default(false),
-  description: z.string({
-    message: "Description is required",
-  }),
+  description: z
+    .string({
+      message: "Description is required",
+    })
+    .max(50),
 });
 
 function CreateSchoolForm({

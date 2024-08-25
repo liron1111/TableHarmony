@@ -19,7 +19,7 @@ export const createSchool = mutation({
       description: args.description,
       isPublic: args.isPublic,
       creatorId: user._id,
-      image: "/assets/project.png",
+      image: "/assets/school.jpeg",
     });
   },
 });

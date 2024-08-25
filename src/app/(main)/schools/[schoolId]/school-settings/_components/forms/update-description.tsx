@@ -18,13 +18,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { LoaderButton } from "@/components/loader-button";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 
 const updateDescriptionSchema = z.object({
-  description: z.string(),
+  description: z.string().max(50),
 });
 
 export function UpdateDescriptionForm() {
@@ -72,7 +71,7 @@ export function UpdateDescriptionForm() {
                   placeholder="Provide a detailed description of the school."
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="md:absolute" />
             </FormItem>
           )}
         />

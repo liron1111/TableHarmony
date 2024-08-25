@@ -23,7 +23,7 @@ import { LoaderButton } from "@/components/loader-button";
 import { toast } from "sonner";
 
 const updateNameSchema = z.object({
-  name: z.string(),
+  name: z.string().min(2).max(50),
 });
 
 export function UpdateNameForm() {
