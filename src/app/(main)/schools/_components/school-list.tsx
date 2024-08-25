@@ -37,20 +37,20 @@ export function SchoolList({ searchQuery }: { searchQuery: string }) {
   //TODO: optimize using useMemo ?
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-4">
+    <div className="flex flex-col space-y-12">
+      <div className="space-y-3">
         <h2 className="text-lg font-semibold">Owned schools</h2>
         <CategorySchoolList
           schools={displaySchools.filter((school) => school.role === "manager")}
         />
       </div>
-      <div className="space-y-4">
+      <div className="space-y-3">
         <h2 className="text-lg font-semibold">Teaching schools</h2>
         <CategorySchoolList
           schools={displaySchools.filter((school) => school.role === "teacher")}
         />
       </div>
-      <div className="space-y-4">
+      <div className="space-y-3">
         <h2 className="text-lg font-semibold">Student schools</h2>
         <CategorySchoolList
           schools={displaySchools.filter((school) => school.role === "student")}
