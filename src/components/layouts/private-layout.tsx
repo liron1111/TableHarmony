@@ -10,7 +10,7 @@ export default function PrivateLayout({
   return (
     <>
       <PrivateHeader />
-      <main className="flex-1 pb-10">{children}</main>
+      <main className="flex-1">{children}</main>
     </>
   );
 }

@@ -14,7 +14,9 @@ export function SchoolInfo() {
     <div className="w-full space-y-4 rounded-md border border-border">
       <EditorProvider
         extensions={extensions}
-        content={school.info ?? "This school has no info yet..."}
+        content={
+          school.info ?? `<h1>${school.name}</h1> <p>${school.description}</p>`
+        }
         editable={false}
         immediatelyRender={true}
       />
