@@ -1,11 +1,14 @@
 "use client";
 
-import { ColumnDef, Row } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Doc } from "../../../../../convex/_generated/dataModel";
 
-export const columns: ColumnDef<Doc<"notifications">>[] = [
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Doc } from "../../../../../../../../convex/_generated/dataModel";
+
+export const columns: ColumnDef<any>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -33,10 +36,42 @@ export const columns: ColumnDef<Doc<"notifications">>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "_id",
+    accessorKey: "Assignee",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="_id" />
+      <DataTableColumnHeader column={column} title="Assignee" />
     ),
+    cell: ({ row }) => {
+      const user: Doc<"users"> = row.original?.user;
+
+      return (
+        <div className="flex items-center gap-2">
+          <Avatar className="size-5">
+            <AvatarImage src={user?.image} alt={`${user?.name} avatar`} />
+            <AvatarFallback className="text-xs">SC</AvatarFallback>
+          </Avatar>
+          <span>{user?.name}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "Role",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Role" />
+    ),
+    cell: ({ row }) => {
+      const role = row.original.role;
+
+      return (
+        <Badge variant={role === "student" ? "default" : "outline"}>
+          {role}
+        </Badge>
+      );
+    },
+
+    filterFn: (row, id, value) => {
+      return value.includes(row.original.role);
+    },
   },
   {
     accessorKey: "_creationTime",
@@ -53,18 +88,5 @@ export const columns: ColumnDef<Doc<"notifications">>[] = [
       const dateString = date.toLocaleDateString("en-GB");
       return dateString.toLowerCase().includes(filterValue.toLowerCase());
     },
-  },
-  {
-    accessorKey: "title",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="title" />
-    ),
-  },
-  {
-    accessorKey: "isRead",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="isRead" />
-    ),
-    filterFn: "includesString",
   },
 ];

@@ -77,7 +77,7 @@ function ActualCombobox({ schoolId }: { schoolId: string }) {
             className="w-fit justify-between"
           >
             {!selectedSchool ? (
-              "Schools"
+              "schools"
             ) : (
               <School name={selectedSchool.name} image={selectedSchool.image} />
             )}

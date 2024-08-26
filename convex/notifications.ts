@@ -12,7 +12,7 @@ export const getNotification = internalQuery({
       .withIndex("by_id", (q) => q.eq("_id", args.notificationId))
       .first();
 
-    if (!notification) throw new ConvexError("Notification not found");
+    if (!notification) return;
 
     return notification;
   },
@@ -28,6 +28,8 @@ export const assertNotificationOwner = internalQuery({
     const notification = await getNotification(ctx, {
       notificationId: args.notificationId,
     });
+
+    if (!notification) throw new ConvexError("Could not find notification");
 
     if (notification.userId !== user._id) throw new ConvexError("Unauthorized");
 
@@ -92,14 +94,7 @@ export const deleteNotifications = mutation({
 
     const deletionPromises = args.notificationsIds.map(
       async (notificationId) => {
-        try {
-          await deleteNotification(ctx, { notificationId });
-        } catch (error) {
-          console.log(
-            `Failed to delete notification ${notificationId}:`,
-            error
-          );
-        }
+        await deleteNotification(ctx, { notificationId });
       }
     );
 
@@ -132,14 +127,10 @@ export const updateNotifications = mutation({
     await assertAuthenticated(ctx, {});
 
     const updatePromises = args.notificationsIds.map(async (notificationId) => {
-      try {
-        await updateNotification(ctx, {
-          notificationId: notificationId,
-          isRead: args.isRead,
-        });
-      } catch (error) {
-        console.log(`Failed to update notification ${notificationId}:`, error);
-      }
+      await updateNotification(ctx, {
+        notificationId: notificationId,
+        isRead: args.isRead,
+      });
     });
 
     await Promise.all(updatePromises);

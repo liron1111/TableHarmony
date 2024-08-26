@@ -28,8 +28,9 @@ import {
 export function SchoolCard({ school }: { school: Doc<"schools"> }) {
   const user = useQuery(api.users.getCurrentUser);
 
+  //TODO: better looking card
   return (
-    <div className="relative duration-200 hover:shadow-md">
+    <div className="relative rounded-md transition-all duration-200 hover:shadow-md dark:border dark:hover:border-white">
       <Link href={`/schools/${school._id}`} aria-label="school">
         <Card>
           <CardHeader className="flex flex-row items-center gap-4">

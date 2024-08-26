@@ -22,7 +22,7 @@ export const getCurrentUser = query({
 });
 
 export const assertAuthenticated = internalQuery({
-  async handler(ctx, args_0) {
+  async handler(ctx) {
     const user = await getCurrentUser(ctx, {});
 
     if (!user) throw new ConvexError("Unauthorized");
@@ -39,8 +39,6 @@ export const getUserById = internalQuery({
       .withIndex("by_id", (q) => q.eq("_id", args.userId))
       .first();
 
-    if (!user) throw new ConvexError("Could not find user");
-
     return user;
   },
 });
@@ -48,10 +46,12 @@ export const getUserById = internalQuery({
 export const getUserByClerkId = internalQuery({
   args: { clerkId: v.string() },
   async handler(ctx, args) {
-    return await ctx.db
+    const user = await ctx.db
       .query("users")
       .withIndex("by_clerkId", (q) => q.eq("clerkId", args.clerkId))
       .first();
+
+    return user;
   },
 });
 
@@ -65,7 +65,7 @@ export const createUser = internalMutation({
   async handler(ctx, args) {
     const user = await getUserByClerkId(ctx, { clerkId: args.clerkId });
 
-    if (user) throw new ConvexError("User already exists");
+    if (user) return;
 
     await ctx.db.insert("users", {
       clerkId: args.clerkId,
@@ -81,9 +81,7 @@ export const deleteUser = internalMutation({
   async handler(ctx, args) {
     const user = await getUserById(ctx, { userId: args.userId });
 
-    if (!user) {
-      throw new ConvexError("Could not find user");
-    }
+    if (!user) return;
 
     if (user._id !== args.userId) throw new ConvexError("Unauthorized");
 
@@ -101,9 +99,7 @@ export const updateUser = mutation({
   async handler(ctx, args) {
     const user = await getUserById(ctx, { userId: args.userId });
 
-    if (!user) {
-      throw new ConvexError("Could not find user");
-    }
+    if (!user) return;
 
     await ctx.db.patch(user._id, {
       image: args.image || user.image,

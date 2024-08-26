@@ -1,7 +1,7 @@
 import { ConvexError, v } from "convex/values";
 import { internalQuery, mutation, query } from "./_generated/server";
 
-import { assertAuthenticated } from "./users";
+import { assertAuthenticated, getUserById } from "./users";
 import {
   createMembership,
   getUserMemberships,
@@ -40,14 +40,13 @@ export const getUserSchools = query({
 
     const schools = await Promise.all(
       memberships.map(async (membership) => {
-        try {
-          const school = await getSchool(ctx, {
-            schoolId: membership.schoolId,
-          });
-          return { role: membership.role, ...school };
-        } catch (e) {
-          return;
-        }
+        const school = await getSchool(ctx, {
+          schoolId: membership.schoolId,
+        });
+
+        if (!school) return;
+
+        return { role: membership.role, ...school };
       })
     );
 
@@ -78,7 +77,7 @@ export const getSchool = query({
       .withIndex("by_id", (q) => q.eq("_id", args.schoolId))
       .first();
 
-    if (!school) throw new ConvexError("Could not find school");
+    if (!school) return;
 
     return school;
   },
@@ -178,7 +177,20 @@ export const getEnrollments = query({
       .withIndex("by_schoolId", (q) => q.eq("schoolId", args.schoolId))
       .collect();
 
-    return enrollments;
+    const enrollmentsWithUserData = await Promise.all(
+      enrollments.map(async (enrollment) => {
+        const user = await getUserById(ctx, { userId: enrollment.userId });
+
+        return {
+          ...enrollment,
+          user,
+        };
+      })
+    );
+
+    return enrollmentsWithUserData.filter(
+      (enrollment) => enrollment !== undefined
+    );
   },
 });
 
@@ -197,8 +209,47 @@ export const deleteEnrollment = mutation({
       )
       .first();
 
-    if (!enrollment) throw new ConvexError("Could not find enrollment");
+    if (!enrollment) return;
 
     await ctx.db.delete(enrollment._id);
+  },
+});
+
+export const deleteEnrollments = mutation({
+  args: {
+    enrollmentIds: v.array(v.id("schoolEnrollments")),
+  },
+  async handler(ctx, args) {
+    const deletionPromises = args.enrollmentIds.map(async (enrollmentId) => {
+      await ctx.db.delete(enrollmentId);
+    });
+
+    await Promise.all(deletionPromises);
+  },
+});
+
+export const acceptEnrollments = mutation({
+  args: {
+    enrollmentIds: v.array(v.id("schoolEnrollments")),
+  },
+  async handler(ctx, args) {
+    const creationPromises = args.enrollmentIds.map(async (enrollmentId) => {
+      const enrollment = await ctx.db
+        .query("schoolEnrollments")
+        .withIndex("by_id", (q) => q.eq("_id", enrollmentId))
+        .first();
+
+      if (!enrollment) return;
+
+      await createMembership(ctx, {
+        schoolId: enrollment.schoolId,
+        userId: enrollment.userId,
+        role: "student",
+      });
+
+      await ctx.db.delete(enrollment._id);
+    });
+
+    await Promise.all(creationPromises);
   },
 });

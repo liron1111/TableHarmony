@@ -10,7 +10,7 @@ import { assertAuthenticated } from "./users";
 import { schoolRoleType } from "./schema";
 import { assertSchoolOwner } from "./schools";
 
-export const createMembership = mutation({
+export const createMembership = internalMutation({
   args: {
     schoolId: v.id("schools"),
     userId: v.id("users"),
@@ -49,7 +49,7 @@ export const getUserMemberships = internalQuery({
   },
 });
 
-export const getSchoolMemberships = query({
+export const getSchoolMemberships = internalQuery({
   args: { schoolId: v.id("schools") },
   async handler(ctx, args) {
     const memberships = await ctx.db
