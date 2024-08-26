@@ -67,7 +67,7 @@ export function UpdateDescriptionForm() {
                 <Textarea
                   {...field}
                   disabled={isLoading}
-                  className="h-[200px]"
+                  className="h-[125px] resize-none"
                   placeholder="Provide a detailed description of the school."
                 />
               </FormControl>

@@ -7,7 +7,7 @@ export default function DangerPage() {
     <div>
       <ConfigurationPanel variant="destructive" title="Delete school">
         <div className="flex flex-col gap-4">
-          <span>You can delete your project if you&apos;re done with it </span>
+          <span>You can delete your school if you&apos;re done with it </span>
           <DeleteSchoolButton />
         </div>
       </ConfigurationPanel>

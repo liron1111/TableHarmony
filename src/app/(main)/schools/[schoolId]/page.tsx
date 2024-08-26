@@ -1,5 +1,5 @@
-import { ComingSoon } from "@/components/coming-soon";
 import { SchoolHeader } from "./_components/school-header";
+import { SchoolInfo } from "./_components/school-info";
 
 export default function SchoolsPage({
   params,
@@ -9,7 +9,8 @@ export default function SchoolsPage({
   return (
     <div className="container">
       <SchoolHeader />
-      <ComingSoon />
+
+      <SchoolInfo />
     </div>
   );
 }

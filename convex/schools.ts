@@ -111,6 +111,7 @@ export const updateSchool = mutation({
     name: v.optional(v.string()),
     description: v.optional(v.string()),
     isPublic: v.optional(v.boolean()),
+    info: v.optional(v.string()),
   },
   async handler(ctx, args) {
     const school = await assertSchoolOwner(ctx, { schoolId: args.schoolId });
@@ -120,6 +121,7 @@ export const updateSchool = mutation({
       name: args.name ?? school.name,
       description: args.description ?? school.description,
       isPublic: args.isPublic ?? school.isPublic,
+      info: args.info ?? school.info,
     });
   },
 });
@@ -252,4 +254,14 @@ export const acceptEnrollments = mutation({
 
     await Promise.all(creationPromises);
   },
+});
+
+export const generateUploadUrl = mutation(async (ctx) => {
+  const identity = await ctx.auth.getUserIdentity();
+
+  if (!identity) {
+    throw new ConvexError("you must be logged in to upload a file");
+  }
+
+  return await ctx.storage.generateUploadUrl();
 });

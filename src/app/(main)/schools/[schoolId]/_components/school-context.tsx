@@ -34,6 +34,8 @@ export function School({
     userId: user?._id as Id<"users">,
   });
 
+  if (school === null) redirect("/schools");
+
   if (!school) return <></>;
 
   if (!membership && !school.isPublic) redirect("/schools");

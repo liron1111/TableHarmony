@@ -39,6 +39,7 @@ export default defineSchema({
     description: v.string(),
     isPublic: v.boolean(),
     image: v.string(),
+    info: v.optional(v.string()),
   }).index("by_creatorId", ["creatorId"]),
   schoolMemberships: defineTable({
     schoolId: v.id("schools"),
