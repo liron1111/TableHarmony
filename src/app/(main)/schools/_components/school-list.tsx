@@ -33,7 +33,6 @@ export function SchoolList({ searchQuery }: { searchQuery: string }) {
       school.name.toLowerCase().includes(searchQuery) ||
       school.description.toLowerCase().includes(searchQuery)
   );
-
   //TODO: optimize using useMemo ?
 
   return (

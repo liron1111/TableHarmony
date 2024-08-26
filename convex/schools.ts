@@ -244,7 +244,7 @@ export const acceptEnrollments = mutation({
       await createMembership(ctx, {
         schoolId: enrollment.schoolId,
         userId: enrollment.userId,
-        role: "student",
+        role: enrollment.role,
       });
 
       await ctx.db.delete(enrollment._id);

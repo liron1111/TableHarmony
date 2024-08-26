@@ -17,9 +17,7 @@ export default function SettingsLayout({
   children: React.ReactNode;
   params: { schoolId: string };
 }) {
-  const school = AssertSchoolOwner();
-
-  if (!school) return;
+  const { school } = AssertSchoolOwner();
 
   return (
     <div className="container">

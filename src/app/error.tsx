@@ -18,7 +18,7 @@ export default function ErrorPage({
   error: Error & { digest?: string };
 }) {
   const isAuthenticationError = error.message.includes(
-    AUTHENTICATION_ERROR_MESSAGE,
+    AUTHENTICATION_ERROR_MESSAGE
   );
 
   return (
@@ -49,7 +49,6 @@ export default function ErrorPage({
         <>
           <PageHeader variant="center">
             <PageHeaderHeading>Oops! Something went wrong</PageHeaderHeading>
-            <PageHeaderDescription>{error.message}</PageHeaderDescription>
           </PageHeader>
           <Image
             src="/assets/fixing-bugs.svg"

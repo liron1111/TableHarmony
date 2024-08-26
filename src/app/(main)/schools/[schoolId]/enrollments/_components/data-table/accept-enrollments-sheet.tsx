@@ -90,7 +90,7 @@ export function AcceptEnrollmentsSheet({
         <SheetHeader>
           <SheetTitle>Accept Enrollments</SheetTitle>
           <SheetDescription>
-            Accept these enrollments to your schools.
+            Accept these enrollments to your school.
           </SheetDescription>
         </SheetHeader>
 

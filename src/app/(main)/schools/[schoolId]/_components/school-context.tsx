@@ -7,13 +7,14 @@ import { api } from "../../../../../../convex/_generated/api";
 import { createContext } from "react";
 import { redirect } from "next/navigation";
 
-interface SchoolContext {
+interface SchoolContextType {
   school: Doc<"schools">;
+  role: "student" | "teacher" | "manager" | "guest";
 }
 
-export const SchoolContext = createContext<SchoolContext>({
-  school: {} as Doc<"schools">,
-});
+export const SchoolContext = createContext<SchoolContextType>(
+  {} as SchoolContextType
+);
 
 export function School({
   children,
@@ -22,20 +23,26 @@ export function School({
   children: React.ReactNode;
   schoolId: string;
 }) {
-  try {
-    const school = useQuery(api.schools.getSchool, {
-      schoolId: schoolId as Id<"schools">,
-    });
+  const user = useQuery(api.users.getCurrentUser);
 
-    //TODO: add a skeleton
-    if (!school) return <></>;
+  const school = useQuery(api.schools.getSchool, {
+    schoolId: schoolId as Id<"schools">,
+  });
 
-    return (
-      <SchoolContext.Provider value={{ school }}>
-        {children}
-      </SchoolContext.Provider>
-    );
-  } catch (e) {
-    redirect("/schools");
-  }
+  const membership = useQuery(api.schoolMemberships.getMembership, {
+    schoolId: schoolId as Id<"schools">,
+    userId: user?._id as Id<"users">,
+  });
+
+  if (!school) return <></>;
+
+  if (!membership && !school.isPublic) redirect("/schools");
+
+  return (
+    <SchoolContext.Provider
+      value={{ school, role: membership?.role ?? "guest" }}
+    >
+      {children}
+    </SchoolContext.Provider>
+  );
 }

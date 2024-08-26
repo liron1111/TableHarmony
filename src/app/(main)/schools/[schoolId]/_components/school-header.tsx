@@ -9,17 +9,13 @@ import {
   PageActions,
 } from "@/components/page-header";
 import { SchoolContext } from "./school-context";
-import { useQuery } from "convex/react";
-import { api } from "../../../../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { EnrollButton } from "./enroll-button";
+import { EnrollSchoolSheet } from "./enroll-school-sheet";
+import { ExitSchoolDialog } from "./exit-school-dialog";
 
 export function SchoolHeader() {
-  const { school } = useContext(SchoolContext);
-  const user = useQuery(api.users.getCurrentUser);
-
-  const isCreator = user?._id === school.creatorId;
+  const { school, role } = useContext(SchoolContext);
 
   return (
     <div>
@@ -27,7 +23,7 @@ export function SchoolHeader() {
         <PageHeaderHeading>{school.name}</PageHeaderHeading>
         <PageHeaderDescription>{school.description}</PageHeaderDescription>
         <PageActions>
-          {isCreator ? (
+          {role === "manager" && (
             <>
               <Button asChild>
                 <Link href={`/schools/${school._id}/school-settings`}>
@@ -40,9 +36,10 @@ export function SchoolHeader() {
                 </Link>
               </Button>
             </>
-          ) : (
-            <EnrollButton />
           )}
+
+          {role === "guest" && <EnrollSchoolSheet />}
+          {(role === "teacher" || role === "student") && <ExitSchoolDialog />}
         </PageActions>
       </PageHeader>
     </div>
