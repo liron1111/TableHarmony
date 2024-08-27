@@ -22,11 +22,17 @@ export function UpdateInfoForm() {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  function isEmptyHtml(html: string): boolean {
+    const textContent = html.replace(/<[^>]*>/g, "");
+    return textContent.trim().length === 0;
+  }
+
   async function onSubmit() {
     setIsLoading(true);
 
     try {
-      await updateSchool({ schoolId: school?._id!, info: htmlRef.current });
+      const info = isEmptyHtml(htmlRef.current) ? "" : htmlRef.current;
+      await updateSchool({ schoolId: school?._id!, info });
       toast.success("Updated successfully!");
     } catch (error) {
       console.error(error);

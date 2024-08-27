@@ -24,20 +24,21 @@ export function EnrollmentsDataTable() {
     schoolId: school._id,
   });
 
-  if (!data) return <DataTableSkeleton />;
+  if (!data) return <></>; //TODO: skeleton ?
 
   if (data.length === 0)
     return (
       <div className={cardStyles}>
         <div className="flex flex-col items-center gap-2 text-center">
           <span className="text-balance text-lg font-semibold md:text-xl">
-            No enrollments found
+            You don&apos;t have any enrollments
           </span>
           <p className="mb-10 text-balance text-muted-foreground">
-            No one has enrolled yet!
+            Start promoting your school to attract studnts and watch your
+            community grow.
           </p>
           <Image
-            src="/assets/posts.svg"
+            src="/assets/selecting-teams.svg"
             alt="Enrollments"
             width={300}
             height={300}

@@ -62,7 +62,7 @@ function ActualCombobox({ schoolId }: { schoolId: string }) {
 
   const schools = useQuery(api.schools.getUserSchools);
 
-  if (!schools) return <Skeleton className="h-6 w-28" />;
+  if (!schools) return <Skeleton className="h-6 w-full md:w-28" />;
 
   const selectedSchool = schools.find((school) => school._id === schoolId);
 

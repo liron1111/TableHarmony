@@ -36,9 +36,10 @@ export function School({
 
   if (school === null) redirect("/schools");
 
-  if (!school) return <></>;
+  //TODO: better looking skeleton
+  if (!school || membership === undefined) return <></>;
 
-  if (!membership && !school.isPublic) redirect("/schools");
+  if (membership === null && !school.isPublic) redirect("/schools");
 
   return (
     <SchoolContext.Provider
