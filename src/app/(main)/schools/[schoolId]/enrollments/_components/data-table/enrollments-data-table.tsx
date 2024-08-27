@@ -33,17 +33,17 @@ export function EnrollmentsDataTable() {
           <span className="text-balance text-lg font-semibold md:text-xl">
             You don&apos;t have any enrollments
           </span>
-          <p className="mb-10 text-balance text-muted-foreground">
+          <p className="text-balance text-muted-foreground">
             Start promoting your school to attract studnts and watch your
             community grow.
           </p>
-          <Image
-            src="/assets/selecting-teams.svg"
-            alt="Enrollments"
-            width={300}
-            height={300}
-          />
         </div>
+        <Image
+          src="/assets/selecting-teams.svg"
+          alt="Enrollments"
+          width={300}
+          height={300}
+        />
       </div>
     );
 

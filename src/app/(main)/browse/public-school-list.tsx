@@ -16,13 +16,20 @@ export function PublicSchoolList({ searchQuery }: { searchQuery: string }) {
   if (schools.length === 0) {
     return (
       <div className={cardStyles}>
+        <div className="flex flex-col items-center gap-2 text-center">
+          <span className="text-balance text-lg font-semibold md:text-xl">
+            No Public Schools Listed
+          </span>
+          <p className="text-balance text-muted-foreground">
+            There are currently no public schools available for browsing.
+          </p>
+        </div>
         <Image
           src="/assets/no-data.svg"
-          width="200"
-          height="200"
-          alt="no schools placeholder image"
+          alt="No public schools available"
+          width={250}
+          height={250}
         />
-        <span className="font-semibold">Uhoh, no schools available</span>
       </div>
     );
   }
@@ -36,13 +43,13 @@ export function PublicSchoolList({ searchQuery }: { searchQuery: string }) {
   if (displaySchools.length === 0) {
     return (
       <div className={cardStyles}>
+        <span className="font-semibold">No schools found</span>
         <Image
           src="/assets/no-data.svg"
           width="200"
           height="200"
           alt="no schools placeholder image"
         />
-        <span className="font-semibold">No schools found</span>
       </div>
     );
   }

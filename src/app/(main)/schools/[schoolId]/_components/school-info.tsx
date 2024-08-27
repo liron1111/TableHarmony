@@ -19,16 +19,16 @@ export function SchoolInfo() {
           <span className="text-balance text-lg font-semibold md:text-xl">
             Welcome to {school.name}!
           </span>
-          <p className="mb-10 text-balance text-muted-foreground">
+          <p className="text-balance text-muted-foreground">
             {school.description}
           </p>
-          <Image
-            src="/assets/welcome-cats.svg"
-            alt="Enrollments"
-            width={500}
-            height={500}
-          />
         </div>
+        <Image
+          src="/assets/welcome-cats.svg"
+          alt="Enrollments"
+          width={500}
+          height={500}
+        />
       </div>
     );
 

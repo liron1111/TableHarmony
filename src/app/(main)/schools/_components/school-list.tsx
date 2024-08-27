@@ -17,13 +17,20 @@ export function SchoolList({ searchQuery }: { searchQuery: string }) {
   if (schools.length === 0) {
     return (
       <div className={cardStyles}>
+        <div className="flex flex-col items-center gap-2 text-center">
+          <span className="text-balance text-lg font-semibold md:text-xl">
+            No school available
+          </span>
+          <p className="text-balance text-muted-foreground">
+            It looks like you haven&apos;t joined or created any schools yet.
+          </p>
+        </div>
         <Image
-          src="/assets/no-data.svg"
-          width="200"
-          height="200"
-          alt="no schools placeholder image"
+          src="/assets/education.svg"
+          alt="Enrollments"
+          width={300}
+          height={300}
         />
-        <span className="font-semibold">Uhoh, no schools available</span>
       </div>
     );
   }
@@ -33,28 +40,37 @@ export function SchoolList({ searchQuery }: { searchQuery: string }) {
       school.name.toLowerCase().includes(searchQuery) ||
       school.description.toLowerCase().includes(searchQuery)
   );
-  //TODO: optimize using useMemo ?
+
+  const ownedSchools = displaySchools.filter(
+    (school) => school.role === "manager"
+  );
+  const teachingSchools = displaySchools.filter(
+    (school) => school.role === "teacher"
+  );
+  const studentSchools = displaySchools.filter(
+    (school) => school.role === "student"
+  );
 
   return (
     <div className="flex flex-col space-y-12">
-      <div className="space-y-3">
-        <h2 className="text-lg font-semibold">Owned schools</h2>
-        <CategorySchoolList
-          schools={displaySchools.filter((school) => school.role === "manager")}
-        />
-      </div>
-      <div className="space-y-3">
-        <h2 className="text-lg font-semibold">Teaching schools</h2>
-        <CategorySchoolList
-          schools={displaySchools.filter((school) => school.role === "teacher")}
-        />
-      </div>
-      <div className="space-y-3">
-        <h2 className="text-lg font-semibold">Student schools</h2>
-        <CategorySchoolList
-          schools={displaySchools.filter((school) => school.role === "student")}
-        />
-      </div>
+      {ownedSchools.length !== 0 && (
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">Owned schools</h2>
+          <CategorySchoolList schools={ownedSchools} />
+        </div>
+      )}
+      {teachingSchools.length !== 0 && (
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">Teaching schools</h2>
+          <CategorySchoolList schools={teachingSchools} />
+        </div>
+      )}
+      {studentSchools.length !== 0 && (
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">Student schools</h2>
+          <CategorySchoolList schools={studentSchools} />
+        </div>
+      )}
     </div>
   );
 }
