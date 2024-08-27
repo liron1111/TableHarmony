@@ -11,7 +11,7 @@ export default function EnrollmentsPage() {
       <PageHeader>
         <PageHeaderHeading>Enrollments</PageHeaderHeading>
         <PageHeaderDescription>
-          Manage school&apos;s enrolls.
+          View and manage school&apos;s enrolls.
         </PageHeaderDescription>
       </PageHeader>
       <EnrollmentsDataTable />

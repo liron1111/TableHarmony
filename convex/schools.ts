@@ -4,8 +4,8 @@ import { internalQuery, mutation, query } from "./_generated/server";
 import { assertAuthenticated, getUserById } from "./users";
 import {
   createMembership,
+  getMembership,
   getUserMemberships,
-  getSchoolMemberships,
 } from "./schoolMemberships";
 import { schoolEnrollmentRoleType } from "./schema";
 
@@ -90,7 +90,7 @@ export const deleteSchool = mutation({
   async handler(ctx, args) {
     const school = await assertSchoolOwner(ctx, { schoolId: args.schoolId });
 
-    const memberships = await getSchoolMemberships(ctx, {
+    const memberships = await getMemberships(ctx, {
       schoolId: args.schoolId,
     });
 
@@ -190,9 +190,7 @@ export const getEnrollments = query({
       })
     );
 
-    return enrollmentsWithUserData.filter(
-      (enrollment) => enrollment !== undefined
-    );
+    return enrollmentsWithUserData;
   },
 });
 
@@ -264,4 +262,34 @@ export const generateUploadUrl = mutation(async (ctx) => {
   }
 
   return await ctx.storage.generateUploadUrl();
+});
+
+export const getMemberships = query({
+  args: { schoolId: v.id("schools") },
+  async handler(ctx, args) {
+    const memberships = await ctx.db
+      .query("schoolMemberships")
+      .withIndex("by_schoolId", (q) => q.eq("schoolId", args.schoolId))
+      .collect();
+
+    const membershipsWithUsers = await Promise.all(
+      memberships.map(async (membership) => {
+        const user = await getUserById(ctx, { userId: membership.userId });
+        return { ...membership, user };
+      })
+    );
+
+    return membershipsWithUsers;
+  },
+});
+
+export const deleteMemberships = mutation({
+  args: { membershipIds: v.array(v.id("schoolMemberships")) },
+  async handler(ctx, args) {
+    const deletionPromises = args.membershipIds.map(async (membershipId) => {
+      await ctx.db.delete(membershipId);
+    });
+
+    await Promise.all(deletionPromises);
+  },
 });

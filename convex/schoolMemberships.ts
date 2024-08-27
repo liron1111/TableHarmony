@@ -49,18 +49,6 @@ export const getUserMemberships = internalQuery({
   },
 });
 
-export const getSchoolMemberships = internalQuery({
-  args: { schoolId: v.id("schools") },
-  async handler(ctx, args) {
-    const memberships = await ctx.db
-      .query("schoolMemberships")
-      .withIndex("by_schoolId", (q) => q.eq("schoolId", args.schoolId))
-      .collect();
-
-    return memberships;
-  },
-});
-
 export const getMembership = query({
   args: { schoolId: v.id("schools"), userId: v.id("users") },
   async handler(ctx, args) {

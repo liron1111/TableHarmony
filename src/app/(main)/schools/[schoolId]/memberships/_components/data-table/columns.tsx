@@ -5,8 +5,7 @@ import { DataTableColumnHeader } from "@/components/data-table";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Doc } from "../../../../../../../../convex/_generated/dataModel";
+import { Badge, BadgeProps } from "@/components/ui/badge";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -36,12 +35,12 @@ export const columns: ColumnDef<any>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "Assignee",
+    accessorKey: "Member",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Assignee" />
+      <DataTableColumnHeader column={column} title="Member" />
     ),
     cell: ({ row }) => {
-      const user: Doc<"users"> = row.original?.user;
+      const user = row.original.user;
 
       return (
         <div className="flex items-center gap-2">
@@ -65,11 +64,20 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => {
       const role = row.original.role;
 
-      return (
-        <Badge variant={role === "student" ? "default" : "outline"}>
-          {role}
-        </Badge>
-      );
+      let variant: BadgeProps["variant"];
+      switch (role) {
+        case "teacher":
+          variant = "destructive";
+          break;
+        case "manager":
+          variant = "default";
+          break;
+        default:
+          variant = "outline";
+          break;
+      }
+
+      return <Badge variant={variant}>{role}</Badge>;
     },
 
     filterFn: (row, id, value) => {

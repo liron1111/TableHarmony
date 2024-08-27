@@ -52,6 +52,15 @@ export function Sidebar() {
                     Enrollments
                   </Link>
                 </Button>
+                <Button
+                  variant="ghost"
+                  className="flex w-full justify-start"
+                  asChild
+                >
+                  <Link href={`/schools/${school._id}/memberships`}>
+                    Members
+                  </Link>
+                </Button>
               </div>
             )}
 
