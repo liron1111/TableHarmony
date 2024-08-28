@@ -1,6 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+import { SearchIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export function SearchForm() {
@@ -20,14 +21,18 @@ export function SearchForm() {
 
   return (
     <div className="flex-grow">
-      <Input
-        placeholder="Search schools"
-        name="search"
-        defaultValue={searchParams.get("query")?.toString()}
-        onChange={(e) => {
-          handleSearch(e.target.value);
-        }}
-      />
+      <div className="relative">
+        <SearchIcon className="absolute left-3 top-1/2 size-5 -translate-y-1/2 transform text-neutral-500" />
+        <Input
+          placeholder="Search schools"
+          name="search"
+          defaultValue={searchParams.get("query")?.toString()}
+          onChange={(e) => {
+            handleSearch(e.target.value);
+          }}
+          className="pl-10"
+        />
+      </div>
     </div>
   );
 }

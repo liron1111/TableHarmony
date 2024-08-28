@@ -8,6 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useContext } from "react";
 import { DeleteMembershipsSheet } from "./delete-memberships-sheet";
+import { SearchIcon } from "lucide-react";
 
 const roles = [
   {
@@ -33,14 +34,17 @@ export function MembershipsDataTableToolbar() {
 
   return (
     <div className="flex flex-col gap-2.5 md:flex-row md:justify-between">
-      <Input
-        placeholder="Filter members..."
-        value={(table.getColumn("Member")?.getFilterValue() as string) ?? ""}
-        onChange={(event) =>
-          table.getColumn("Member")?.setFilterValue(event.target.value)
-        }
-        className="md:w-[300px] lg:w-[350px]"
-      />
+      <div className="relative">
+        <SearchIcon className="absolute left-3 top-1/2 size-5 -translate-y-1/2 transform text-neutral-500" />
+        <Input
+          placeholder="Search"
+          value={(table.getColumn("Member")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("Member")?.setFilterValue(event.target.value)
+          }
+          className="pl-10 md:w-[300px] lg:w-[350px]"
+        />
+      </div>
       <div className="flex flex-wrap gap-2">
         {table.getSelectedRowModel().rows.length !== 0 && <></>}
         <DataTableFacetedFilter
