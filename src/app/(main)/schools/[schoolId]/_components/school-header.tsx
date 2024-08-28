@@ -10,6 +10,7 @@ import {
 } from "@/components/page-header";
 import { SchoolContext } from "./school-context";
 import { EnrollSchoolSheet } from "./enroll-school-sheet";
+import { ExitSchoolDialog } from "./exit-school-dialog";
 
 export function SchoolHeader() {
   const { school, role } = useContext(SchoolContext);
@@ -22,6 +23,11 @@ export function SchoolHeader() {
         {role === "guest" && (
           <PageActions>
             <EnrollSchoolSheet />
+          </PageActions>
+        )}
+        {(role === "teacher" || role === "student") && (
+          <PageActions>
+            <ExitSchoolDialog />
           </PageActions>
         )}
       </PageHeader>

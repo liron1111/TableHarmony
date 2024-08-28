@@ -26,6 +26,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import useMediaQuery from "@/hooks/use-media-query";
+import { SchoolContext } from "./school-context";
 
 const School = ({ name, image }: { name: string; image: string }) => (
   <div className="flex items-center gap-2">
@@ -43,28 +44,18 @@ const School = ({ name, image }: { name: string; image: string }) => (
 );
 
 export function SchoolsCombobox() {
-  const pathname = usePathname();
+  const { school: selectedSchool } = React.useContext(SchoolContext);
 
-  const schoolId = pathname.split("/").at(2);
-
-  if (!schoolId) return;
-
-  return <ActualCombobox schoolId={schoolId} />;
-}
-
-function ActualCombobox({ schoolId }: { schoolId: string }) {
   const router = useRouter();
 
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(schoolId);
+  const [value, setValue] = React.useState(selectedSchool?._id as string);
   const [query, setQuery] = React.useState("");
   const { isMobile } = useMediaQuery();
 
   const schools = useQuery(api.schools.getUserSchools);
 
   if (!schools) return <Skeleton className="h-6 w-full md:w-28" />;
-
-  const selectedSchool = schools.find((school) => school._id === schoolId);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
