@@ -22,7 +22,7 @@ export function SearchForm() {
   return (
     <div className="flex-grow">
       <div className="relative">
-        <SearchIcon className="absolute left-3 top-1/2 size-5 -translate-y-1/2 transform text-neutral-500" />
+        <SearchIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 transform text-neutral-500" />
         <Input
           placeholder="Search schools"
           name="search"

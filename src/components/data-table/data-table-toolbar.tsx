@@ -53,7 +53,7 @@ export function DataTableFilter({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">
-            <SearchIcon className="h-4 w-4 sm:mr-2" />
+            <SearchIcon className="size-4 sm:mr-2" />
             <span className="sr-only whitespace-nowrap sm:not-sr-only">
               Search
             </span>

@@ -41,6 +41,20 @@ export function SchoolList({ searchQuery }: { searchQuery: string }) {
       school.description.toLowerCase().includes(searchQuery)
   );
 
+  if (displaySchools.length === 0) {
+    return (
+      <div className={cardStyles}>
+        <span className="font-semibold">No schools found</span>
+        <Image
+          src="/assets/no-data.svg"
+          width="200"
+          height="200"
+          alt="no schools placeholder image"
+        />
+      </div>
+    );
+  }
+
   const ownedSchools = displaySchools.filter(
     (school) => school.role === "manager"
   );

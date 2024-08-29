@@ -35,7 +35,7 @@ export function MembershipsDataTableToolbar() {
   return (
     <div className="flex flex-col gap-2.5 md:flex-row md:justify-between">
       <div className="relative">
-        <SearchIcon className="absolute left-3 top-1/2 size-5 -translate-y-1/2 transform text-neutral-500" />
+        <SearchIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 transform text-neutral-500" />
         <Input
           placeholder="Search"
           value={(table.getColumn("Member")?.getFilterValue() as string) ?? ""}

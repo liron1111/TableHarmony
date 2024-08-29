@@ -29,7 +29,7 @@ export function Sidebar() {
   const path = usePathname();
 
   return (
-    <aside className="relative left-0 z-10 hidden h-[calc(100vh-69px)] w-60 flex-col border-r border-border md:flex">
+    <aside className="relative left-0 z-10 hidden h-screen w-60 flex-col border-r border-border md:flex">
       <nav className="flex h-full flex-col items-start space-y-2 px-4 py-5">
         <Button asChild variant="ghost" className="w-full justify-start">
           <Link href={`/schools/${school._id}`}>
