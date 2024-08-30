@@ -28,8 +28,8 @@ export function SchoolList({ searchQuery }: { searchQuery: string }) {
         <Image
           src="/assets/education.svg"
           alt="Enrollments"
-          width={300}
-          height={300}
+          width="300"
+          height="300"
         />
       </div>
     );
@@ -47,8 +47,8 @@ export function SchoolList({ searchQuery }: { searchQuery: string }) {
         <span className="font-semibold">No schools found</span>
         <Image
           src="/assets/no-data.svg"
-          width="200"
-          height="200"
+          width="300"
+          height="300"
           alt="no schools placeholder image"
         />
       </div>

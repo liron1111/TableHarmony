@@ -9,11 +9,18 @@ export function ClerkProvider({ children }: { children: React.ReactNode }) {
 
   if (resolvedTheme === "dark") {
     return (
-      <ImportedClerkProvider appearance={{ baseTheme: dark }}>
+      <ImportedClerkProvider
+        afterSignOutUrl="/"
+        appearance={{ baseTheme: dark }}
+      >
         {children}
       </ImportedClerkProvider>
     );
   }
 
-  return <ImportedClerkProvider>{children}</ImportedClerkProvider>;
+  return (
+    <ImportedClerkProvider afterSignOutUrl="/">
+      {children}
+    </ImportedClerkProvider>
+  );
 }

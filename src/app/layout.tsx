@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 import { BASE_URL, createMetadata } from "@/utils/metadata";
 
 import { ContextProvider } from "@/components/providers/context-provider";
-import NextTopLoader from "nextjs-toploader";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import NextTopLoader from "nextjs-toploader";
 
 const fontSans = FontSans({
   subsets: ["latin"],
