@@ -18,7 +18,7 @@ export function ConfigurationPanel({
     >
       <header
         className={cn("rounded-t-md border-b bg-muted/40 px-4 py-3 sm:px-6", {
-          "border-destructive bg-destructive/20 text-destructive dark:text-red-500":
+          "border-destructive bg-destructive/20 text-red-500":
             variant === "destructive",
         })}
       >

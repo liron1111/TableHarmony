@@ -32,10 +32,8 @@ export default function SchoolLayout({
   return (
     <School schoolId={params.schoolId}>
       <div className="flex">
-        <div className="pr-4">
-          <Sidebar />
-        </div>
-        <div className="relative w-full overflow-x-auto">{children}</div>
+        <Sidebar />
+        <div className="relative w-full overflow-x-hidden">{children}</div>
       </div>
     </School>
   );
