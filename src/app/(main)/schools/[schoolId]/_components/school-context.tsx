@@ -4,19 +4,25 @@ import { useQuery } from "convex/react";
 import { Doc, Id } from "../../../../../../convex/_generated/dataModel";
 import { api } from "../../../../../../convex/_generated/api";
 
-import { createContext } from "react";
+import React, { createContext, useContext } from "react";
 import { redirect } from "next/navigation";
 
 interface SchoolContextType {
   school: Doc<"schools">;
-  role: "student" | "teacher" | "manager" | "guest";
+  membership: Doc<"schoolMemberships"> | null;
 }
 
-export const SchoolContext = createContext<SchoolContextType>(
-  {} as SchoolContextType
-);
+const SchoolContext = createContext<SchoolContextType | undefined>(undefined);
 
-export function School({
+export function useSchool() {
+  const context = useContext(SchoolContext);
+  if (context === undefined) {
+    throw new Error("useSchool must be used within a SchoolProvider");
+  }
+  return context;
+}
+
+export function SchoolProvider({
   children,
   schoolId,
 }: {
@@ -34,18 +40,12 @@ export function School({
     userId: user?._id as Id<"users">,
   });
 
-  if (school === null) redirect("/schools");
+  if (school === undefined || membership === undefined) return null;
+  if (!school || (!school.isPublic && !membership)) redirect("/schools");
 
-  //TODO: better looking skeleton
-  if (!school || membership === undefined) return <></>;
-
-  if (membership === null && !school.isPublic) redirect("/schools");
+  const value: SchoolContextType = { school, membership };
 
   return (
-    <SchoolContext.Provider
-      value={{ school, role: membership?.role ?? "guest" }}
-    >
-      {children}
-    </SchoolContext.Provider>
+    <SchoolContext.Provider value={value}>{children}</SchoolContext.Provider>
   );
 }

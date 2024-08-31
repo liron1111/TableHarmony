@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SchoolsCombobox } from "@/app/(main)/schools/[schoolId]/_components/schools-combobox";
 import { Button } from "@/components/ui/button";
 import { SearchIcon, SettingsIcon, SlashIcon } from "lucide-react";
-import { School } from "@/app/(main)/schools/[schoolId]/_components/school-context";
+import { SchoolProvider } from "@/app/(main)/schools/[schoolId]/_components/school-context";
 
 export function HeaderLinks() {
   const { isMobile } = useMediaQuery();
@@ -96,9 +96,9 @@ function Links() {
   return (
     <div className="flex items-center gap-3">
       <SlashIcon className="size-3 -rotate-12 text-muted-foreground" />
-      <School schoolId={schoolId}>
+      <SchoolProvider schoolId={schoolId}>
         <SchoolsCombobox />
-      </School>
+      </SchoolProvider>
     </div>
   );
 }

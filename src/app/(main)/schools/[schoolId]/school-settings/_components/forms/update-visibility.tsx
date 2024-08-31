@@ -1,16 +1,16 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 import { useMutation } from "convex/react";
 import { api } from "../../../../../../../../convex/_generated/api";
-import { SchoolContext } from "../../../_components/school-context";
+import { useSchool } from "../../../_components/school-context";
 
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
 
 export function UpdateVisibilityForm() {
-  const { school } = useContext(SchoolContext);
+  const { school } = useSchool();
   const updateSchool = useMutation(api.schools.updateSchool);
 
   const [checked, setChecked] = useState(school.isPublic);

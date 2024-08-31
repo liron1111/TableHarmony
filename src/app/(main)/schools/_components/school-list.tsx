@@ -56,13 +56,13 @@ export function SchoolList({ searchQuery }: { searchQuery: string }) {
   }
 
   const ownedSchools = displaySchools.filter(
-    (school) => school.role === "manager"
+    (school) => school.membership.role === "manager"
   );
   const teachingSchools = displaySchools.filter(
-    (school) => school.role === "teacher"
+    (school) => school.membership.role === "teacher"
   );
   const studentSchools = displaySchools.filter(
-    (school) => school.role === "student"
+    (school) => school.membership.role === "student"
   );
 
   return (

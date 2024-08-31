@@ -1,4 +1,4 @@
-import { School } from "./_components/school-context";
+import { SchoolProvider } from "./_components/school-context";
 import { Sidebar } from "./_components/sidebar";
 
 import { createMetadata } from "@/utils/metadata";
@@ -30,11 +30,11 @@ export default function SchoolLayout({
   params: { schoolId: string };
 }) {
   return (
-    <School schoolId={params.schoolId}>
+    <SchoolProvider schoolId={params.schoolId}>
       <div className="flex">
         <Sidebar />
         <div className="relative w-full overflow-x-hidden">{children}</div>
       </div>
-    </School>
+    </SchoolProvider>
   );
 }

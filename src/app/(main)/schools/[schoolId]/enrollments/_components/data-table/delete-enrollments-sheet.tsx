@@ -32,7 +32,9 @@ function DeleteEnrollmentsForm({
   setShowSheet: Dispatch<SetStateAction<boolean>>;
 }) {
   const [isPending, setIsPending] = useState(false);
-  const deleteEnrollments = useMutation(api.schools.deleteEnrollments);
+  const deleteEnrollments = useMutation(
+    api.schoolEnrollments.deleteEnrollments
+  );
 
   async function onSubmit() {
     setIsPending(true);

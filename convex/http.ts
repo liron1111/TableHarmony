@@ -1,5 +1,4 @@
 import { httpRouter } from "convex/server";
-import { ConvexError } from "convex/values";
 
 import { api, internal } from "./_generated/api";
 import { httpAction } from "./_generated/server";
@@ -35,32 +34,14 @@ http.route({
           });
           break;
         case "user.updated":
-          const updatedUser = await ctx.runQuery(
-            internal.users.getUserByClerkId,
-            {
-              clerkId: result.data.id!,
-            }
-          );
-
-          if (!updatedUser) throw new ConvexError("User does not exist");
-
           await ctx.runMutation(api.users.updateUser, {
-            userId: updatedUser._id,
+            clerkId: result.data.id,
             image: result.data.image_url,
           });
           break;
         case "user.deleted":
-          const deletedUser = await ctx.runQuery(
-            internal.users.getUserByClerkId,
-            {
-              clerkId: result.data.id!,
-            }
-          );
-
-          if (!deletedUser) throw new ConvexError("User does not exist");
-
           await ctx.runMutation(internal.users.deleteUser, {
-            userId: deletedUser._id,
+            clerkId: result.data.id!,
           });
           break;
       }

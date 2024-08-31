@@ -32,13 +32,13 @@ function AcceptEnrollmentsForm({
   setShowSheet: Dispatch<SetStateAction<boolean>>;
 }) {
   const [isPending, setIsPending] = useState(false);
-  const acceptEnrollments = useMutation(api.schools.acceptEnrollments);
+  const approveEnrollments = useMutation(api.schools.approveEnrollments);
 
   async function onSubmit() {
     setIsPending(true);
 
     try {
-      await acceptEnrollments({ enrollmentIds });
+      await approveEnrollments({ enrollmentIds });
       toast.success("Accpeted enrollments successfully!");
     } catch (error) {
       console.error(error);

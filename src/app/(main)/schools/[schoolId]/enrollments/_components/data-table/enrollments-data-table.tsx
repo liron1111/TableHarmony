@@ -7,20 +7,18 @@ import {
   DataTable,
   DataTableBody,
   DataTablePagination,
-  DataTableSkeleton,
 } from "@/components/data-table";
 
 import { columns } from "./columns";
-import { useContext } from "react";
 import { EnrollmentsDataTableToolbar } from "./toolbar";
 import { cardStyles } from "@/styles/common";
 import Image from "next/image";
-import { SchoolContext } from "../../../_components/school-context";
+import { useSchool } from "../../../_components/school-context";
 
 export function EnrollmentsDataTable() {
-  const { school } = useContext(SchoolContext);
+  const { school } = useSchool();
 
-  const data = useQuery(api.schools.getEnrollments, {
+  const data = useQuery(api.schools.getSchoolEnrollments, {
     schoolId: school._id,
   });
 

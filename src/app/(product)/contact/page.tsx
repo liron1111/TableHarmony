@@ -4,7 +4,7 @@ import { PageHeader, PageHeaderHeading } from "@/components/page-header";
 import { createMetadata } from "@/utils/metadata";
 
 export const metadata = createMetadata({
-  title: "Contact us",
+  title: "Contact",
   description: "Inform us on the website",
 });
 

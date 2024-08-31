@@ -7,7 +7,7 @@ import { useMutation } from "convex/react";
 
 import { toast } from "sonner";
 import { LoaderButton } from "@/components/loader-button";
-import { SchoolContext } from "./school-context";
+import { useSchool } from "./school-context";
 import {
   Sheet,
   SheetContent,
@@ -30,8 +30,7 @@ export function EnrollSchoolForm({
 }: {
   setShowSheet: Dispatch<SetStateAction<boolean>>;
 }) {
-  const { school } = useContext(SchoolContext);
-
+  const { school } = useSchool();
   const [isPending, setIsPending] = useState(false);
   const enroll = useMutation(api.schools.enroll);
 
@@ -81,7 +80,7 @@ export function EnrollSchoolForm({
 
 export function EnrollSchoolSheet() {
   const [showSheet, setShowSheet] = useState(false);
-  const { school } = useContext(SchoolContext);
+  const { school } = useSchool();
 
   return (
     <Sheet open={showSheet} onOpenChange={setShowSheet}>

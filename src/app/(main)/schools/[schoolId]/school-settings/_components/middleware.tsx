@@ -1,13 +1,12 @@
 "use client";
 
-import { useContext } from "react";
-import { SchoolContext } from "../../_components/school-context";
 import { redirect } from "next/navigation";
+import { useSchool } from "../../_components/school-context";
 
 export function AssertSchoolOwner() {
-  const { school, role } = useContext(SchoolContext);
+  const { school, membership } = useSchool();
 
-  if (role !== "manager") return redirect(`/schools/${school._id}`);
+  if (membership?.role !== "manager") return redirect(`/schools/${school._id}`);
 
-  return { school, role };
+  return { school, membership };
 }

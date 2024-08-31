@@ -46,7 +46,7 @@ export function UpdateNameForm() {
 
   async function onSubmit(values: z.infer<typeof updateNameSchema>) {
     try {
-      await updateUser({ userId: user?._id!, name: values.name });
+      await updateUser({ clerkId: user?.clerkId!, name: values.name });
       toast.success("Updated successfully!");
     } catch (error) {
       console.error(error);

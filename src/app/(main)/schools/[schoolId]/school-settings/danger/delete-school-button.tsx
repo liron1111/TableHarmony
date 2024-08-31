@@ -1,14 +1,16 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { DeleteSchoolDialog } from "../../../_components/delete-school-dialog";
-import { SchoolContext } from "../../_components/school-context";
+import { useSchool } from "../../_components/school-context";
 
 export function DeleteSchoolButton() {
-  const { school } = useContext(SchoolContext);
   const [open, setOpen] = useState(false);
+  const { school, membership } = useSchool();
+
+  if (membership?.role !== "manager") return null;
 
   return (
     <>

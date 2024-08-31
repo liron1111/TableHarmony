@@ -12,7 +12,7 @@ export const getNotification = internalQuery({
       .withIndex("by_id", (q) => q.eq("_id", args.notificationId))
       .first();
 
-    if (!notification) return;
+    if (!notification) return null;
 
     return notification;
   },
@@ -29,9 +29,7 @@ export const assertNotificationOwner = internalQuery({
       notificationId: args.notificationId,
     });
 
-    if (!notification) throw new ConvexError("Could not find notification");
-
-    if (notification.userId !== user._id) throw new ConvexError("Unauthorized");
+    if (notification?.userId !== user._id) return null;
 
     return notification;
   },
@@ -81,6 +79,8 @@ export const deleteNotification = mutation({
       notificationId: args.notificationId,
     });
 
+    if (!notification) throw new ConvexError("Could not find notification");
+
     await ctx.db.delete(notification._id);
   },
 });
@@ -90,12 +90,8 @@ export const deleteNotifications = mutation({
     notificationsIds: v.array(v.id("notifications")),
   },
   async handler(ctx, args) {
-    await assertAuthenticated(ctx, {});
-
-    const deletionPromises = args.notificationsIds.map(
-      async (notificationId) => {
-        await deleteNotification(ctx, { notificationId });
-      }
+    const deletionPromises = args.notificationsIds.map((notificationId) =>
+      deleteNotification(ctx, { notificationId })
     );
 
     await Promise.all(deletionPromises);
@@ -112,6 +108,8 @@ export const updateNotification = mutation({
       notificationId: args.notificationId,
     });
 
+    if (!notification) throw new ConvexError("Could not find notification");
+
     await ctx.db.patch(notification._id, {
       isRead: args.isRead ?? notification.isRead,
     });
@@ -124,14 +122,12 @@ export const updateNotifications = mutation({
     isRead: v.optional(v.boolean()),
   },
   async handler(ctx, args) {
-    await assertAuthenticated(ctx, {});
-
-    const updatePromises = args.notificationsIds.map(async (notificationId) => {
-      await updateNotification(ctx, {
+    const updatePromises = args.notificationsIds.map((notificationId) =>
+      updateNotification(ctx, {
         notificationId: notificationId,
         isRead: args.isRead,
-      });
-    });
+      })
+    );
 
     await Promise.all(updatePromises);
   },

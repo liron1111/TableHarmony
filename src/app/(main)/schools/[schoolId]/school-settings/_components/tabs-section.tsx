@@ -4,8 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSchool } from "../../_components/school-context";
 
-export function SettingsTabs({ schoolId }: { schoolId: string }) {
+export function SettingsTabs() {
+  const { school } = useSchool();
+
   const path = usePathname();
   const currentTab = path.split("/").pop();
 
@@ -13,10 +16,10 @@ export function SettingsTabs({ schoolId }: { schoolId: string }) {
     <Tabs value={currentTab} defaultValue={currentTab}>
       <TabsList className="space-x-4">
         <TabsTrigger value="school-settings" asChild>
-          <Link href={`/schools/${schoolId}/school-settings`}>General</Link>
+          <Link href={`/schools/${school?._id}/school-settings`}>General</Link>
         </TabsTrigger>
         <TabsTrigger value="danger" asChild>
-          <Link href={`/schools/${schoolId}/school-settings/danger`}>
+          <Link href={`/schools/${school?._id}/school-settings/danger`}>
             Danger
           </Link>
         </TabsTrigger>

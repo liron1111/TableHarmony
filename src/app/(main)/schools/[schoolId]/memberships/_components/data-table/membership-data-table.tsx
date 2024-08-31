@@ -10,16 +10,15 @@ import {
 } from "@/components/data-table";
 
 import { columns } from "./columns";
-import { useContext } from "react";
 import { cardStyles } from "@/styles/common";
 import Image from "next/image";
-import { SchoolContext } from "../../../_components/school-context";
 import { MembershipsDataTableToolbar } from "./toolbar";
+import { useSchool } from "../../../_components/school-context";
 
 export function MembershipDataTable() {
-  const { school } = useContext(SchoolContext);
+  const { school } = useSchool();
 
-  const data = useQuery(api.schools.getMemberships, {
+  const data = useQuery(api.schools.getSchoolMemberships, {
     schoolId: school._id,
   });
 

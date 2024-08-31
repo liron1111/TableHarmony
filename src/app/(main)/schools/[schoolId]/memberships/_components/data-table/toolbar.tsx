@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useContext } from "react";
 import { DeleteMembershipsSheet } from "./delete-memberships-sheet";
 import { SearchIcon } from "lucide-react";
+import { useSchool } from "../../../_components/school-context";
 
 const roles = [
   {
@@ -27,6 +28,7 @@ const roles = [
 
 export function MembershipsDataTableToolbar() {
   const { table } = useContext(DataTableContext);
+  const { membership } = useSchool();
 
   const selectedMemberships = table
     .getSelectedRowModel()
@@ -46,7 +48,13 @@ export function MembershipsDataTableToolbar() {
         />
       </div>
       <div className="flex flex-wrap gap-2">
-        {table.getSelectedRowModel().rows.length !== 0 && <></>}
+        {table.getSelectedRowModel().rows.length !== 0 && (
+          <>
+            {!selectedMemberships.includes(membership?._id) && (
+              <DeleteMembershipsSheet membershipIds={selectedMemberships} />
+            )}
+          </>
+        )}
         <DataTableFacetedFilter
           column={table.getColumn("Role")}
           title="Role"

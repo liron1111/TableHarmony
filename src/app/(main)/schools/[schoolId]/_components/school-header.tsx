@@ -1,31 +1,29 @@
 "use client";
 
-import { useContext } from "react";
-
 import {
   PageHeader,
   PageHeaderHeading,
   PageHeaderDescription,
   PageActions,
 } from "@/components/page-header";
-import { SchoolContext } from "./school-context";
 import { EnrollSchoolSheet } from "./enroll-school-sheet";
 import { ExitSchoolDialog } from "./exit-school-dialog";
+import { useSchool } from "./school-context";
 
 export function SchoolHeader() {
-  const { school, role } = useContext(SchoolContext);
+  const { school, membership } = useSchool();
 
   return (
     <div>
       <PageHeader>
         <PageHeaderHeading>{school.name}</PageHeaderHeading>
         <PageHeaderDescription>{school.description}</PageHeaderDescription>
-        {role === "guest" && (
+        {!membership && (
           <PageActions>
             <EnrollSchoolSheet />
           </PageActions>
         )}
-        {(role === "teacher" || role === "student") && (
+        {(membership?.role === "teacher" || membership?.role === "student") && (
           <PageActions>
             <ExitSchoolDialog />
           </PageActions>

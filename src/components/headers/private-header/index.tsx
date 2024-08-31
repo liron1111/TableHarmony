@@ -3,7 +3,7 @@
 import { SchoolsCombobox } from "@/app/(main)/schools/[schoolId]/_components/schools-combobox";
 import { HeaderActions } from "./header-actions";
 import { HeaderLinks } from "./header-links";
-import { School } from "@/app/(main)/schools/[schoolId]/_components/school-context";
+import { SchoolProvider } from "@/app/(main)/schools/[schoolId]/_components/school-context";
 import { SchoolSidebarMobile } from "@/app/(main)/schools/[schoolId]/_components/sidebar";
 import useMediaQuery from "@/hooks/use-media-query";
 import { usePathname } from "next/navigation";
@@ -24,12 +24,12 @@ export function PrivateHeader() {
           <HeaderActions />
         </div>
         {schoolId && (
-          <School schoolId={schoolId}>
+          <SchoolProvider schoolId={schoolId}>
             <div className="flex w-full gap-2">
               {isMobile && <SchoolSidebarMobile />}
               <SchoolsCombobox />
             </div>
-          </School>
+          </SchoolProvider>
         )}
       </div>
       <div className="hidden h-14 w-full items-center justify-between p-8 md:flex">

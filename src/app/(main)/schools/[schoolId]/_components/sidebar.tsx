@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 
 import { useContext, useState } from "react";
-import { SchoolContext } from "./school-context";
+import { useSchool } from "./school-context";
 
 import Link from "next/link";
 import {
@@ -14,19 +14,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  ClipboardListIcon,
-  EllipsisVerticalIcon,
-  SettingsIcon,
-  UsersIcon,
-} from "lucide-react";
+import { ClipboardListIcon, SettingsIcon, UsersIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import useMediaQuery from "@/hooks/use-media-query";
 
 export function Sidebar() {
-  const { school, role } = useContext(SchoolContext);
+  const { school, membership } = useSchool();
   const path = usePathname();
   const { isMobile } = useMediaQuery();
 
@@ -56,7 +51,7 @@ export function Sidebar() {
         <div className="flex flex-col gap-8 px-4 py-6 md:px-3">
           <div className="space-y-1">
             <span className="font-medium">Overview</span>
-            {role === "manager" && (
+            {membership?.role === "manager" && (
               <>
                 <Button
                   variant="ghost"
@@ -88,7 +83,7 @@ export function Sidebar() {
         </div>
       </div>
 
-      {role === "manager" && (
+      {membership?.role === "manager" && (
         <div className="flex flex-row items-center border-t px-4 py-2 md:px-3">
           <Button
             asChild
@@ -109,7 +104,7 @@ export function Sidebar() {
 }
 
 export function SchoolSidebarMobile() {
-  const { school, role } = useContext(SchoolContext);
+  const { school, membership } = useSchool();
 
   const path = usePathname();
   const [showSheet, setShowSheet] = useState(false);
@@ -148,7 +143,7 @@ export function SchoolSidebarMobile() {
           <span className="text-sm font-semibold uppercase text-muted-foreground">
             overview
           </span>
-          {role === "manager" && (
+          {membership?.role === "manager" && (
             <>
               <Button
                 variant="ghost"
@@ -185,7 +180,7 @@ export function SchoolSidebarMobile() {
             </>
           )}
         </div>
-        {role === "manager" && (
+        {membership?.role === "manager" && (
           <div className="mt-10 space-y-1">
             <span className="text-sm font-semibold uppercase text-muted-foreground">
               manage

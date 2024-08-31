@@ -12,10 +12,10 @@ import { LoaderButton } from "@/components/loader-button";
 
 import { EditorProvider } from "@tiptap/react";
 import { toast } from "sonner";
-import { SchoolContext } from "../../../_components/school-context";
+import { useSchool } from "../../../_components/school-context";
 
 export function UpdateInfoForm() {
-  const { school } = useContext(SchoolContext);
+  const { school } = useSchool();
   const updateSchool = useMutation(api.schools.updateSchool);
 
   const htmlRef = useRef<string>("");

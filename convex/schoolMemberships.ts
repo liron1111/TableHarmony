@@ -6,9 +6,27 @@ import {
   query,
 } from "./_generated/server";
 
-import { assertAuthenticated } from "./users";
 import { schoolRoleType } from "./schema";
-import { assertSchoolOwner } from "./schools";
+import { assertSchoolOwner, getSchool } from "./schools";
+import { assertAuthenticated } from "./users";
+
+export const assertMembershipAccess = internalQuery({
+  args: { membershipId: v.id("schoolMemberships") },
+  async handler(ctx, args) {
+    const membership = await ctx.db.get(args.membershipId);
+
+    if (!membership) return null;
+
+    const user = await assertAuthenticated(ctx, {});
+
+    if (membership.userId === user._id) return membership;
+
+    const school = await getSchool(ctx, { schoolId: membership.schoolId });
+    if (school?.creatorId === user._id) return membership;
+
+    return null;
+  },
+});
 
 export const createMembership = internalMutation({
   args: {
@@ -19,12 +37,10 @@ export const createMembership = internalMutation({
   async handler(ctx, args) {
     await assertSchoolOwner(ctx, { schoolId: args.schoolId });
 
-    const membership = await ctx.db
-      .query("schoolMemberships")
-      .withIndex("by_schoolId_userId", (q) =>
-        q.eq("schoolId", args.schoolId).eq("userId", args.userId)
-      )
-      .first();
+    const membership = await getMembership(ctx, {
+      schoolId: args.schoolId,
+      userId: args.userId,
+    });
 
     if (membership) throw new ConvexError("User already has a membership");
 
@@ -63,18 +79,28 @@ export const getMembership = query({
   },
 });
 
-export const exit = mutation({
-  args: { schoolId: v.id("schools") },
+export const deleteMembership = internalMutation({
+  args: { membershipId: v.id("schoolMemberships") },
   async handler(ctx, args) {
-    const user = await assertAuthenticated(ctx, {});
-
-    const membership = await getMembership(ctx, {
-      schoolId: args.schoolId,
-      userId: user._id,
+    const membership = await assertMembershipAccess(ctx, {
+      membershipId: args.membershipId,
     });
 
     if (!membership) throw new ConvexError("Membership not found");
 
     await ctx.db.delete(membership._id);
+  },
+});
+
+export const deleteMemberships = mutation({
+  args: { membershipIds: v.array(v.id("schoolMemberships")) },
+  async handler(ctx, args) {
+    const memberships = args.membershipIds;
+
+    const deletionPromises = memberships.map((membership) =>
+      deleteMembership(ctx, { membershipId: membership })
+    );
+
+    await Promise.all(deletionPromises);
   },
 });

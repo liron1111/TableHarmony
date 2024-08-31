@@ -23,10 +23,10 @@ import {
 } from "@/components/ui/popover";
 import { useQuery } from "convex/react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import useMediaQuery from "@/hooks/use-media-query";
-import { SchoolContext } from "./school-context";
+import { useSchool } from "./school-context";
 
 const School = ({ name, image }: { name: string; image: string }) => (
   <div className="flex items-center gap-2">
@@ -44,7 +44,7 @@ const School = ({ name, image }: { name: string; image: string }) => (
 );
 
 export function SchoolsCombobox() {
-  const { school: selectedSchool } = React.useContext(SchoolContext);
+  const { school: selectedSchool } = useSchool();
 
   const router = useRouter();
 

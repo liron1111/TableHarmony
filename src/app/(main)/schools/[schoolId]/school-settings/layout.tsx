@@ -1,5 +1,3 @@
-"use client";
-
 import {
   PageActions,
   PageHeader,
@@ -8,8 +6,6 @@ import {
 } from "@/components/page-header";
 import { SettingsTabs } from "./_components/tabs-section";
 
-import { AssertSchoolOwner } from "./_components/middleware";
-
 export default function SettingsLayout({
   children,
   params,
@@ -17,8 +13,6 @@ export default function SettingsLayout({
   children: React.ReactNode;
   params: { schoolId: string };
 }) {
-  const { school } = AssertSchoolOwner();
-
   return (
     <div className="container">
       <PageHeader>
@@ -27,7 +21,7 @@ export default function SettingsLayout({
           Manage your school&apos;s settings and set preferences.
         </PageHeaderDescription>
         <PageActions>
-          <SettingsTabs schoolId={school?._id} />
+          <SettingsTabs />
         </PageActions>
       </PageHeader>
       {children}

@@ -26,7 +26,7 @@ export function EditBioForm() {
     setIsLoading(true);
 
     try {
-      await updateUser({ userId: user?._id!, bio: htmlRef.current });
+      await updateUser({ clerkId: user?.clerkId!, bio: htmlRef.current });
       toast.success("Updated successfully!");
     } catch (error) {
       console.error(error);

@@ -4,13 +4,12 @@ import "@/styles/tiptap.css";
 
 import { extensions } from "@/components/tiptap";
 import { EditorProvider } from "@tiptap/react";
-import { useContext } from "react";
-import { SchoolContext } from "./school-context";
+import { useSchool } from "./school-context";
 import Image from "next/image";
 import { cardStyles } from "@/styles/common";
 
 export function SchoolInfo() {
-  const { school } = useContext(SchoolContext);
+  const { school } = useSchool();
 
   if (!school.info)
     return (

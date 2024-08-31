@@ -1,6 +1,6 @@
 "use client";
 
-import { ColumnDef, Row } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Doc } from "../../../../../convex/_generated/dataModel";
@@ -33,10 +33,17 @@ export const columns: ColumnDef<Doc<"notifications">>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "_id",
+    accessorKey: "title",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="_id" />
+      <DataTableColumnHeader column={column} title="title" />
     ),
+  },
+  {
+    accessorKey: "isRead",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="isRead" />
+    ),
+    filterFn: "includesString",
   },
   {
     accessorKey: "_creationTime",
@@ -53,18 +60,5 @@ export const columns: ColumnDef<Doc<"notifications">>[] = [
       const dateString = date.toLocaleDateString("en-GB");
       return dateString.toLowerCase().includes(filterValue.toLowerCase());
     },
-  },
-  {
-    accessorKey: "title",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="title" />
-    ),
-  },
-  {
-    accessorKey: "isRead",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="isRead" />
-    ),
-    filterFn: "includesString",
   },
 ];
