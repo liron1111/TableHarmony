@@ -12,7 +12,7 @@ export function HeroSection() {
     <section className="container py-8 md:py-12 md:pb-8 lg:py-24 lg:pb-20">
       <div className="flex flex-col items-center space-y-7 text-center">
         <h1 className="max-w-3xl text-4xl font-bold leading-none tracking-tight md:text-6xl xl:text-7xl">
-          Manage Your Schools in One Place
+          {siteConfig.title}
         </h1>
         <p className="max-w-sm font-light text-muted-foreground md:text-lg lg:text-xl">
           {siteConfig.description}

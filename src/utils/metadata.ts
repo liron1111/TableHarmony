@@ -19,6 +19,7 @@ export function createMetadata(override: Metadata): Metadata {
       ...override.openGraph,
     },
     twitter: {
+      title: siteConfig.name,
       card: "summary_large_image",
       images: "/banner.png",
     },

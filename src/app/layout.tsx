@@ -20,7 +20,7 @@ const fontSans = FontSans({
 export const metadata = createMetadata({
   title: {
     template: `%s | ${siteConfig.name}`,
-    default: `${siteConfig.name} | ${siteConfig.description}`,
+    default: `${siteConfig.name} | ${siteConfig.title}`,
   },
   description: siteConfig.description,
   metadataBase: new URL(BASE_URL),
