@@ -20,7 +20,7 @@ export async function ContextProvider({
         <ConvexProvider>
           <TooltipProvider delayDuration={100}>
             {children}
-            <Toaster />
+            <Toaster duration={2000} richColors />
           </TooltipProvider>
         </ConvexProvider>
       </ClerkProvider>
