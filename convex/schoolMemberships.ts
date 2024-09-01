@@ -8,7 +8,7 @@ import {
 
 import { schoolRoleType } from "./schema";
 import { assertSchoolOwner, getSchool } from "./schools";
-import { assertAuthenticated } from "./users";
+import { getCurrentUser } from "./users";
 
 export const assertMembershipAccess = internalQuery({
   args: { membershipId: v.id("schoolMemberships") },
@@ -17,7 +17,9 @@ export const assertMembershipAccess = internalQuery({
 
     if (!membership) return null;
 
-    const user = await assertAuthenticated(ctx, {});
+    const user = await getCurrentUser(ctx, {});
+
+    if (!user) throw new ConvexError("Unauthorized");
 
     if (membership.userId === user._id) return membership;
 
@@ -35,10 +37,12 @@ export const createMembership = internalMutation({
     role: schoolRoleType,
   },
   async handler(ctx, args) {
-    await assertSchoolOwner(ctx, { schoolId: args.schoolId });
+    const school = await assertSchoolOwner(ctx, { schoolId: args.schoolId });
+
+    if (!school) throw new ConvexError("School not found");
 
     const membership = await getMembership(ctx, {
-      schoolId: args.schoolId,
+      schoolId: school._id,
       userId: args.userId,
     });
 
@@ -54,7 +58,9 @@ export const createMembership = internalMutation({
 
 export const getUserMemberships = internalQuery({
   async handler(ctx) {
-    const user = await assertAuthenticated(ctx, {});
+    const user = await getCurrentUser(ctx, {});
+
+    if (!user) return [];
 
     const memberships = await ctx.db
       .query("schoolMemberships")

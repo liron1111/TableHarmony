@@ -2,7 +2,7 @@ import { ConvexError, v } from "convex/values";
 import { internalMutation, internalQuery, mutation } from "./_generated/server";
 
 import { schoolEnrollmentRoleType } from "./schema";
-import { assertAuthenticated } from "./users";
+import { getCurrentUser } from "./users";
 import { getSchool } from "./schools";
 
 export const assertEnrollmentAccess = internalQuery({
@@ -11,8 +11,10 @@ export const assertEnrollmentAccess = internalQuery({
     const enrollment = await ctx.db.get(args.enrollmentId);
     if (!enrollment) return null;
 
-    const user = await assertAuthenticated(ctx, {});
+    const user = await getCurrentUser(ctx, {});
     const school = await getSchool(ctx, { schoolId: enrollment.schoolId });
+
+    if (!user) throw new ConvexError("Unauthorized");
 
     if (school?.creatorId !== user._id) return null;
 
@@ -26,7 +28,9 @@ export const createEnrollment = internalMutation({
     role: schoolEnrollmentRoleType,
   },
   async handler(ctx, args) {
-    const user = await assertAuthenticated(ctx, {});
+    const user = await getCurrentUser(ctx, {});
+
+    if (!user) throw new ConvexError("Unauthorized");
 
     const enrollment = await ctx.db
       .query("schoolEnrollments")

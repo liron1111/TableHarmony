@@ -1,6 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { internalQuery, mutation, query } from "./_generated/server";
-import { assertAuthenticated } from "./users";
+import { getCurrentUser } from "./users";
 
 export const getNotification = internalQuery({
   args: {
@@ -23,7 +23,9 @@ export const assertNotificationOwner = internalQuery({
     notificationId: v.id("notifications"),
   },
   async handler(ctx, args) {
-    const user = await assertAuthenticated(ctx, {});
+    const user = await getCurrentUser(ctx, {});
+
+    if (!user) return null;
 
     const notification = await getNotification(ctx, {
       notificationId: args.notificationId,
@@ -40,7 +42,9 @@ export const getUserNotifications = query({
     limit: v.optional(v.number()),
   },
   async handler(ctx, args) {
-    const user = await assertAuthenticated(ctx, {});
+    const user = await getCurrentUser(ctx, {});
+
+    if (!user) return null;
 
     const notifications = ctx.db
       .query("notifications")
@@ -57,7 +61,9 @@ export const getUnReadNotifications = query({
     limit: v.optional(v.number()),
   },
   async handler(ctx, args) {
-    const user = await assertAuthenticated(ctx, {});
+    const user = await getCurrentUser(ctx, {});
+
+    if (!user) return null;
 
     const notifications = ctx.db
       .query("notifications")

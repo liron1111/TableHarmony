@@ -7,27 +7,15 @@ import {
 import { ConvexError, v } from "convex/values";
 import { getClerkId } from "./util";
 
-export const assertAuthenticated = internalQuery({
-  async handler(ctx) {
-    const clerkId = await getClerkId(ctx);
-
-    if (!clerkId) throw new ConvexError("Unauthorized");
-
-    const user = await getUserByClerkId(ctx, { clerkId });
-
-    if (!user) throw new ConvexError("User not found");
-
-    return user;
-  },
-});
-
 export const getCurrentUser = query({
   async handler(ctx) {
     const clerkId = await getClerkId(ctx);
 
-    if (!clerkId) throw new ConvexError("Unauthorized");
+    if (!clerkId) return null;
 
     const user = await getUserByClerkId(ctx, { clerkId });
+
+    if (!user) return null;
 
     return user;
   },

@@ -1,6 +1,6 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation } from "./_generated/server";
-import { assertAuthenticated } from "./users";
+import { getCurrentUser } from "./users";
 
 export const createFeedback = mutation({
   args: {
@@ -9,7 +9,9 @@ export const createFeedback = mutation({
     message: v.string(),
   },
   async handler(ctx, args) {
-    const user = await assertAuthenticated(ctx, {});
+    const user = await getCurrentUser(ctx, {});
+
+    if (!user) throw new ConvexError("Unauthorized");
 
     await ctx.db.insert("feedbacks", {
       userId: user._id,

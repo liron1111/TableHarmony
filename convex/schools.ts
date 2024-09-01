@@ -13,7 +13,7 @@ import {
   getMembership,
   getUserMemberships,
 } from "./schoolMemberships";
-import { assertAuthenticated, getUserById } from "./users";
+import { getCurrentUser, getUserById } from "./users";
 import { schoolEnrollmentRoleType } from "./schema";
 import {
   createEnrollment,
@@ -28,7 +28,9 @@ export const createSchool = mutation({
     isPublic: v.boolean(),
   },
   async handler(ctx, args) {
-    const user = await assertAuthenticated(ctx, {});
+    const user = await getCurrentUser(ctx, {});
+
+    if (!user) throw new ConvexError("Unauthorized");
 
     const schoolId = await ctx.db.insert("schools", {
       name: args.name,
@@ -96,7 +98,10 @@ export const assertSchoolOwner = internalQuery({
     schoolId: v.id("schools"),
   },
   async handler(ctx, args) {
-    const user = await assertAuthenticated(ctx, {});
+    const user = await getCurrentUser(ctx, {});
+
+    if (!user) return null;
+
     const school = await getSchool(ctx, { schoolId: args.schoolId });
 
     if (school?.creatorId !== user._id) return null;
@@ -138,23 +143,20 @@ export const deleteSchool = mutation({
 
     if (!school) throw new ConvexError("You do not have access to this school");
 
-    const memberships = await getSchoolMemberships(ctx, {
-      schoolId: args.schoolId,
-    });
+    const [memberships, enrollments] = await Promise.all([
+      getSchoolMemberships(ctx, { schoolId: school._id }),
+      getSchoolEnrollments(ctx, { schoolId: school._id }),
+    ]);
 
-    await deleteMemberships(ctx, {
-      membershipIds: memberships.map((membership) => membership._id),
-    });
-
-    const enrollments = await getSchoolEnrollments(ctx, {
-      schoolId: args.schoolId,
-    });
-
-    await deleteEnrollments(ctx, {
-      enrollmentIds: enrollments.map((enrollment) => enrollment._id),
-    });
-
-    await ctx.db.delete(school._id);
+    await Promise.all([
+      deleteMemberships(ctx, {
+        membershipIds: memberships.map((membership) => membership._id),
+      }),
+      deleteEnrollments(ctx, {
+        enrollmentIds: enrollments.map((enrollment) => enrollment._id),
+      }),
+      ctx.db.delete(school._id),
+    ]);
   },
 });
 
@@ -199,7 +201,9 @@ export const getSchoolEnrollments = query({
 export const exitSchool = mutation({
   args: { schoolId: v.id("schools") },
   async handler(ctx, args) {
-    const user = await assertAuthenticated(ctx, {});
+    const user = await getCurrentUser(ctx, {});
+
+    if (!user) throw new ConvexError("Unauthorized");
 
     const membership = await getMembership(ctx, {
       schoolId: args.schoolId,
