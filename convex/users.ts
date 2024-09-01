@@ -7,6 +7,16 @@ import {
 import { ConvexError, v } from "convex/values";
 import { getClerkId } from "./util";
 
+export const assertAuthenticated = internalMutation({
+  async handler(ctx) {
+    const user = await getCurrentUser(ctx, {});
+
+    if (!user) throw new ConvexError("Unauthorized");
+
+    return user;
+  },
+});
+
 export const getCurrentUser = query({
   async handler(ctx) {
     const clerkId = await getClerkId(ctx);
@@ -14,8 +24,6 @@ export const getCurrentUser = query({
     if (!clerkId) return null;
 
     const user = await getUserByClerkId(ctx, { clerkId });
-
-    if (!user) return null;
 
     return user;
   },
@@ -29,8 +37,6 @@ export const getUserByClerkId = internalQuery({
       .withIndex("by_clerkId", (q) => q.eq("clerkId", args.clerkId))
       .first();
 
-    if (!user) return null;
-
     return user;
   },
 });
@@ -42,8 +48,6 @@ export const getUserById = internalQuery({
       .query("users")
       .withIndex("by_id", (q) => q.eq("_id", args.userId))
       .first();
-
-    if (!user) return null;
 
     return user;
   },

@@ -12,8 +12,6 @@ export const getNotification = internalQuery({
       .withIndex("by_id", (q) => q.eq("_id", args.notificationId))
       .first();
 
-    if (!notification) return null;
-
     return notification;
   },
 });

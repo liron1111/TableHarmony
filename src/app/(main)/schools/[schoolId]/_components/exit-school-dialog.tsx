@@ -7,7 +7,7 @@ import { useMutation } from "convex/react";
 
 import { toast } from "sonner";
 import { LoaderButton } from "@/components/loader-button";
-import { useSchool } from "./school-context";
+import { useSchool } from "./providers/school-provider";
 import {
   Credenza,
   CredenzaClose,
@@ -27,6 +27,8 @@ export function ExitSchoolDialog() {
   const exit = useMutation(api.schools.exitSchool);
 
   async function onSubmit() {
+    if (!school) return;
+
     setIsPending(true);
 
     try {

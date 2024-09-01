@@ -12,7 +12,7 @@ export default function ContactPage() {
   return (
     <div className="container max-w-4xl">
       <PageHeader>
-        <PageHeaderHeading>Contact us</PageHeaderHeading>
+        <PageHeaderHeading>Contact</PageHeaderHeading>
       </PageHeader>
       <article className="prose max-w-2xl dark:prose-invert">
         <Contact />

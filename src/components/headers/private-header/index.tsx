@@ -3,10 +3,11 @@
 import { SchoolsCombobox } from "@/app/(main)/schools/[schoolId]/_components/schools-combobox";
 import { HeaderActions } from "./header-actions";
 import { HeaderLinks } from "./header-links";
-import { SchoolProvider } from "@/app/(main)/schools/[schoolId]/_components/school-context";
+import { SchoolProvider } from "@/app/(main)/schools/[schoolId]/_components/providers/school-provider";
 import { SchoolSidebarMobile } from "@/app/(main)/schools/[schoolId]/_components/sidebar";
 import useMediaQuery from "@/hooks/use-media-query";
 import { usePathname } from "next/navigation";
+import { MembershipProvider } from "@/app/(main)/schools/[schoolId]/_components/providers/membership-provider";
 
 export function PrivateHeader() {
   const { isMobile } = useMediaQuery();
@@ -24,12 +25,14 @@ export function PrivateHeader() {
           <HeaderActions />
         </div>
         {schoolId && (
-          <SchoolProvider schoolId={schoolId}>
-            <div className="flex w-full gap-2">
-              {isMobile && <SchoolSidebarMobile />}
-              <SchoolsCombobox />
-            </div>
-          </SchoolProvider>
+          <div className="flex w-full gap-2">
+            <SchoolProvider>
+              <MembershipProvider>
+                {isMobile && <SchoolSidebarMobile />}
+                <SchoolsCombobox />
+              </MembershipProvider>
+            </SchoolProvider>
+          </div>
         )}
       </div>
       <div className="hidden h-14 w-full items-center justify-between p-8 md:flex">

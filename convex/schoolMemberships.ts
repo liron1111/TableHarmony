@@ -19,7 +19,7 @@ export const assertMembershipAccess = internalQuery({
 
     const user = await getCurrentUser(ctx, {});
 
-    if (!user) throw new ConvexError("Unauthorized");
+    if (!user) return null;
 
     if (membership.userId === user._id) return membership;
 

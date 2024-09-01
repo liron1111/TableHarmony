@@ -8,7 +8,7 @@ import {
 import { createMetadata } from "@/utils/metadata";
 
 export const metadata = createMetadata({
-  title: "Privacy Policy",
+  title: "Privacy policy",
   description: "Legal document informing you of our policies and procedures",
 });
 

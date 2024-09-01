@@ -43,7 +43,7 @@ function Links() {
           href="/contact"
           className="text-xs text-muted-foreground duration-200 hover:text-foreground"
         >
-          Contact us
+          Contact
         </Link>
       </div>
       <div className="flex flex-col space-y-4">

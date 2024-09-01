@@ -8,10 +8,8 @@ import { SettingsTabs } from "./_components/tabs-section";
 
 export default function SettingsLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: { schoolId: string };
 }) {
   return (
     <div className="container">

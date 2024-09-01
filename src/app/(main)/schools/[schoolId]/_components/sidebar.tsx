@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 
 import { useContext, useState } from "react";
-import { useSchool } from "./school-context";
+import { useSchool } from "./providers/school-provider";
 
 import Link from "next/link";
 import {
@@ -19,9 +19,11 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import useMediaQuery from "@/hooks/use-media-query";
+import { useMembership } from "./providers/membership-provider";
 
 export function Sidebar() {
-  const { school, membership } = useSchool();
+  const { school } = useSchool();
+  const { membership } = useMembership();
   const path = usePathname();
   const { isMobile } = useMediaQuery();
 
@@ -29,24 +31,6 @@ export function Sidebar() {
 
   return (
     <aside className="fixed z-30 flex h-[calc(100vh-69px)] shrink-0 flex-col bg-card max-md:inset-0 max-md:bg-background/80 max-md:pt-14 max-md:text-[15px] max-md:backdrop-blur-md md:sticky md:top-0 md:w-[240px] md:border-e xl:w-[260px]">
-      <div className="flex flex-col gap-2 px-4 pt-2 max-md:hidden md:px-3 md:pt-4">
-        <div className="flex flex-row items-center gap-2 border-b pb-2 max-md:hidden">
-          <Image
-            src={school.image}
-            alt={`${school.name} logo`}
-            width="50"
-            height="50"
-            className="rounded-md"
-          />
-          <Link
-            className="truncate text-xl font-medium"
-            href={`/schools/${school._id}`}
-          >
-            {school.name}
-          </Link>
-        </div>
-      </div>
-
       <div className="flex-1 overflow-hidden">
         <div className="flex flex-col gap-8 px-4 py-6 md:px-3">
           <div className="space-y-1">
@@ -60,7 +44,7 @@ export function Sidebar() {
                   })}
                   asChild
                 >
-                  <Link href={`/schools/${school._id}/memberships`}>
+                  <Link href={`/schools/${school?._id}/memberships`}>
                     <UsersIcon className="mr-2 size-5" />
                     Memberships
                   </Link>
@@ -72,7 +56,7 @@ export function Sidebar() {
                   })}
                   asChild
                 >
-                  <Link href={`/schools/${school._id}/enrollments`}>
+                  <Link href={`/schools/${school?._id}/enrollments`}>
                     <ClipboardListIcon className="mr-2 size-5" />
                     Enrollments
                   </Link>
@@ -92,7 +76,7 @@ export function Sidebar() {
               "bg-muted": path.includes("/school-settings"),
             })}
           >
-            <Link href={`/schools/${school._id}/school-settings`}>
+            <Link href={`/schools/${school?._id}/school-settings`}>
               <SettingsIcon className="mr-2 size-5" />
               School settings
             </Link>
@@ -104,7 +88,8 @@ export function Sidebar() {
 }
 
 export function SchoolSidebarMobile() {
-  const { school, membership } = useSchool();
+  const { school } = useSchool();
+  const { membership } = useMembership();
 
   const path = usePathname();
   const [showSheet, setShowSheet] = useState(false);
@@ -133,9 +118,9 @@ export function SchoolSidebarMobile() {
       </SheetTrigger>
       <SheetContent side="left">
         <SheetHeader>
-          <SheetTitle className="truncate">{school.name}</SheetTitle>
+          <SheetTitle className="truncate">{school?.name}</SheetTitle>
           <SheetDescription className="truncate">
-            {school.description}
+            {school?.description}
           </SheetDescription>
         </SheetHeader>
 
@@ -154,7 +139,7 @@ export function SchoolSidebarMobile() {
                 asChild
               >
                 <Link
-                  href={`/schools/${school._id}/enrollments`}
+                  href={`/schools/${school?._id}/enrollments`}
                   className="flex items-center gap-2"
                 >
                   <ClipboardListIcon className="size-4" />
@@ -170,7 +155,7 @@ export function SchoolSidebarMobile() {
                 asChild
               >
                 <Link
-                  href={`/schools/${school._id}/memberships`}
+                  href={`/schools/${school?._id}/memberships`}
                   className="flex items-center gap-2"
                 >
                   <UsersIcon className="size-4" />
@@ -194,7 +179,7 @@ export function SchoolSidebarMobile() {
               asChild
             >
               <Link
-                href={`/schools/${school._id}/school-settings`}
+                href={`/schools/${school?._id}/school-settings`}
                 className="flex items-center gap-2"
               >
                 <SettingsIcon className="size-4" />

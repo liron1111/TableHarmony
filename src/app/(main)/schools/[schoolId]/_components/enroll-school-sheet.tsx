@@ -7,7 +7,7 @@ import { useMutation } from "convex/react";
 
 import { toast } from "sonner";
 import { LoaderButton } from "@/components/loader-button";
-import { useSchool } from "./school-context";
+import { useSchool } from "./providers/school-provider";
 import {
   Sheet,
   SheetContent,
@@ -37,6 +37,8 @@ export function EnrollSchoolForm({
   const [role, setRole] = useState<"teacher" | "student">("student");
 
   async function onSubmit() {
+    if (!school) return;
+
     setIsPending(true);
 
     try {
@@ -84,15 +86,15 @@ export function EnrollSchoolSheet() {
 
   return (
     <Sheet open={showSheet} onOpenChange={setShowSheet}>
-      <SheetTrigger>
+      <SheetTrigger asChild>
         <Button>Enroll</Button>
       </SheetTrigger>
 
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>{school.name} enrollment</SheetTitle>
+          <SheetTitle>{school?.name} enrollment</SheetTitle>
           <SheetDescription>
-            Please enter your details to enroll to {school.name}.
+            Please enter your details to enroll to {school?.name}.
           </SheetDescription>
         </SheetHeader>
         <EnrollSchoolForm setShowSheet={setShowSheet} />

@@ -13,7 +13,7 @@ import {
   getMembership,
   getUserMemberships,
 } from "./schoolMemberships";
-import { getCurrentUser, getUserById } from "./users";
+import { assertAuthenticated, getCurrentUser, getUserById } from "./users";
 import { schoolEnrollmentRoleType } from "./schema";
 import {
   createEnrollment,
@@ -28,9 +28,7 @@ export const createSchool = mutation({
     isPublic: v.boolean(),
   },
   async handler(ctx, args) {
-    const user = await getCurrentUser(ctx, {});
-
-    if (!user) throw new ConvexError("Unauthorized");
+    const user = await assertAuthenticated(ctx, {});
 
     const schoolId = await ctx.db.insert("schools", {
       name: args.name,
@@ -57,8 +55,6 @@ export const getSchool = query({
       .query("schools")
       .withIndex("by_id", (q) => q.eq("_id", args.schoolId))
       .first();
-
-    if (!school) return null;
 
     return school;
   },
@@ -201,9 +197,7 @@ export const getSchoolEnrollments = query({
 export const exitSchool = mutation({
   args: { schoolId: v.id("schools") },
   async handler(ctx, args) {
-    const user = await getCurrentUser(ctx, {});
-
-    if (!user) throw new ConvexError("Unauthorized");
+    const user = await assertAuthenticated(ctx, {});
 
     const membership = await getMembership(ctx, {
       schoolId: args.schoolId,

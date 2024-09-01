@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useSchool } from "../../_components/school-context";
+import { useSchool } from "../../_components/providers/school-provider";
 
 export function SettingsTabs() {
   const { school } = useSchool();

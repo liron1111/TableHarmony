@@ -2,7 +2,7 @@
 
 import "@/styles/tiptap.css";
 
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 import { useMutation } from "convex/react";
 import { api } from "../../../../../../../../convex/_generated/api";
@@ -12,7 +12,7 @@ import { LoaderButton } from "@/components/loader-button";
 
 import { EditorProvider } from "@tiptap/react";
 import { toast } from "sonner";
-import { useSchool } from "../../../_components/school-context";
+import { useSchool } from "../../../_components/providers/school-provider";
 
 export function UpdateInfoForm() {
   const { school } = useSchool();
@@ -50,7 +50,7 @@ export function UpdateInfoForm() {
         }}
         slotBefore={<MenuBar />}
         extensions={extensions}
-        content={school.info}
+        content={school?.info}
         editable={true}
         immediatelyRender={false}
       />

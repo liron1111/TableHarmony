@@ -21,6 +21,8 @@ export default function ErrorPage({
     AUTHENTICATION_ERROR_MESSAGE
   );
 
+  const isDev = process.env.NODE_ENV === "development";
+
   return (
     <div className="container flex flex-col items-center">
       {isAuthenticationError ? (
@@ -49,6 +51,9 @@ export default function ErrorPage({
         <>
           <PageHeader variant="center">
             <PageHeaderHeading>Oops! Something went wrong</PageHeaderHeading>
+            {isDev && (
+              <PageHeaderDescription>{error.message}</PageHeaderDescription>
+            )}
           </PageHeader>
           <Image
             src="/assets/fixing-bugs.svg"

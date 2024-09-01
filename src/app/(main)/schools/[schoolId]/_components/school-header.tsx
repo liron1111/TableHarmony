@@ -8,16 +8,18 @@ import {
 } from "@/components/page-header";
 import { EnrollSchoolSheet } from "./enroll-school-sheet";
 import { ExitSchoolDialog } from "./exit-school-dialog";
-import { useSchool } from "./school-context";
+import { useSchool } from "./providers/school-provider";
+import { useMembership } from "./providers/membership-provider";
 
 export function SchoolHeader() {
-  const { school, membership } = useSchool();
+  const { school } = useSchool();
+  const { membership } = useMembership();
 
   return (
     <div>
       <PageHeader>
-        <PageHeaderHeading>{school.name}</PageHeaderHeading>
-        <PageHeaderDescription>{school.description}</PageHeaderDescription>
+        <PageHeaderHeading>{school?.name}</PageHeaderHeading>
+        <PageHeaderDescription>{school?.description}</PageHeaderDescription>
         {!membership && (
           <PageActions>
             <EnrollSchoolSheet />

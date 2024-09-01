@@ -26,7 +26,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import useMediaQuery from "@/hooks/use-media-query";
-import { useSchool } from "./school-context";
+import { useSchool } from "./providers/school-provider";
 
 const School = ({ name, image }: { name: string; image: string }) => (
   <div className="flex items-center gap-2">

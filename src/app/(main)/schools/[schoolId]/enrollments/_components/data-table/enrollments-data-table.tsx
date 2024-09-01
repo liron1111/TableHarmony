@@ -13,13 +13,13 @@ import { columns } from "./columns";
 import { EnrollmentsDataTableToolbar } from "./toolbar";
 import { cardStyles } from "@/styles/common";
 import Image from "next/image";
-import { useSchool } from "../../../_components/school-context";
+import { useSchool } from "../../../_components/providers/school-provider";
 
 export function EnrollmentsDataTable() {
   const { school } = useSchool();
 
   const data = useQuery(api.schools.getSchoolEnrollments, {
-    schoolId: school._id,
+    schoolId: school?._id!,
   });
 
   if (!data) return <></>; //TODO: skeleton ?

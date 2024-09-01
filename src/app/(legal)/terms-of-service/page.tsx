@@ -8,7 +8,7 @@ import {
 import { createMetadata } from "@/utils/metadata";
 
 export const metadata = createMetadata({
-  title: "Terms Of Service",
+  title: "Terms of service",
   description: "Legal agreement between us and our users.",
 });
 

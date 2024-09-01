@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 
 import { useMutation } from "convex/react";
 import { api } from "../../../../../../../../convex/_generated/api";
-import { useSchool } from "../../../_components/school-context";
+import { useSchool } from "../../../_components/providers/school-provider";
 
 import {
   Form,
@@ -20,6 +20,7 @@ import {
 import { LoaderButton } from "@/components/loader-button";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
+import { useEffect } from "react";
 
 const updateDescriptionSchema = z.object({
   description: z.string().max(50),
@@ -32,13 +33,19 @@ export function UpdateDescriptionForm() {
   const form = useForm<z.infer<typeof updateDescriptionSchema>>({
     resolver: zodResolver(updateDescriptionSchema),
     defaultValues: {
-      description: school.description,
+      description: school?.description,
     },
   });
+
+  useEffect(() => {
+    form.reset({ description: school?.description });
+  }, [school?.description, form]);
 
   const isLoading = form.formState.isSubmitting;
 
   async function onSubmit(values: z.infer<typeof updateDescriptionSchema>) {
+    if (!school) return;
+
     try {
       await updateSchool({
         schoolId: school._id,

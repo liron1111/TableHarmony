@@ -13,13 +13,13 @@ import { columns } from "./columns";
 import { cardStyles } from "@/styles/common";
 import Image from "next/image";
 import { MembershipsDataTableToolbar } from "./toolbar";
-import { useSchool } from "../../../_components/school-context";
+import { useSchool } from "../../../_components/providers/school-provider";
 
 export function MembershipDataTable() {
   const { school } = useSchool();
 
   const data = useQuery(api.schools.getSchoolMemberships, {
-    schoolId: school._id,
+    schoolId: school?._id!,
   });
 
   if (!data) return <></>;

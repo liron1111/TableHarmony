@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input";
 import { useContext } from "react";
 import { DeleteMembershipsSheet } from "./delete-memberships-sheet";
 import { SearchIcon } from "lucide-react";
-import { useSchool } from "../../../_components/school-context";
+import { useSchool } from "../../../_components/providers/school-provider";
+import { useMembership } from "../../../_components/providers/membership-provider";
 
 const roles = [
   {
@@ -28,7 +29,7 @@ const roles = [
 
 export function MembershipsDataTableToolbar() {
   const { table } = useContext(DataTableContext);
-  const { membership } = useSchool();
+  const { membership } = useMembership();
 
   const selectedMemberships = table
     .getSelectedRowModel()
