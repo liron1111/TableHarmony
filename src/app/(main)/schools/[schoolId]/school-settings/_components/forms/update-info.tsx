@@ -13,6 +13,7 @@ import { LoaderButton } from "@/components/loader-button";
 import { EditorProvider } from "@tiptap/react";
 import { toast } from "sonner";
 import { useSchool } from "../../../_components/providers/school-provider";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function UpdateInfoForm() {
   const { school } = useSchool();
@@ -41,6 +42,8 @@ export function UpdateInfoForm() {
 
     setIsLoading(false);
   }
+
+  if (!school) return <Skeleton className="h-64 w-full" />;
 
   return (
     <div className="w-full space-y-4">

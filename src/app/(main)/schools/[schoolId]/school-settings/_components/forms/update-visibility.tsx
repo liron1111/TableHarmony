@@ -35,10 +35,13 @@ export function UpdateVisibilityForm() {
   }
 
   return (
-    <Switch
-      aria-label="visibility"
-      checked={checked}
-      onCheckedChange={handleCheckedChange}
-    />
+    <div className="flex max-w-md flex-row items-center justify-between rounded-lg border p-4">
+      <span className="text-base font-medium">Is public</span>
+      <Switch
+        aria-label="visibility"
+        checked={checked}
+        onCheckedChange={handleCheckedChange}
+      />
+    </div>
   );
 }

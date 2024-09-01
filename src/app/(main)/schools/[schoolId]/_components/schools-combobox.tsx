@@ -49,13 +49,14 @@ export function SchoolsCombobox() {
   const router = useRouter();
 
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(selectedSchool?._id as string);
+  const [value, setValue] = React.useState(selectedSchool?._id);
   const [query, setQuery] = React.useState("");
   const { isMobile } = useMediaQuery();
 
   const schools = useQuery(api.schools.getUserSchools);
 
-  if (!schools) return <Skeleton className="h-6 w-full md:w-28" />;
+  if (!schools || !selectedSchool)
+    return <Skeleton className="h-6 w-full md:w-28" />;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -67,11 +68,7 @@ export function SchoolsCombobox() {
             aria-expanded={open}
             className="w-fit justify-between"
           >
-            {!selectedSchool ? (
-              "schools"
-            ) : (
-              <School name={selectedSchool.name} image={selectedSchool.image} />
-            )}
+            <School name={selectedSchool.name} image={selectedSchool.image} />
             <ChevronsUpDown className="ml-4 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         ) : (
@@ -81,11 +78,7 @@ export function SchoolsCombobox() {
             aria-expanded={open}
             className="w-full justify-between"
           >
-            {!selectedSchool ? (
-              "Schools"
-            ) : (
-              <School name={selectedSchool.name} image={selectedSchool.image} />
-            )}
+            <School name={selectedSchool.name} image={selectedSchool.image} />
             <ChevronsUpDown className="ml-4 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         )}
@@ -103,9 +96,10 @@ export function SchoolsCombobox() {
               {schools.map((school) => (
                 <CommandItem
                   key={school._id}
-                  value={school.name}
+                  value={school._id}
+                  keywords={[school.name]}
                   onSelect={(currentValue: string) => {
-                    setValue(currentValue);
+                    setValue(currentValue as Id<"schools">);
                     setOpen(false);
                     router.push(`/schools/${school._id}`);
                   }}

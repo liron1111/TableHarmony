@@ -3,24 +3,24 @@
 import {
   PageHeader,
   PageHeaderHeading,
-  PageHeaderDescription,
   PageActions,
+  PageHeaderDescription,
 } from "@/components/page-header";
 import { EnrollSchoolSheet } from "./enroll-school-sheet";
 import { ExitSchoolDialog } from "./exit-school-dialog";
-import { useSchool } from "./providers/school-provider";
 import { useMembership } from "./providers/membership-provider";
 
 export function SchoolHeader() {
-  const { school } = useSchool();
   const { membership } = useMembership();
 
   return (
     <div>
       <PageHeader>
-        <PageHeaderHeading>{school?.name}</PageHeaderHeading>
-        <PageHeaderDescription>{school?.description}</PageHeaderDescription>
-        {!membership && (
+        <PageHeaderHeading>Overview</PageHeaderHeading>
+        <PageHeaderDescription>
+          General info about this school
+        </PageHeaderDescription>
+        {membership === null && (
           <PageActions>
             <EnrollSchoolSheet />
           </PageActions>

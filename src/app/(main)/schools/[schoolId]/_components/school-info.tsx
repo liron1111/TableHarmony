@@ -11,17 +11,15 @@ import { cardStyles } from "@/styles/common";
 export function SchoolInfo() {
   const { school } = useSchool();
 
-  if (!school) return null;
-
-  if (!school.info)
+  if (!school?.info)
     return (
       <div className={cardStyles}>
         <div className="flex flex-col items-center gap-2 text-center">
           <span className="text-balance text-lg font-semibold md:text-xl">
-            Welcome to {school.name}!
+            Welcome to {school?.name}!
           </span>
           <p className="text-balance text-muted-foreground">
-            {school.description}
+            {school?.description}
           </p>
         </div>
         <Image
