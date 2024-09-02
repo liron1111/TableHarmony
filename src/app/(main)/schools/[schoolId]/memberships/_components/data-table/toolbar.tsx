@@ -11,6 +11,7 @@ import { DeleteMembershipsSheet } from "./delete-memberships-sheet";
 import { SearchIcon } from "lucide-react";
 import { useSchool } from "../../../_components/providers/school-provider";
 import { useMembership } from "../../../_components/providers/membership-provider";
+import { Button } from "@/components/ui/button";
 
 const roles = [
   {
@@ -49,19 +50,22 @@ export function MembershipsDataTableToolbar() {
         />
       </div>
       <div className="flex flex-wrap gap-2">
-        {table.getSelectedRowModel().rows.length !== 0 && (
-          <>
-            {!selectedMemberships.includes(membership?._id) && (
-              <DeleteMembershipsSheet membershipIds={selectedMemberships} />
-            )}
-          </>
-        )}
         <DataTableFacetedFilter
           column={table.getColumn("Role")}
           title="Role"
           options={roles}
         />
-        <DataTableViewOptions />
+        {table.getSelectedRowModel().rows.length !== 0 && (
+          <>
+            {!selectedMemberships.includes(membership?._id) && (
+              <DeleteMembershipsSheet membershipIds={selectedMemberships}>
+                <Button variant="destructive">
+                  Delete {selectedMemberships.length} selected
+                </Button>
+              </DeleteMembershipsSheet>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

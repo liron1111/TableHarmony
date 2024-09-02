@@ -7,30 +7,24 @@ import { Id } from "../../../../../../../../convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  Credenza,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from "@/components/ui/credenza";
 import { toast } from "sonner";
 import { LoaderButton } from "@/components/loader-button";
 import { Button } from "@/components/ui/button";
-import { UserPlusIcon } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { shapeErrors } from "@/utils/errors";
 
 function AcceptEnrollmentsForm({
   enrollmentIds,
-  setShowSheet,
+  setShowDialog,
 }: {
   enrollmentIds: Id<"schoolEnrollments">[];
-  setShowSheet: Dispatch<SetStateAction<boolean>>;
+  setShowDialog: Dispatch<SetStateAction<boolean>>;
 }) {
   const [isPending, setIsPending] = useState(false);
   const approveEnrollments = useMutation(api.schools.approveEnrollments);
@@ -47,15 +41,15 @@ function AcceptEnrollmentsForm({
     }
 
     setIsPending(false);
-    setShowSheet(false);
+    setShowDialog(false);
   }
 
   return (
-    <div className="mt-4 flex w-full gap-2">
+    <div className="flex gap-2">
       <Button
         variant="outline"
         className="w-full"
-        onClick={() => setShowSheet(false)}
+        onClick={() => setShowDialog(false)}
       >
         Cancel
       </Button>
@@ -66,40 +60,32 @@ function AcceptEnrollmentsForm({
   );
 }
 
-export function AcceptEnrollmentsSheet({
+export function AcceptEnrollmentsDialog({
   enrollmentIds,
+  children,
 }: {
   enrollmentIds: string[];
+  children: React.ReactNode;
 }) {
-  const [showSheet, setShowSheet] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
 
   return (
-    <Sheet open={showSheet} onOpenChange={setShowSheet}>
-      <SheetTrigger>
-        <Tooltip>
-          <TooltipTrigger>
-            <Button variant="ghost" size="icon">
-              <UserPlusIcon className="size-4" />
-              <span className="sr-only">Enrollments</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Accept enrollments</TooltipContent>
-        </Tooltip>
-      </SheetTrigger>
+    <Credenza open={showDialog} onOpenChange={setShowDialog}>
+      <CredenzaTrigger>{children}</CredenzaTrigger>
 
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Accept Enrollments</SheetTitle>
-          <SheetDescription>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>Accept Enrollments</CredenzaTitle>
+          <CredenzaDescription>
             Accept these enrollments to your school.
-          </SheetDescription>
-        </SheetHeader>
+          </CredenzaDescription>
+        </CredenzaHeader>
 
         <AcceptEnrollmentsForm
           enrollmentIds={enrollmentIds as Id<"schoolEnrollments">[]}
-          setShowSheet={setShowSheet}
+          setShowDialog={setShowDialog}
         />
-      </SheetContent>
-    </Sheet>
+      </CredenzaContent>
+    </Credenza>
   );
 }

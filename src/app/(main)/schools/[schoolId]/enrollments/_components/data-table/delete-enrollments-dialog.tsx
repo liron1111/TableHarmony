@@ -7,30 +7,24 @@ import { Id } from "../../../../../../../../convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  Credenza,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from "@/components/ui/credenza";
 import { toast } from "sonner";
 import { LoaderButton } from "@/components/loader-button";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { TrashIcon } from "lucide-react";
 import { shapeErrors } from "@/utils/errors";
 
 function DeleteEnrollmentsForm({
   enrollmentIds,
-  setShowSheet,
+  setShowDialog,
 }: {
   enrollmentIds: Id<"schoolEnrollments">[];
-  setShowSheet: Dispatch<SetStateAction<boolean>>;
+  setShowDialog: Dispatch<SetStateAction<boolean>>;
 }) {
   const [isPending, setIsPending] = useState(false);
   const deleteEnrollments = useMutation(
@@ -49,15 +43,15 @@ function DeleteEnrollmentsForm({
     }
 
     setIsPending(false);
-    setShowSheet(false);
+    setShowDialog(false);
   }
 
   return (
-    <div className="mt-4 flex w-full gap-2">
+    <div className="flex gap-2">
       <Button
         variant="outline"
         className="w-full"
-        onClick={() => setShowSheet(false)}
+        onClick={() => setShowDialog(false)}
       >
         Cancel
       </Button>
@@ -67,47 +61,40 @@ function DeleteEnrollmentsForm({
         variant="destructive"
         onClick={onSubmit}
       >
-        Delete
+        Confirm
       </LoaderButton>
     </div>
   );
 }
 
-export function DeleteEnrollmentsSheet({
+export function DeleteEnrollmentsDialog({
   enrollmentIds,
+  children,
 }: {
   enrollmentIds: string[];
+  children: React.ReactNode;
 }) {
-  const [showSheet, setShowSheet] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
 
   return (
-    <Sheet open={showSheet} onOpenChange={setShowSheet}>
-      <SheetTrigger>
-        <Tooltip>
-          <TooltipTrigger>
-            <Button variant="ghost" size="icon">
-              <TrashIcon className="size-4 text-destructive" />
-              <span className="sr-only">Delete</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Delete enrollments</TooltipContent>
-        </Tooltip>
-      </SheetTrigger>
+    <Credenza open={showDialog} onOpenChange={setShowDialog}>
+      <CredenzaTrigger>{children}</CredenzaTrigger>
 
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Delete Enrollments</SheetTitle>
-          <SheetDescription>
-            These enrollments will immediately be deleted. Once deleted,
-            you&apos;ll no longer be able to view or modify it.
-          </SheetDescription>
-        </SheetHeader>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>
+            Delete Enrollment {enrollmentIds.length > 1 && "s"}
+          </CredenzaTitle>
+          <CredenzaDescription>
+            Once deleted, you&apos;ll no longer be able to view or modify it.
+          </CredenzaDescription>
+        </CredenzaHeader>
 
         <DeleteEnrollmentsForm
           enrollmentIds={enrollmentIds as Id<"schoolEnrollments">[]}
-          setShowSheet={setShowSheet}
+          setShowDialog={setShowDialog}
         />
-      </SheetContent>
-    </Sheet>
+      </CredenzaContent>
+    </Credenza>
   );
 }

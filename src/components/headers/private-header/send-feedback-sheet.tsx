@@ -178,7 +178,7 @@ export function SendFeedbackSheet() {
 
   return (
     <Sheet open={showSheet} onOpenChange={setShowSheet}>
-      <SheetTrigger>
+      <SheetTrigger asChild>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button size="icon" variant="ghost" aria-label="feedback">

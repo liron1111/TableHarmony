@@ -3,13 +3,20 @@
 import {
   DataTableContext,
   DataTableFacetedFilter,
-  DataTableViewOptions,
 } from "@/components/data-table";
 import { useContext } from "react";
-import { DeleteEnrollmentsSheet } from "./delete-enrollments-sheet";
-import { AcceptEnrollmentsSheet } from "./accept-enrollments-sheet";
+import { DeleteEnrollmentsDialog } from "./delete-enrollments-dialog";
+import { AcceptEnrollmentsDialog } from "./accept-enrollments-dialog";
 import { Input } from "@/components/ui/input";
 import { SearchIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDownIcon, Trash2Icon, CheckIcon } from "lucide-react";
 
 const roles = [
   {
@@ -46,18 +53,41 @@ export function EnrollmentsDataTableToolbar() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {table.getSelectedRowModel().rows.length !== 0 && (
-          <>
-            <DeleteEnrollmentsSheet enrollmentIds={selectedEnrollments} />
-            <AcceptEnrollmentsSheet enrollmentIds={selectedEnrollments} />
-          </>
-        )}
         <DataTableFacetedFilter
           column={table.getColumn("Role")}
           title="Role"
           options={roles}
         />
-        <DataTableViewOptions />
+        {table.getSelectedRowModel().rows.length !== 0 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                Actions <ChevronDownIcon className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="flex flex-col">
+              <DropdownMenuItem asChild>
+                <DeleteEnrollmentsDialog enrollmentIds={selectedEnrollments}>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start text-destructive hover:text-destructive"
+                  >
+                    <Trash2Icon className="mr-2 h-4 w-4" />
+                    Delete
+                  </Button>
+                </DeleteEnrollmentsDialog>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <AcceptEnrollmentsDialog enrollmentIds={selectedEnrollments}>
+                  <Button variant="ghost" className="w-full justify-start">
+                    <CheckIcon className="mr-2 h-4 w-4" />
+                    Approve
+                  </Button>
+                </AcceptEnrollmentsDialog>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
     </div>
   );

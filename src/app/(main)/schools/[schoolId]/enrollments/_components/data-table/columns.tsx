@@ -7,8 +7,21 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge, BadgeProps } from "@/components/ui/badge";
 import { Doc } from "../../../../../../../../convex/_generated/dataModel";
+import { DeleteEnrollmentsDialog } from "./delete-enrollments-dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import { CheckIcon, Trash2Icon } from "lucide-react";
+import { AcceptEnrollmentsDialog } from "./accept-enrollments-dialog";
 
-export const columns: ColumnDef<any>[] = [
+type Enrollment = Doc<"schoolEnrollments"> & {
+  user: Doc<"users">;
+};
+
+export const columns: ColumnDef<Enrollment>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -41,7 +54,7 @@ export const columns: ColumnDef<any>[] = [
       <DataTableColumnHeader column={column} title="Assignee" />
     ),
     cell: ({ row }) => {
-      const user: Doc<"users"> = row.original?.user;
+      const user = row.original?.user;
 
       return (
         <div className="flex items-center gap-2">
@@ -54,7 +67,10 @@ export const columns: ColumnDef<any>[] = [
       );
     },
     filterFn: (row, id, value) => {
-      return row.original.user.name.toLowerCase().includes(value.toLowerCase());
+      const user = row.original?.user;
+      if (!user.name) return false;
+
+      return user.name.toLowerCase().includes(value.toLowerCase());
     },
   },
   {
@@ -68,9 +84,6 @@ export const columns: ColumnDef<any>[] = [
       let variant: BadgeProps["variant"];
       switch (role) {
         case "teacher":
-          variant = "destructive";
-          break;
-        case "manager":
           variant = "default";
           break;
         default:
@@ -88,7 +101,7 @@ export const columns: ColumnDef<any>[] = [
   {
     accessorKey: "_creationTime",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="_creationTime" />
+      <DataTableColumnHeader column={column} title="Date" />
     ),
     cell: ({ row }) => {
       return new Date(row.getValue("_creationTime")).toLocaleDateString(
@@ -99,6 +112,36 @@ export const columns: ColumnDef<any>[] = [
       const date = new Date(row.getValue(columnId));
       const dateString = date.toLocaleDateString("en-GB");
       return dateString.toLowerCase().includes(filterValue.toLowerCase());
+    },
+  },
+  {
+    accessorKey: "actions",
+    header: () => <p>Actions</p>,
+    cell: ({ row }) => {
+      return (
+        <div>
+          <DeleteEnrollmentsDialog enrollmentIds={[row.original._id]}>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button variant="ghost" size="icon" aria-label="Delete">
+                  <Trash2Icon className="size-4 text-destructive" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Delete</TooltipContent>
+            </Tooltip>
+          </DeleteEnrollmentsDialog>
+          <AcceptEnrollmentsDialog enrollmentIds={[row.original._id]}>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button variant="ghost" size="icon" aria-label="Accept">
+                  <CheckIcon className="size-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Accept</TooltipContent>
+            </Tooltip>
+          </AcceptEnrollmentsDialog>
+        </div>
+      );
     },
   },
 ];

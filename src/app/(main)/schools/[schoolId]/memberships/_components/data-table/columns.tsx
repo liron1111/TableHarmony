@@ -67,10 +67,10 @@ export const columns: ColumnDef<any>[] = [
       let variant: BadgeProps["variant"];
       switch (role) {
         case "teacher":
-          variant = "destructive";
+          variant = "default";
           break;
         case "manager":
-          variant = "default";
+          variant = "destructive";
           break;
         default:
           variant = "outline";
@@ -87,7 +87,7 @@ export const columns: ColumnDef<any>[] = [
   {
     accessorKey: "_creationTime",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="_creationTime" />
+      <DataTableColumnHeader column={column} title="Joined at" />
     ),
     cell: ({ row }) => {
       return new Date(row.getValue("_creationTime")).toLocaleDateString(

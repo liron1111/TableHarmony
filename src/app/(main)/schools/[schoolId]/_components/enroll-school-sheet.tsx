@@ -72,8 +72,12 @@ export function EnrollSchoolForm({
           ))}
         </SelectContent>
       </Select>
-      <div className="flex justify-end">
-        <LoaderButton isLoading={isPending} onClick={onSubmit}>
+      <div className="flex w-full sm:justify-end">
+        <LoaderButton
+          onClick={onSubmit}
+          isLoading={isPending}
+          className="w-full md:w-auto"
+        >
           Enroll
         </LoaderButton>
       </div>

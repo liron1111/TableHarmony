@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { api } from "../../../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../../../convex/_generated/dataModel";
@@ -17,12 +17,7 @@ import {
 import { toast } from "sonner";
 import { LoaderButton } from "@/components/loader-button";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { TrashIcon } from "lucide-react";
+
 import { shapeErrors } from "@/utils/errors";
 
 function DeleteMembershipsForm({
@@ -75,24 +70,16 @@ function DeleteMembershipsForm({
 
 export function DeleteMembershipsSheet({
   membershipIds,
+  children,
 }: {
   membershipIds: string[];
+  children: React.ReactNode;
 }) {
   const [showSheet, setShowSheet] = useState(false);
 
   return (
     <Sheet open={showSheet} onOpenChange={setShowSheet}>
-      <SheetTrigger>
-        <Tooltip>
-          <TooltipTrigger>
-            <Button variant="ghost" size="icon">
-              <TrashIcon className="size-4 text-destructive" />
-              <span className="sr-only">Delete</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Delete memberships</TooltipContent>
-        </Tooltip>
-      </SheetTrigger>
+      <SheetTrigger>{children}</SheetTrigger>
 
       <SheetContent>
         <SheetHeader>
