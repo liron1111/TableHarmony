@@ -6,12 +6,13 @@ import {
 } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { getClerkId } from "./util";
+import { AuthenticationError, AuthorizationError } from "@/utils/errors";
 
 export const assertAuthenticated = internalMutation({
   async handler(ctx) {
     const user = await getCurrentUser(ctx, {});
 
-    if (!user) throw new ConvexError("Unauthorized");
+    if (!user) throw new AuthenticationError();
 
     return user;
   },
@@ -75,7 +76,7 @@ export const deleteUser = internalMutation({
   async handler(ctx, args) {
     const currentClerkId = await getClerkId(ctx);
 
-    if (currentClerkId !== args.clerkId) throw new ConvexError("Unauthorized");
+    if (currentClerkId !== args.clerkId) throw new AuthorizationError();
 
     const user = await getUserByClerkId(ctx, { clerkId: currentClerkId });
 

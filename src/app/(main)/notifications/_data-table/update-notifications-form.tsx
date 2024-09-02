@@ -14,6 +14,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { shapeErrors } from "@/utils/errors";
 
 export function UpdateNotificationsButton({
   notificationsIds,
@@ -32,8 +33,8 @@ export function UpdateNotificationsButton({
       await updateNotifications({ notificationsIds, isRead: true });
       toast.success("Updated notifications successfully!");
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      const formattedError = shapeErrors({ error });
+      toast.error(formattedError.message);
     }
 
     setIsPending(false);

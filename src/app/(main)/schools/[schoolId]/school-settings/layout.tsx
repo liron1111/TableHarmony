@@ -5,6 +5,11 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import { SettingsTabs } from "./_components/tabs-section";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  description: "Manage your school's settings and set preferences.",
+};
 
 export default function SettingsLayout({
   children,

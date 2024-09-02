@@ -9,6 +9,7 @@ import {
 import { schoolRoleType } from "./schema";
 import { assertSchoolOwner, getSchool } from "./schools";
 import { getCurrentUser } from "./users";
+import { AuthorizationError } from "@/utils/errors";
 
 export const assertMembershipAccess = internalQuery({
   args: { membershipId: v.id("schoolMemberships") },
@@ -39,7 +40,7 @@ export const createMembership = internalMutation({
   async handler(ctx, args) {
     const school = await assertSchoolOwner(ctx, { schoolId: args.schoolId });
 
-    if (!school) throw new ConvexError("School not found");
+    if (!school) throw new AuthorizationError();
 
     const membership = await getMembership(ctx, {
       schoolId: school._id,
@@ -92,7 +93,7 @@ export const deleteMembership = internalMutation({
       membershipId: args.membershipId,
     });
 
-    if (!membership) throw new ConvexError("Membership not found");
+    if (!membership) throw new AuthorizationError();
 
     await ctx.db.delete(membership._id);
   },

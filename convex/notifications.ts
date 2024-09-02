@@ -1,6 +1,7 @@
-import { ConvexError, v } from "convex/values";
+import { v } from "convex/values";
 import { internalQuery, mutation, query } from "./_generated/server";
 import { getCurrentUser } from "./users";
+import { AuthorizationError } from "@/utils/errors";
 
 export const getNotification = internalQuery({
   args: {
@@ -83,7 +84,7 @@ export const deleteNotification = mutation({
       notificationId: args.notificationId,
     });
 
-    if (!notification) throw new ConvexError("Could not find notification");
+    if (!notification) throw new AuthorizationError();
 
     await ctx.db.delete(notification._id);
   },
@@ -112,7 +113,7 @@ export const updateNotification = mutation({
       notificationId: args.notificationId,
     });
 
-    if (!notification) throw new ConvexError("Could not find notification");
+    if (!notification) throw new AuthorizationError();
 
     await ctx.db.patch(notification._id, {
       isRead: args.isRead ?? notification.isRead,

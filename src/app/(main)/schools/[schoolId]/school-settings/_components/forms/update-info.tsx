@@ -14,6 +14,7 @@ import { EditorProvider } from "@tiptap/react";
 import { toast } from "sonner";
 import { useSchool } from "../../../_components/providers/school-provider";
 import { Skeleton } from "@/components/ui/skeleton";
+import { shapeErrors } from "@/utils/errors";
 
 export function UpdateInfoForm() {
   const { school } = useSchool();
@@ -36,8 +37,8 @@ export function UpdateInfoForm() {
       await updateSchool({ schoolId: school?._id!, info });
       toast.success("Updated successfully!");
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      const formattedError = shapeErrors({ error });
+      toast.error(formattedError.message);
     }
 
     setIsLoading(false);

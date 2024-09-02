@@ -1,10 +1,5 @@
-import { ConvexError, v } from "convex/values";
-import {
-  internalMutation,
-  internalQuery,
-  mutation,
-  query,
-} from "./_generated/server";
+import { v } from "convex/values";
+import { internalQuery, mutation, query } from "./_generated/server";
 
 import {
   createMembership,
@@ -20,6 +15,7 @@ import {
   deleteEnrollment,
   deleteEnrollments,
 } from "./schoolEnrollments";
+import { AuthorizationError, shapeErrors, NotFoundError } from "@/utils/errors";
 
 export const createSchool = mutation({
   args: {
@@ -118,7 +114,7 @@ export const updateSchool = mutation({
   async handler(ctx, args) {
     const school = await assertSchoolOwner(ctx, { schoolId: args.schoolId });
 
-    if (!school) throw new ConvexError("You do not have access to this school");
+    if (!school) throw new AuthorizationError();
 
     await ctx.db.patch(school._id, {
       image: args.image ?? school.image,
@@ -137,7 +133,7 @@ export const deleteSchool = mutation({
   async handler(ctx, args) {
     const school = await assertSchoolOwner(ctx, { schoolId: args.schoolId });
 
-    if (!school) throw new ConvexError("You do not have access to this school");
+    if (!school) throw new AuthorizationError();
 
     const [memberships, enrollments] = await Promise.all([
       getSchoolMemberships(ctx, { schoolId: school._id }),
@@ -204,7 +200,7 @@ export const exitSchool = mutation({
       userId: user._id,
     });
 
-    if (!membership) throw new ConvexError("Could not find membership");
+    if (!membership) throw new AuthorizationError();
 
     await deleteMembership(ctx, { membershipId: membership._id });
   },
@@ -233,7 +229,7 @@ export const approveEnrollments = mutation({
     const promises = enrollments.map(async (enrollmentId) => {
       const enrollment = await ctx.db.get(enrollmentId);
 
-      if (!enrollment) throw new ConvexError("Could not find enrollment");
+      if (!enrollment) throw new NotFoundError();
 
       await createMembership(ctx, {
         schoolId: enrollment.schoolId,

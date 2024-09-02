@@ -4,7 +4,7 @@ import { SchoolsCombobox } from "@/app/(main)/schools/[schoolId]/_components/sch
 import { HeaderActions } from "./header-actions";
 import { HeaderLinks } from "./header-links";
 import { SchoolProvider } from "@/app/(main)/schools/[schoolId]/_components/providers/school-provider";
-import { SchoolSidebarMobile } from "@/app/(main)/schools/[schoolId]/_components/sidebar";
+import { SchoolSidebar } from "@/app/(main)/schools/[schoolId]/_components/sidebar";
 import useMediaQuery from "@/hooks/use-media-query";
 import { usePathname } from "next/navigation";
 import { MembershipProvider } from "@/app/(main)/schools/[schoolId]/_components/providers/membership-provider";
@@ -28,7 +28,7 @@ export function PrivateHeader() {
           <div className="flex w-full gap-2">
             <SchoolProvider>
               <MembershipProvider>
-                {isMobile && <SchoolSidebarMobile />}
+                {isMobile && <SchoolSidebar />}
                 <SchoolsCombobox />
               </MembershipProvider>
             </SchoolProvider>

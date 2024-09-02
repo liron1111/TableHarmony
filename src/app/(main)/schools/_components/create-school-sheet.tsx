@@ -32,6 +32,7 @@ import { Switch } from "@/components/ui/switch";
 import { useMutation } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { toast } from "sonner";
+import { shapeErrors } from "@/utils/errors";
 
 const formSchema = z.object({
   name: z
@@ -72,8 +73,8 @@ function CreateSchoolForm({
       });
       toast.success("Created school successfully!");
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      const formattedError = shapeErrors({ error });
+      toast.error(formattedError.message);
     }
 
     setShowSheet(false);

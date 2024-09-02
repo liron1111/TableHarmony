@@ -4,6 +4,7 @@ import { internalMutation, internalQuery, mutation } from "./_generated/server";
 import { schoolEnrollmentRoleType } from "./schema";
 import { assertAuthenticated, getCurrentUser } from "./users";
 import { getSchool } from "./schools";
+import { AuthorizationError } from "@/utils/errors";
 
 export const assertEnrollmentAccess = internalQuery({
   args: { enrollmentId: v.id("schoolEnrollments") },
@@ -54,7 +55,7 @@ export const deleteEnrollment = internalMutation({
       enrollmentId: args.enrollmentId,
     });
 
-    if (!enrollment) throw new ConvexError("Enrollment not found");
+    if (!enrollment) throw new AuthorizationError();
 
     await ctx.db.delete(enrollment._id);
   },

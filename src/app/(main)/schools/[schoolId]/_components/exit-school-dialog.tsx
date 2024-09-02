@@ -19,6 +19,7 @@ import {
   CredenzaTrigger,
 } from "@/components/ui/credenza";
 import { Button } from "@/components/ui/button";
+import { shapeErrors } from "@/utils/errors";
 
 export function ExitSchoolDialog() {
   const { school } = useSchool();
@@ -35,8 +36,8 @@ export function ExitSchoolDialog() {
       await exit({ schoolId: school._id });
       toast.success("Exited successfully!");
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      const formattedError = shapeErrors({ error });
+      toast.error(formattedError.message);
     }
 
     setIsPending(false);

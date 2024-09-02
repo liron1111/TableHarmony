@@ -14,8 +14,10 @@ import Image from "next/image";
 
 export default function ErrorPage({
   error,
+  reset,
 }: {
   error: Error & { digest?: string };
+  reset: () => void;
 }) {
   const isAuthenticationError = error.message.includes(
     AUTHENTICATION_ERROR_MESSAGE
@@ -54,6 +56,11 @@ export default function ErrorPage({
             {isDev && (
               <PageHeaderDescription>{error.message}</PageHeaderDescription>
             )}
+            <PageActions>
+              <Button onClick={reset} size="lg">
+                Try again!
+              </Button>
+            </PageActions>
           </PageHeader>
           <Image
             src="/assets/fixing-bugs.svg"

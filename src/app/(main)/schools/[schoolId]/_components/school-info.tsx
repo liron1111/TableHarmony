@@ -11,6 +11,18 @@ import { cardStyles } from "@/styles/common";
 export function SchoolInfo() {
   const { school } = useSchool();
 
+  if (!school) return null;
+
+  return (
+    <div className="space-y-10">
+      <Info />
+    </div>
+  );
+}
+
+function Info() {
+  const { school } = useSchool();
+
   if (!school?.info)
     return (
       <div className={cardStyles}>

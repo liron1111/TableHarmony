@@ -13,6 +13,7 @@ import { LoaderButton } from "@/components/loader-button";
 import { EditorProvider } from "@tiptap/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import { shapeErrors } from "@/utils/errors";
 
 export function EditBioForm() {
   const user = useQuery(api.users.getCurrentUser);
@@ -29,8 +30,8 @@ export function EditBioForm() {
       await updateUser({ clerkId: user?.clerkId!, bio: htmlRef.current });
       toast.success("Updated successfully!");
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      const formattedError = shapeErrors({ error });
+      toast.error(formattedError.message);
     }
 
     setIsLoading(false);

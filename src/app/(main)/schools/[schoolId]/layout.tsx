@@ -1,5 +1,5 @@
 import { SchoolProvider } from "./_components/providers/school-provider";
-import { Sidebar } from "./_components/sidebar";
+import { SchoolSidebar } from "./_components/sidebar";
 
 import { createMetadata } from "@/utils/metadata";
 
@@ -32,7 +32,7 @@ export default function SchoolLayout({
     <SchoolProvider>
       <MembershipProvider>
         <div className="flex">
-          <Sidebar />
+          <SchoolSidebar />
           {children}
         </div>
       </MembershipProvider>

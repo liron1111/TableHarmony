@@ -31,6 +31,7 @@ import { Id } from "../../../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
+import { shapeErrors } from "@/utils/errors";
 
 const deleteSchema = z.object({
   confirm: z.string(),
@@ -59,8 +60,8 @@ export function DeleteSchoolDialog({
       await deleteSchool({ schoolId: schoolId });
       toast.success("Deleted school successfully!");
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      const formattedError = shapeErrors({ error });
+      toast.error(formattedError.message);
     }
   };
 

@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { shapeErrors } from "@/utils/errors";
 
 export function EnrollSchoolForm({
   setShowSheet,
@@ -45,8 +46,8 @@ export function EnrollSchoolForm({
       await enroll({ role: role, schoolId: school._id });
       toast.success("Enrolled successfully!");
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      const formattedError = shapeErrors({ error });
+      toast.error(formattedError.message);
     }
 
     setShowSheet(false);

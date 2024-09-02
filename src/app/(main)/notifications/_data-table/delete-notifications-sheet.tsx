@@ -23,6 +23,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { TrashIcon } from "lucide-react";
+import { shapeErrors } from "@/utils/errors";
 
 function DeleteNotificationsForm({
   notificationsIds,
@@ -43,8 +44,8 @@ function DeleteNotificationsForm({
       await deleteNotifications({ notificationsIds });
       toast.success("Deleted notifications successfully!");
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      const formattedError = shapeErrors({ error });
+      toast.error(formattedError.message);
     }
 
     setIsPending(false);

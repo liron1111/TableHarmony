@@ -23,6 +23,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { TrashIcon } from "lucide-react";
+import { shapeErrors } from "@/utils/errors";
 
 function DeleteMembershipsForm({
   membershipIds,
@@ -43,8 +44,8 @@ function DeleteMembershipsForm({
       await deleteMemberships({ membershipIds });
       toast.success("Deleted memberships successfully!");
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      const formattedError = shapeErrors({ error });
+      toast.error(formattedError.message);
     }
 
     setIsPending(false);

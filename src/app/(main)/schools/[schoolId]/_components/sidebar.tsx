@@ -2,25 +2,16 @@
 
 import { Button } from "@/components/ui/button";
 
-import { useState } from "react";
 import { useSchool } from "./providers/school-provider";
 
 import Link from "next/link";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { ClipboardListIcon, SettingsIcon, UsersIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import useMediaQuery from "@/hooks/use-media-query";
 import { useMembership } from "./providers/membership-provider";
 
-export function Sidebar() {
+export function SchoolSidebar() {
   const { school } = useSchool();
   const { membership } = useMembership();
   const path = usePathname();
@@ -84,111 +75,5 @@ export function Sidebar() {
         )}
       </div>
     </aside>
-  );
-}
-
-export function SchoolSidebarMobile() {
-  const { school } = useSchool();
-  const { membership } = useMembership();
-
-  const path = usePathname();
-  const [showSheet, setShowSheet] = useState(false);
-
-  return (
-    <Sheet open={showSheet} onOpenChange={setShowSheet}>
-      <SheetTrigger>
-        <Button size="icon" variant="ghost" aria-label="Open sidebar">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            className="lucide lucide-chart-no-axes-gantt size-5"
-          >
-            <path d="M8 6h10" />
-            <path d="M6 12h9" />
-            <path d="M11 18h7" />
-          </svg>
-        </Button>
-      </SheetTrigger>
-      <SheetContent side="left">
-        <SheetHeader>
-          <SheetTitle className="truncate">{school?.name}</SheetTitle>
-          <SheetDescription className="truncate">
-            {school?.description}
-          </SheetDescription>
-        </SheetHeader>
-
-        <div className="mt-10 space-y-1">
-          <span className="text-sm font-semibold uppercase text-muted-foreground">
-            overview
-          </span>
-          {membership?.role === "manager" && (
-            <>
-              <Button
-                variant="ghost"
-                className={cn("flex w-full justify-start", {
-                  "bg-muted": path.includes("enrollments"),
-                })}
-                onClick={() => setShowSheet(false)}
-                asChild
-              >
-                <Link
-                  href={`/schools/${school?._id}/enrollments`}
-                  className="flex items-center gap-2"
-                >
-                  <ClipboardListIcon className="size-4" />
-                  Enrollments
-                </Link>
-              </Button>
-              <Button
-                variant="ghost"
-                className={cn("flex w-full justify-start", {
-                  "bg-muted": path.includes("memberships"),
-                })}
-                onClick={() => setShowSheet(false)}
-                asChild
-              >
-                <Link
-                  href={`/schools/${school?._id}/memberships`}
-                  className="flex items-center gap-2"
-                >
-                  <UsersIcon className="size-4" />
-                  Memberships
-                </Link>
-              </Button>
-            </>
-          )}
-        </div>
-        {membership?.role === "manager" && (
-          <div className="mt-10 space-y-1">
-            <span className="text-sm font-semibold uppercase text-muted-foreground">
-              manage
-            </span>
-            <Button
-              variant="ghost"
-              className={cn("flex w-full justify-start", {
-                "bg-muted": path.includes("school-settings"),
-              })}
-              onClick={() => setShowSheet(false)}
-              asChild
-            >
-              <Link
-                href={`/schools/${school?._id}/school-settings`}
-                className="flex items-center gap-2"
-              >
-                <SettingsIcon className="size-4" />
-                School settings
-              </Link>
-            </Button>
-          </div>
-        )}
-      </SheetContent>
-    </Sheet>
   );
 }

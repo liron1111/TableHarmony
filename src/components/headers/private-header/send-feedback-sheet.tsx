@@ -44,6 +44,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { shapeErrors } from "@/utils/errors";
 
 const LABELS = [
   "Issue",
@@ -87,8 +88,8 @@ function SendFeedbackForm({
       await createFeedback(values);
       toast.success("Feedback successfully sent!");
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      const formattedError = shapeErrors({ error });
+      toast.error(formattedError.message);
     }
 
     form.reset();

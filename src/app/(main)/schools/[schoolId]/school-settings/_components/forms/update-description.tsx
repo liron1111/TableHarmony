@@ -21,6 +21,7 @@ import { LoaderButton } from "@/components/loader-button";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect } from "react";
+import { shapeErrors } from "@/utils/errors";
 
 const updateDescriptionSchema = z.object({
   description: z.string().max(50),
@@ -53,8 +54,8 @@ export function UpdateDescriptionForm() {
       });
       toast.success("Updated school description!");
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      const formattedError = shapeErrors({ error });
+      toast.error(formattedError.message);
 
       form.reset();
     }

@@ -8,6 +8,7 @@ import { useSchool } from "../../../_components/providers/school-provider";
 
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
+import { shapeErrors } from "@/utils/errors";
 
 export function UpdateVisibilityForm() {
   const { school } = useSchool();
@@ -29,8 +30,8 @@ export function UpdateVisibilityForm() {
       toast.success("Updated school visibility!");
     } catch (error) {
       setChecked(school.isPublic);
-      console.error(error);
-      toast.error("Something went wrong");
+      const formattedError = shapeErrors({ error });
+      toast.error(formattedError.message);
     }
   }
 

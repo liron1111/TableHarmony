@@ -5,10 +5,10 @@ import { Doc, Id } from "../../../../../../../convex/_generated/dataModel";
 import { api } from "../../../../../../../convex/_generated/api";
 
 import React, { createContext, useContext } from "react";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 
 interface SchoolContextType {
-  school?: Doc<"schools"> | null;
+  school?: Doc<"schools">;
 }
 
 const SchoolContext = createContext<SchoolContextType>({});
@@ -25,6 +25,8 @@ export function SchoolProvider({ children }: { children: React.ReactNode }) {
   const { schoolId }: { schoolId: Id<"schools"> } = useParams();
 
   const school = useQuery(api.schools.getSchool, { schoolId });
+
+  if (school === null) redirect("/schools");
 
   return (
     <SchoolContext.Provider value={{ school }}>

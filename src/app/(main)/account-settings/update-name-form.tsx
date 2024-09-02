@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { LoaderButton } from "@/components/loader-button";
 import { toast } from "sonner";
 import { useEffect } from "react";
+import { shapeErrors } from "@/utils/errors";
 
 const updateNameSchema = z.object({
   name: z.string(),
@@ -49,8 +50,8 @@ export function UpdateNameForm() {
       await updateUser({ clerkId: user?.clerkId!, name: values.name });
       toast.success("Updated successfully!");
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      const formattedError = shapeErrors({ error });
+      toast.error(formattedError.message);
 
       form.reset();
     }

@@ -23,6 +23,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { shapeErrors } from "@/utils/errors";
 
 function AcceptEnrollmentsForm({
   enrollmentIds,
@@ -41,8 +42,8 @@ function AcceptEnrollmentsForm({
       await approveEnrollments({ enrollmentIds });
       toast.success("Accpeted enrollments successfully!");
     } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong");
+      const formattedError = shapeErrors({ error });
+      toast.error(formattedError.message);
     }
 
     setIsPending(false);
