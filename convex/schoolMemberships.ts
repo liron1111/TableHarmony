@@ -53,6 +53,7 @@ export const createMembership = internalMutation({
       userId: args.userId,
       schoolId: args.schoolId,
       role: args.role,
+      boardingComplete: false,
     });
   },
 });
@@ -109,5 +110,20 @@ export const deleteMemberships = mutation({
     );
 
     await Promise.all(deletionPromises);
+  },
+});
+
+export const completeOnboarding = mutation({
+  args: { membershipId: v.id("schoolMemberships") },
+  async handler(ctx, args) {
+    const membership = await assertMembershipAccess(ctx, {
+      membershipId: args.membershipId,
+    });
+
+    if (!membership) throw new AuthorizationError();
+
+    await ctx.db.patch(membership._id, {
+      boardingComplete: true,
+    });
   },
 });

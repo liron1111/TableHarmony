@@ -45,6 +45,7 @@ export default defineSchema({
     schoolId: v.id("schools"),
     userId: v.id("users"),
     role: schoolRoleType,
+    boardingComplete: v.boolean(),
   })
     .index("by_schoolId_userId", ["schoolId", "userId"])
     .index("by_schoolId", ["schoolId"])

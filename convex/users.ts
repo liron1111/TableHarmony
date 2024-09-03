@@ -6,7 +6,11 @@ import {
 } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { getClerkId } from "./util";
-import { AuthenticationError, AuthorizationError } from "@/utils/errors";
+import {
+  AuthenticationError,
+  AuthorizationError,
+  NotFoundError,
+} from "@/utils/errors";
 
 export const assertAuthenticated = internalMutation({
   async handler(ctx) {
@@ -74,13 +78,9 @@ export const createUser = internalMutation({
 export const deleteUser = internalMutation({
   args: { clerkId: v.string() },
   async handler(ctx, args) {
-    const currentClerkId = await getClerkId(ctx);
+    const user = await getUserByClerkId(ctx, { clerkId: args.clerkId });
 
-    if (currentClerkId !== args.clerkId) throw new AuthorizationError();
-
-    const user = await getUserByClerkId(ctx, { clerkId: currentClerkId });
-
-    if (!user) throw new ConvexError("User not found");
+    if (!user) throw new NotFoundError();
 
     await ctx.db.delete(user._id);
   },

@@ -49,6 +49,11 @@ export function MembershipProvider({
   });
 
   if (school !== undefined && membership !== undefined) {
+    if (!path.includes("onboarding")) {
+      if (membership !== null && !membership.boardingComplete)
+        redirect(`/schools/${school._id}/onboarding`);
+    } else if (membership?.boardingComplete) redirect(`/schools/${school._id}`);
+
     if (membership === null && !school.isPublic) redirect("/schools");
 
     if (isManagerRoute(path) && membership?.role !== "manager")
