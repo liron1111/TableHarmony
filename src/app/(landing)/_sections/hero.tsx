@@ -19,8 +19,9 @@ export function HeroSection() {
         </p>
         <SignedOut>
           <SignInButton mode="modal">
-            <Button className="w-56">
-              Get started <ArrowRightIcon className="ml-2 size-4" />
+            <Button className="group w-56">
+              Get started
+              <ArrowRightIcon className="ml-0 size-0 opacity-0 transition-all duration-200 group-hover:ml-2 group-hover:size-4 group-hover:opacity-100" />
             </Button>
           </SignInButton>
         </SignedOut>

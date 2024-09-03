@@ -43,7 +43,7 @@ export function Notifications() {
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
+      <PopoverTrigger>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button

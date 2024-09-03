@@ -35,13 +35,13 @@ function Links() {
         <p className="font-semibold">Product</p>
         <Link
           href="/changelog"
-          className="text-xs text-muted-foreground duration-200 hover:text-foreground"
+          className="w-fit text-xs text-muted-foreground duration-200 hover:text-foreground"
         >
           Changelog
         </Link>
         <Link
           href="/contact"
-          className="text-xs text-muted-foreground duration-200 hover:text-foreground"
+          className="w-fit text-xs text-muted-foreground duration-200 hover:text-foreground"
         >
           Contact
         </Link>
@@ -50,13 +50,13 @@ function Links() {
         <p className="font-semibold">Legal</p>
         <Link
           href="/privacy-policy"
-          className="text-xs text-muted-foreground duration-200 hover:text-foreground"
+          className="w-fit text-xs text-muted-foreground duration-200 hover:text-foreground"
         >
           Privacy policy
         </Link>
         <Link
           href="/terms-of-service"
-          className="text-xs text-muted-foreground duration-200 hover:text-foreground"
+          className="w-fit text-xs text-muted-foreground duration-200 hover:text-foreground"
         >
           Terms of service
         </Link>
@@ -112,7 +112,9 @@ function Socials() {
 function Header() {
   return (
     <div className="space-y-4">
-      <Logo />
+      <div className="w-fit">
+        <Logo />
+      </div>
       <p className="max-w-xs text-sm text-muted-foreground">
         {siteConfig.description}
       </p>

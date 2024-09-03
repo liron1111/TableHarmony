@@ -48,11 +48,12 @@ export function MembershipProvider({
     userId: user?._id!,
   });
 
-  if (membership === null && !school?.isPublic) redirect("/schools");
+  if (school !== undefined && membership !== undefined) {
+    if (membership === null && !school.isPublic) redirect("/schools");
 
-  if (isManagerRoute(path))
-    if (school && membership && membership.role !== "manager")
+    if (isManagerRoute(path) && membership?.role !== "manager")
       redirect(`/schools/${school._id}`);
+  }
 
   return (
     <MembershipContext.Provider value={{ membership }}>

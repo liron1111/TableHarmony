@@ -30,7 +30,7 @@ import { useSchool } from "./providers/school-provider";
 
 const School = ({ name, image }: { name: string; image: string }) => (
   <div className="flex items-center gap-2">
-    <div className="relative size-6">
+    <div className="relative size-5">
       <Image
         alt={`${name} logo`}
         src={image}

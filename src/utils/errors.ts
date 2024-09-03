@@ -1,6 +1,8 @@
+export const PUBLIC_ERROR_PREFIX = "PUBLIC_ERROR:";
+
 export class PublicError extends Error {
   constructor(message: string) {
-    super(message);
+    super(`${PUBLIC_ERROR_PREFIX} ${message}`);
   }
 }
 
@@ -34,15 +36,15 @@ export class NotFoundError extends PublicError {
 }
 
 export function shapeErrors({ error }: any) {
-  const isAllowedError = true;
-  console.log(error);
+  const isAllowed = error.message.includes(PUBLIC_ERROR_PREFIX);
+
   // let's all errors pass through to the UI so debugging locally is easier
   const isDev = process.env.NODE_ENV === "development";
-  if (isAllowedError || isDev) {
+  if (isAllowed || isDev) {
     console.error(error);
     return {
       code: error.code ?? "ERROR",
-      message: `${!isAllowedError && isDev ? "DEV ONLY ENABLED - " : ""}${filterPublicErrorMessage(
+      message: `${!isAllowed && isDev ? "DEV ONLY ENABLED - " : ""}${filterPublicErrorMessage(
         error.message
       )}`,
     };
@@ -57,12 +59,10 @@ export function shapeErrors({ error }: any) {
 function filterPublicErrorMessage(message: string) {
   let filter = message;
 
-  if (message.includes(":")) {
-    filter = message.split(":").pop()?.trim() || message;
+  if (message.includes(PUBLIC_ERROR_PREFIX)) {
+    filter = message.split(PUBLIC_ERROR_PREFIX).pop()?.trim() || message;
+    filter = filter.split("Called by ")[0];
   }
-
-  // Remove everything after "Called by "
-  filter = filter.split("Called by ")[0];
 
   return filter;
 }

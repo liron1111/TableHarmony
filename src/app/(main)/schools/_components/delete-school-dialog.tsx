@@ -63,6 +63,8 @@ export function DeleteSchoolDialog({
       const formattedError = shapeErrors({ error });
       toast.error(formattedError.message);
     }
+
+    setOpen(false);
   };
 
   return (

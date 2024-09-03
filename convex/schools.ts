@@ -15,7 +15,7 @@ import {
   deleteEnrollment,
   deleteEnrollments,
 } from "./schoolEnrollments";
-import { AuthorizationError, shapeErrors, NotFoundError } from "@/utils/errors";
+import { AuthorizationError, NotFoundError } from "@/utils/errors";
 
 export const createSchool = mutation({
   args: {
@@ -31,7 +31,7 @@ export const createSchool = mutation({
       description: args.description,
       isPublic: args.isPublic,
       creatorId: user._id,
-      image: "/assets/school.jpeg",
+      image: "/assets/school.svg",
     });
 
     await createMembership(ctx, {

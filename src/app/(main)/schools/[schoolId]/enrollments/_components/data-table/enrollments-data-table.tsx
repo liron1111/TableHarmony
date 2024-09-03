@@ -22,7 +22,7 @@ export function EnrollmentsDataTable() {
     schoolId: school?._id!,
   });
 
-  if (!data) return <></>; //TODO: skeleton ?
+  if (!data) return <></>;
 
   if (data.length === 0)
     return (
