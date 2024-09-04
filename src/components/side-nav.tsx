@@ -58,7 +58,7 @@ export default function SideNav({ NavItems }: { NavItems: () => NavItem[] }) {
         <aside className="flex h-full w-full columns-1 flex-col overflow-x-hidden break-words px-4">
           {/* Top */}
           <div className="relative mt-4 pb-2">
-            <div className="flex flex-col space-y-1">
+            <div className="flex flex-col space-y-2">
               {navItems.map((item, idx) => {
                 if (item.position === "top") {
                   return (
@@ -79,7 +79,7 @@ export default function SideNav({ NavItems }: { NavItems: () => NavItem[] }) {
             </div>
           </div>
           {/* Bottom */}
-          <div className="sticky bottom-0 mb-4 mt-auto block whitespace-nowrap transition duration-200">
+          <div className="sticky bottom-0 mb-4 mt-auto block space-y-2 whitespace-nowrap transition duration-200">
             {navItems.map((item, idx) => {
               if (item.position === "bottom") {
                 return (
@@ -99,10 +99,10 @@ export default function SideNav({ NavItems }: { NavItems: () => NavItem[] }) {
             })}
           </div>
         </aside>
-        <div className="relative mt-[calc(calc(90vh)-40px)]">
+        <div className="relative mb-[calc(calc(90vh)-40px)]">
           <button
             type="button"
-            className="absolute bottom-32 right-[-12px] flex h-6 w-6 items-center justify-center rounded-full border border-muted-foreground/20 bg-accent shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg"
+            className="absolute right-[-12px] top-32 flex h-6 w-6 items-center justify-center rounded-full border border-muted-foreground/20 bg-accent shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg"
             onClick={toggleSidebar}
           >
             {isSidebarExpanded ? (

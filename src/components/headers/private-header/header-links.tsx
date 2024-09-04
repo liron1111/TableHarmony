@@ -4,7 +4,7 @@ import { api } from "../../../../convex/_generated/api";
 import { useConvexAuth, useQuery } from "convex/react";
 
 import useMediaQuery from "@/hooks/use-media-query";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 
 import Link from "next/link";
 
@@ -59,11 +59,9 @@ function Profile() {
 
 function Links() {
   const path = usePathname();
-  const segments = path.split("/").filter(Boolean);
+  const { schoolId } = useParams();
 
-  const hasIds = segments.length > 1 && segments.at(0) === "schools";
-
-  if (!hasIds) {
+  if (!schoolId) {
     return (
       <div className="hidden items-center gap-2 md:flex">
         <Button

@@ -1,13 +1,11 @@
 import { SchoolProvider } from "../_components/providers/school-provider";
 import { MembershipProvider } from "../_components/providers/membership-provider";
 import { ScreensProvider } from "./onboarding/_components/screens-provider";
+import { Metadata } from "next";
 
-import { createMetadata } from "@/utils/metadata";
-
-export const metadata = createMetadata({
-  title: "Onboarding",
+export const metadata: Metadata = {
   description: "Setup and get started with this school",
-});
+};
 
 export default function OnboardingLayout({
   children,

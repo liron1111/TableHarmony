@@ -1,8 +1,4 @@
-import {
-  PageHeader,
-  PageHeaderDescription,
-  PageHeaderHeading,
-} from "@/components/page-header";
+import { PageHeader, PageHeaderHeading } from "@/components/page-header";
 import { EnrollmentsDataTable } from "./_components/data-table/enrollments-data-table";
 import { Metadata } from "next";
 
@@ -15,9 +11,6 @@ export default function EnrollmentsPage() {
     <div className="container">
       <PageHeader>
         <PageHeaderHeading>Enrollments</PageHeaderHeading>
-        <PageHeaderDescription>
-          View and manage school&apos;s enrolls.
-        </PageHeaderDescription>
       </PageHeader>
       <EnrollmentsDataTable />
     </div>

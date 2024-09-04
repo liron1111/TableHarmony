@@ -28,7 +28,10 @@ export function ClassroomCard({ classroom }: { classroom: Doc<"classrooms"> }) {
 
   return (
     <div className="relative rounded-md transition-all duration-200 hover:shadow-md dark:border dark:hover:border-white">
-      <Link href="#" aria-label="school">
+      <Link
+        href={`/schools/${membership?.schoolId}/classrooms/${classroom._id}`}
+        aria-label="school"
+      >
         <Card>
           <CardHeader className="flex flex-row items-center gap-4">
             <Image

@@ -1,19 +1,17 @@
 "use client";
 
-import { SchoolsCombobox } from "@/app/(main)/schools/[schoolId]/_components/schools-combobox";
+import { useParams } from "next/navigation";
+
 import { HeaderActions } from "./header-actions";
 import { HeaderLinks } from "./header-links";
+
 import { SchoolProvider } from "@/app/(main)/schools/[schoolId]/_components/providers/school-provider";
-import { usePathname } from "next/navigation";
+import { SchoolsCombobox } from "@/app/(main)/schools/[schoolId]/_components/schools-combobox";
 import { MembershipProvider } from "@/app/(main)/schools/[schoolId]/_components/providers/membership-provider";
 import { SchoolSidebarMobile } from "@/app/(main)/schools/[schoolId]/(main)/_components/sidebar";
 
 export function PrivateHeader() {
-  const path = usePathname();
-
-  const segments = path.split("/").filter(Boolean);
-  const hasIds = segments.length > 1 && segments.at(0) === "schools";
-  const schoolId = hasIds ? segments.at(1) : null;
+  const { schoolId } = useParams();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b backdrop-blur transition-all duration-300 supports-[backdrop-filter]:bg-background/60">

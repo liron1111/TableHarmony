@@ -55,3 +55,14 @@ export const deleteClassroom = mutation({
     await ctx.db.delete(args.classroomId);
   },
 });
+
+export const getClassroom = query({
+  args: {
+    classroomId: v.id("classrooms"),
+  },
+  async handler(ctx, args) {
+    const classroom = await ctx.db.get(args.classroomId);
+
+    return classroom;
+  },
+});
