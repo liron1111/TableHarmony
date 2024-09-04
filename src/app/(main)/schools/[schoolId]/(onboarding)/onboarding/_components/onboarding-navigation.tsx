@@ -13,6 +13,7 @@ import { LoaderButton } from "@/components/loader-button";
 import { Button } from "@/components/ui/button";
 
 import { shapeErrors } from "@/utils/errors";
+import { useScreens } from "./screens-provider";
 
 function CompleteOnboardingButton() {
   const [isPending, setIsPending] = useState(false);
@@ -37,7 +38,7 @@ function CompleteOnboardingButton() {
   }
 
   return (
-    <LoaderButton size="lg" isLoading={isPending} onClick={onSubmit}>
+    <LoaderButton className="w-full" isLoading={isPending} onClick={onSubmit}>
       Complete
     </LoaderButton>
   );
@@ -48,8 +49,12 @@ export function OnboardingNavigation() {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const currentScreen = Number(searchParams.get("screen") || "1");
-  const totalScreens = 3;
+  const { screens } = useScreens();
+
+  const screenKeys = Object.keys(screens);
+  const totalScreens = screenKeys.length;
+  const currentScreenKey = searchParams.get("screen") || screenKeys[0];
+  const currentScreenIndex = screenKeys.indexOf(currentScreenKey);
 
   function setScreen(screen: string) {
     const params = new URLSearchParams(searchParams);
@@ -61,35 +66,19 @@ export function OnboardingNavigation() {
     replace(`${pathname}?${params.toString()}`);
   }
 
-  const handleBack = () => {
-    if (currentScreen > 1) {
-      setScreen((currentScreen - 1).toString());
-    }
-  };
-
   const handleNext = () => {
-    if (currentScreen < totalScreens) {
-      setScreen((currentScreen + 1).toString());
+    if (currentScreenIndex < totalScreens - 1) {
+      setScreen(screenKeys[currentScreenIndex + 1]);
     }
   };
 
   return (
-    <div className="flex gap-2">
-      <Button
-        variant="outline"
-        onClick={handleBack}
-        disabled={currentScreen === 1}
-        size="lg"
-      >
-        Back
-      </Button>
-      {currentScreen === totalScreens ? (
-        <div className="inline-block">
-          <CompleteOnboardingButton />
-        </div>
+    <div className="w-full">
+      {currentScreenIndex === totalScreens - 1 ? (
+        <CompleteOnboardingButton />
       ) : (
-        <Button size="lg" onClick={handleNext}>
-          Next
+        <Button className="w-full" onClick={handleNext}>
+          Continue
         </Button>
       )}
     </div>

@@ -23,6 +23,11 @@ function WelcomeScreen() {
   );
 }
 
-export const managerScreens = {
+function SupportScreen() {
+  return <div>You are going to be a teacher</div>;
+}
+
+export const teacherScreens = {
   welcome: WelcomeScreen,
+  support: SupportScreen,
 };

@@ -1,5 +1,6 @@
 import { SchoolProvider } from "../_components/providers/school-provider";
 import { MembershipProvider } from "../_components/providers/membership-provider";
+import { ScreensProvider } from "./onboarding/_components/screens-provider";
 
 import { createMetadata } from "@/utils/metadata";
 
@@ -16,9 +17,11 @@ export default function OnboardingLayout({
   return (
     <SchoolProvider>
       <MembershipProvider>
-        <div className="flex min-h-[calc(100vh-65px)] w-full flex-col items-center bg-shapes-background bg-cover bg-center bg-no-repeat">
-          {children}
-        </div>
+        <ScreensProvider>
+          <div className="flex min-h-[calc(100vh-65px)] w-full flex-col items-center bg-shapes-background bg-cover bg-center bg-no-repeat">
+            {children}
+          </div>
+        </ScreensProvider>
       </MembershipProvider>
     </SchoolProvider>
   );
