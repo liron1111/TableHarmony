@@ -53,7 +53,7 @@ export const createMembership = internalMutation({
       userId: args.userId,
       schoolId: args.schoolId,
       role: args.role,
-      boardingComplete: false,
+      boardingComplete: args.role === "manager",
     });
   },
 });

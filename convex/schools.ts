@@ -21,6 +21,7 @@ export const createSchool = mutation({
   args: {
     name: v.string(),
     description: v.string(),
+    isPublic: v.boolean(),
   },
   async handler(ctx, args) {
     const user = await assertAuthenticated(ctx, {});
@@ -30,7 +31,7 @@ export const createSchool = mutation({
       description: args.description,
       creatorId: user._id,
       image: "/assets/school.svg",
-      isPublic: false,
+      isPublic: args.isPublic,
     });
 
     await createMembership(ctx, {
@@ -38,8 +39,6 @@ export const createSchool = mutation({
       schoolId: schoolId,
       role: "manager",
     });
-
-    return schoolId;
   },
 });
 
