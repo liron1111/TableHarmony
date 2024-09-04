@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Doc } from "../../../../../convex/_generated/dataModel";
+import { Badge } from "@/components/ui/badge";
 
 export const columns: ColumnDef<Doc<"notifications">>[] = [
   {
@@ -35,20 +36,38 @@ export const columns: ColumnDef<Doc<"notifications">>[] = [
   {
     accessorKey: "title",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="title" />
+      <DataTableColumnHeader column={column} title="Title" />
     ),
+    cell: ({ row }) => {
+      return (
+        <span className="max-w-[500px] truncate font-medium">
+          {row.getValue("title")}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "isRead",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="isRead" />
+      <DataTableColumnHeader column={column} title="Read" />
     ),
-    filterFn: "includesString",
+    cell: ({ row }) => {
+      const isRead = row.original.isRead;
+
+      return (
+        <Badge variant={isRead ? "default" : "destructive"}>
+          {isRead.toString()}
+        </Badge>
+      );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.original.isRead.toString());
+    },
   },
   {
     accessorKey: "_creationTime",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="_creationTime" />
+      <DataTableColumnHeader column={column} title="Created at" />
     ),
     cell: ({ row }) => {
       return new Date(row.getValue("_creationTime")).toLocaleDateString(

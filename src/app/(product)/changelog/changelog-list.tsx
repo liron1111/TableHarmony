@@ -20,7 +20,7 @@ export async function ChangelogList() {
   unstable_noStore();
 
   const changelogs = await fetch(
-    `https://projectplannerai.com/api/changelog?projectId=${projectId}`,
+    `https://projectplannerai.com/api/changelog?projectId=${projectId}`
   ).then(async (res) => res.json() as Promise<ChangeLog[]>);
 
   return (

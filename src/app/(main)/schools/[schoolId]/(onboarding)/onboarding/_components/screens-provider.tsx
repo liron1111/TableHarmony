@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useMemo } from "react";
 import { useMembership } from "@/app/(main)/schools/[schoolId]/_components/providers/membership-provider";
 
 import { studentScreens } from "./screens/student-screens";
@@ -29,16 +29,16 @@ export function useScreens() {
 export function ScreensProvider({ children }: { children: React.ReactNode }) {
   const { membership } = useMembership();
 
-  let screens: Screens = {} as Screens;
-
-  switch (membership?.role) {
-    case "teacher":
-      screens = teacherScreens;
-      break;
-    case "student":
-      screens = studentScreens;
-      break;
-  }
+  const screens = useMemo(() => {
+    switch (membership?.role) {
+      case "teacher":
+        return teacherScreens;
+      case "student":
+        return studentScreens;
+      default:
+        return {} as Screens;
+    }
+  }, [membership?.role]);
 
   return (
     <ScreensContext.Provider value={{ screens }}>

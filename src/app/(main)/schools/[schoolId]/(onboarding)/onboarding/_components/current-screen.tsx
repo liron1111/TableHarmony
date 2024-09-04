@@ -1,21 +1,23 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useScreens } from "./screens-provider";
 
-export function CurrentScreen({ screen }: { screen: string }) {
+export function CurrentScreen() {
   const { screens } = useScreens();
+  const searchParams = useSearchParams();
 
-  if (!screen) return <></>;
+  const screen = searchParams.get("screen") || "";
 
-  // Get the keys of the screens object
-  const screenKeys = Object.keys(screens) as Array<keyof typeof screens>;
+  if (!screens) return <></>;
 
-  // Check if the provided screen is a valid key, otherwise use the first screen
-  const validScreen = screenKeys.includes(screen as keyof typeof screens)
-    ? (screen as keyof typeof screens)
-    : screenKeys[0];
+  const validScreen = Object.keys(screens).includes(screen)
+    ? screen
+    : Object.keys(screens)[0];
 
   const Screen = screens[validScreen];
+
+  if (!Screen) return <></>;
 
   return <Screen />;
 }
