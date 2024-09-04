@@ -34,7 +34,9 @@ import { toast } from "sonner";
 import { shapeErrors } from "@/utils/errors";
 
 const deleteSchema = z.object({
-  confirm: z.string(),
+  confirm: z.string().refine((v) => v === "Delete school", {
+    message: "Please type 'Delete school' to confirm",
+  }),
 });
 
 export function DeleteSchoolDialog({
@@ -79,7 +81,7 @@ export function DeleteSchoolDialog({
         </CredenzaHeader>
         <CredenzaBody>
           <Form {...form}>
-            <form>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
                 name="confirm"

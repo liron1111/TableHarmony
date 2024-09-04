@@ -29,8 +29,6 @@ export function useScreens() {
 export function ScreensProvider({ children }: { children: React.ReactNode }) {
   const { membership } = useMembership();
 
-  if (!membership) return <></>; //TODO: IDK if this is the best way to handle this
-
   let screens: Screens = {} as Screens;
 
   switch (membership?.role) {

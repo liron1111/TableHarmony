@@ -6,6 +6,7 @@ import { HeaderLinks } from "./header-links";
 import { SchoolProvider } from "@/app/(main)/schools/[schoolId]/_components/providers/school-provider";
 import { usePathname } from "next/navigation";
 import { MembershipProvider } from "@/app/(main)/schools/[schoolId]/_components/providers/membership-provider";
+import { SchoolSidebarMobile } from "@/app/(main)/schools/[schoolId]/(main)/_components/sidebar";
 
 export function PrivateHeader() {
   const path = usePathname();
@@ -22,9 +23,10 @@ export function PrivateHeader() {
           <HeaderActions />
         </div>
         {schoolId && (
-          <div className="flex w-full gap-2">
+          <div className="flex w-full items-center gap-2">
             <SchoolProvider>
               <MembershipProvider>
+                <SchoolSidebarMobile />
                 <SchoolsCombobox />
               </MembershipProvider>
             </SchoolProvider>

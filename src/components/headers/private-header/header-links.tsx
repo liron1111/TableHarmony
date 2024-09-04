@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 import { LogoIcon } from "@/components/icons";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SchoolsCombobox } from "@/app/(main)/schools/[schoolId]/_components/schools-combobox";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ import { SchoolProvider } from "@/app/(main)/schools/[schoolId]/_components/prov
 export function HeaderLinks() {
   const { isMobile } = useMediaQuery();
   const { isLoading } = useConvexAuth();
+
   if (isMobile) {
     return (
       <Link href="/schools">
@@ -33,11 +34,8 @@ export function HeaderLinks() {
       <Link href="/schools">
         <LogoIcon />
       </Link>
-
       <SlashIcon className="size-3 -rotate-12 text-muted-foreground" />
-
       {isLoading ? <Skeleton className="h-5 w-28" /> : <Profile />}
-
       <Links />
     </div>
   );
@@ -52,6 +50,7 @@ function Profile() {
     <Link href="/schools" className="flex items-center gap-2">
       <Avatar className="size-6">
         <AvatarImage src={user?.image} alt="profile" />
+        <AvatarFallback className="text-xs">SC</AvatarFallback>
       </Avatar>
       <span className="max-w-32 truncate text-sm">{user.name}</span>
     </Link>

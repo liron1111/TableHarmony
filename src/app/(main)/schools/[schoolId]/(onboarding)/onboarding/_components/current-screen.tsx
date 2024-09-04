@@ -5,6 +5,8 @@ import { useScreens } from "./screens-provider";
 export function CurrentScreen({ screen }: { screen: string }) {
   const { screens } = useScreens();
 
+  if (!screen) return <></>;
+
   // Get the keys of the screens object
   const screenKeys = Object.keys(screens) as Array<keyof typeof screens>;
 
