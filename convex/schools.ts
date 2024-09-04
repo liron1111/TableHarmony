@@ -38,6 +38,8 @@ export const createSchool = mutation({
       schoolId: schoolId,
       role: "manager",
     });
+
+    return schoolId;
   },
 });
 
@@ -146,8 +148,9 @@ export const deleteSchool = mutation({
       deleteEnrollments(ctx, {
         enrollmentIds: enrollments.map((enrollment) => enrollment._id),
       }),
-      ctx.db.delete(school._id),
     ]);
+
+    await ctx.db.delete(school._id);
   },
 });
 

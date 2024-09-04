@@ -36,7 +36,8 @@ export class NotFoundError extends PublicError {
 }
 
 export function shapeErrors({ error }: any) {
-  const isAllowed = error.message.includes(PUBLIC_ERROR_PREFIX);
+  const isAllowed =
+    error.message.includes(PUBLIC_ERROR_PREFIX) || error instanceof PublicError;
 
   // let's all errors pass through to the UI so debugging locally is easier
   const isDev = process.env.NODE_ENV === "development";

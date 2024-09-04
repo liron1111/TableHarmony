@@ -32,6 +32,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { shapeErrors } from "@/utils/errors";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z
@@ -52,6 +53,7 @@ function CreateSchoolForm({
   setShowSheet: Dispatch<SetStateAction<boolean>>;
 }) {
   const createSchool = useMutation(api.schools.createSchool);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -61,11 +63,11 @@ function CreateSchoolForm({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await createSchool({
+      const schoolId = await createSchool({
         name: values.name,
         description: values.description,
       });
-      toast.success("Created school successfully!");
+      router.push(`/schools/${schoolId}/onboarding`);
     } catch (error) {
       const formattedError = shapeErrors({ error });
       toast.error(formattedError.message);

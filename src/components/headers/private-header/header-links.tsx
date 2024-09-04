@@ -93,7 +93,7 @@ function Links() {
 
   return (
     <SchoolProvider>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <SlashIcon className="size-3 -rotate-12 text-muted-foreground" />
         <SchoolsCombobox />
       </div>

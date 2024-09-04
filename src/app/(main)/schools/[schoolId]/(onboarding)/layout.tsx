@@ -16,7 +16,7 @@ export default function OnboardingLayout({
   return (
     <SchoolProvider>
       <MembershipProvider>
-        <div className="bg-shapes-background flex min-h-[calc(100vh-65px)] w-full flex-col items-center bg-cover bg-center bg-no-repeat">
+        <div className="flex min-h-[calc(100vh-65px)] w-full flex-col items-center bg-shapes-background bg-cover bg-center bg-no-repeat">
           {children}
         </div>
       </MembershipProvider>
