@@ -10,6 +10,7 @@ import {
   ClipboardIcon,
   EllipsisVerticalIcon,
   HomeIcon,
+  SchoolIcon,
   SettingsIcon,
   UsersIcon,
 } from "lucide-react";
@@ -58,6 +59,14 @@ export const NavItems = () => {
     href: schoolPath("/"),
     icon: <HomeIcon className="size-5" />,
     active: pathname === schoolPath(""),
+    position: "top",
+  });
+
+  navItems.push({
+    name: "Classrooms",
+    href: schoolPath("classrooms"),
+    icon: <SchoolIcon className="size-5" />,
+    active: isNavItemActive(pathname, "/classrooms"),
     position: "top",
   });
 

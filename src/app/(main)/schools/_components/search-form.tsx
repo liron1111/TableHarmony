@@ -24,7 +24,7 @@ export function SearchForm() {
       <div className="relative">
         <SearchIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 transform text-neutral-500" />
         <Input
-          placeholder="Search schools"
+          placeholder="Search"
           name="search"
           defaultValue={searchParams.get("query")?.toString()}
           onChange={(e) => {
