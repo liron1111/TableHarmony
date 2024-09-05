@@ -15,9 +15,13 @@ export async function generateMetadata({
     classroomId: params.classroomId,
   });
 
+  const school = await fetchQuery(api.schools.getSchool, {
+    schoolId: classroom?.schoolId!,
+  });
+
   return createMetadata({
-    title: classroom?.name ?? "Classroom",
-    description: classroom?.description ?? "classroom description",
+    title: `${classroom?.name} | ${school?.name}`,
+    description: classroom?.description,
   });
 }
 

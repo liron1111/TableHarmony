@@ -1,7 +1,6 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { assertSchoolOwner } from "./schools";
 import { mutation, query } from "./_generated/server";
-import { AuthorizationError, NotFoundError } from "@/utils/errors";
 import {
   createMembership,
   deleteMembership,
@@ -18,7 +17,10 @@ export const createClassroom = mutation({
   async handler(ctx, args) {
     const user = await assertSchoolOwner(ctx, { schoolId: args.schoolId });
 
-    if (!user) throw new AuthorizationError();
+    if (!user)
+      throw new ConvexError(
+        "You are not authorized to create a classroom in this school"
+      );
 
     await ctx.db.insert("classrooms", {
       schoolId: args.schoolId,
@@ -50,11 +52,12 @@ export const deleteClassroom = mutation({
   async handler(ctx, args) {
     const classroom = await ctx.db.get(args.classroomId);
 
-    if (!classroom) throw new NotFoundError();
+    if (!classroom) throw new ConvexError("Classroom not found");
 
     const user = await assertSchoolOwner(ctx, { schoolId: classroom.schoolId });
 
-    if (!user) throw new AuthorizationError();
+    if (!user)
+      throw new ConvexError("You are not authorized to delete this classroom");
 
     //TODO: delete all classroom members
 
@@ -85,7 +88,8 @@ export const exitClassroom = mutation({
       userId: user._id,
     });
 
-    if (!membership) throw new NotFoundError();
+    if (!membership)
+      throw new ConvexError("You are not a member of this classroom");
 
     await deleteMembership(ctx, {
       membershipId: membership._id,
@@ -102,14 +106,15 @@ export const joinClassroom = mutation({
 
     const classroom = await ctx.db.get(args.classroomId);
 
-    if (!classroom) throw new NotFoundError();
+    if (!classroom) throw new ConvexError("Classroom not found");
 
     const membership = await getMembership(ctx, {
       classroomId: args.classroomId,
       userId: user._id,
     });
 
-    if (membership) throw new AuthorizationError();
+    if (membership)
+      throw new ConvexError("You are already a member of this classroom");
 
     await createMembership(ctx, {
       classroomId: args.classroomId,

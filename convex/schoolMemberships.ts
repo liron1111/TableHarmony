@@ -9,7 +9,6 @@ import {
 import { schoolRoleType } from "./schema";
 import { assertSchoolOwner, getSchool } from "./schools";
 import { getCurrentUser } from "./users";
-import { AuthorizationError } from "@/utils/errors";
 
 export const assertMembershipAccess = internalQuery({
   args: { membershipId: v.id("schoolMemberships") },
@@ -40,7 +39,10 @@ export const createMembership = internalMutation({
   async handler(ctx, args) {
     const school = await assertSchoolOwner(ctx, { schoolId: args.schoolId });
 
-    if (!school) throw new AuthorizationError();
+    if (!school)
+      throw new ConvexError(
+        "You are not authorized to create memberships for this school"
+      );
 
     const membership = await getMembership(ctx, {
       schoolId: school._id,
@@ -94,7 +96,8 @@ export const deleteMembership = internalMutation({
       membershipId: args.membershipId,
     });
 
-    if (!membership) throw new AuthorizationError();
+    if (!membership)
+      throw new ConvexError("You are not authorized to delete this membership");
 
     await ctx.db.delete(membership._id);
   },
@@ -120,7 +123,10 @@ export const completeOnboarding = mutation({
       membershipId: args.membershipId,
     });
 
-    if (!membership) throw new AuthorizationError();
+    if (!membership)
+      throw new ConvexError(
+        "You are not authorized to complete onboarding for this membership"
+      );
 
     await ctx.db.patch(membership._id, {
       boardingComplete: true,

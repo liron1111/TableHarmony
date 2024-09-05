@@ -1,8 +1,8 @@
-export const PUBLIC_ERROR_PREFIX = "PUBLIC_ERROR:";
+import { ConvexError } from "convex/values";
 
 export class PublicError extends Error {
   constructor(message: string) {
-    super(`${PUBLIC_ERROR_PREFIX} ${message}`);
+    super(message);
   }
 }
 
@@ -37,7 +37,7 @@ export class NotFoundError extends PublicError {
 
 export function shapeErrors({ error }: any) {
   const isAllowed =
-    error.message.includes(PUBLIC_ERROR_PREFIX) || error instanceof PublicError;
+    error instanceof PublicError || error instanceof ConvexError;
 
   // let's all errors pass through to the UI so debugging locally is easier
   const isDev = process.env.NODE_ENV === "development";
@@ -45,8 +45,8 @@ export function shapeErrors({ error }: any) {
     console.error(error);
     return {
       code: error.code ?? "ERROR",
-      message: `${!isAllowed && isDev ? "DEV ONLY ENABLED - " : ""}${filterPublicErrorMessage(
-        error.message
+      message: `${!isAllowed && isDev ? "DEV ONLY ENABLED - " : ""}${getErrorMessage(
+        error
       )}`,
     };
   } else {
@@ -57,13 +57,9 @@ export function shapeErrors({ error }: any) {
   }
 }
 
-function filterPublicErrorMessage(message: string) {
-  let filter = message;
-
-  if (message.includes(PUBLIC_ERROR_PREFIX)) {
-    filter = message.split(PUBLIC_ERROR_PREFIX).pop()?.trim() || message;
-    filter = filter.split("Called by ")[0];
+function getErrorMessage(error: Error) {
+  if (error instanceof ConvexError) {
+    return error.data;
   }
-
-  return filter;
+  return error.message;
 }

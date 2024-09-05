@@ -19,6 +19,7 @@ export default function ErrorPage({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  //TODO: display public errors
   return (
     <div className="container flex flex-col items-center">
       <PageHeader variant="center">

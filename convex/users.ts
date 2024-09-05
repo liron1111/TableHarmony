@@ -6,17 +6,13 @@ import {
 } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { getClerkId } from "./util";
-import {
-  AuthenticationError,
-  AuthorizationError,
-  NotFoundError,
-} from "@/utils/errors";
 
 export const assertAuthenticated = internalMutation({
   async handler(ctx) {
     const user = await getCurrentUser(ctx, {});
 
-    if (!user) throw new AuthenticationError();
+    if (!user)
+      throw new ConvexError("You must be logged in to view this content");
 
     return user;
   },
@@ -80,7 +76,7 @@ export const deleteUser = internalMutation({
   async handler(ctx, args) {
     const user = await getUserByClerkId(ctx, { clerkId: args.clerkId });
 
-    if (!user) throw new NotFoundError();
+    if (!user) throw new ConvexError("User not found");
 
     await ctx.db.delete(user._id);
   },

@@ -1,6 +1,5 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { internalMutation, internalQuery, query } from "./_generated/server";
-import { AuthorizationError } from "@/utils/errors";
 import { getCurrentUser } from "./users";
 
 export const assertMembershipAccess = internalQuery({
@@ -52,7 +51,8 @@ export const deleteMembership = internalMutation({
       membershipId: args.membershipId,
     });
 
-    if (!membership) throw new AuthorizationError();
+    if (!membership)
+      throw new ConvexError("You are not authorized to delete this membership");
 
     await ctx.db.delete(membership._id);
   },
