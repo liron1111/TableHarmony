@@ -10,7 +10,7 @@ import { CreateClassroomSheet } from "./_components/create-classroom-sheet";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  description: "View and manage school's classrooms.",
+  description: "school's classrooms",
 };
 
 export default function ClassroomsPage() {

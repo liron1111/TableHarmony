@@ -4,6 +4,7 @@ import { fetchQuery } from "convex/nextjs";
 
 import { createMetadata } from "@/utils/metadata";
 import { ClassroomProvider } from "./_components/providers/classroom-provider";
+import { ClassroomMembershipProvider } from "./_components/providers/classroom-membership-provider";
 
 export async function generateMetadata({
   params,
@@ -25,5 +26,9 @@ export default function ClassroomLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <ClassroomProvider>{children}</ClassroomProvider>;
+  return (
+    <ClassroomProvider>
+      <ClassroomMembershipProvider>{children}</ClassroomMembershipProvider>
+    </ClassroomProvider>
+  );
 }

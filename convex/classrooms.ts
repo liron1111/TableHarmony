@@ -2,6 +2,12 @@ import { v } from "convex/values";
 import { assertSchoolOwner } from "./schools";
 import { mutation, query } from "./_generated/server";
 import { AuthorizationError, NotFoundError } from "@/utils/errors";
+import {
+  createMembership,
+  deleteMembership,
+  getMembership,
+} from "./classroomMemberships";
+import { assertAuthenticated } from "./users";
 
 export const createClassroom = mutation({
   args: {
@@ -64,5 +70,50 @@ export const getClassroom = query({
     const classroom = await ctx.db.get(args.classroomId);
 
     return classroom;
+  },
+});
+
+export const exitClassroom = mutation({
+  args: {
+    classroomId: v.id("classrooms"),
+  },
+  async handler(ctx, args) {
+    const user = await assertAuthenticated(ctx, {});
+
+    const membership = await getMembership(ctx, {
+      classroomId: args.classroomId,
+      userId: user._id,
+    });
+
+    if (!membership) throw new NotFoundError();
+
+    await deleteMembership(ctx, {
+      membershipId: membership._id,
+    });
+  },
+});
+
+export const joinClassroom = mutation({
+  args: {
+    classroomId: v.id("classrooms"),
+  },
+  async handler(ctx, args) {
+    const user = await assertAuthenticated(ctx, {});
+
+    const classroom = await ctx.db.get(args.classroomId);
+
+    if (!classroom) throw new NotFoundError();
+
+    const membership = await getMembership(ctx, {
+      classroomId: args.classroomId,
+      userId: user._id,
+    });
+
+    if (membership) throw new AuthorizationError();
+
+    await createMembership(ctx, {
+      classroomId: args.classroomId,
+      userId: user._id,
+    });
   },
 });
