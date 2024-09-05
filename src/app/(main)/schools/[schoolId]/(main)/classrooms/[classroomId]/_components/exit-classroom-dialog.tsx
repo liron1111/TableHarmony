@@ -7,7 +7,6 @@ import { useMutation } from "convex/react";
 
 import { toast } from "sonner";
 import { LoaderButton } from "@/components/loader-button";
-import { useSchool } from "@/app/(main)/schools/[schoolId]/_components/providers/school-provider";
 import {
   Credenza,
   CredenzaClose,
@@ -26,6 +25,8 @@ export function ExitClassroomDialog() {
   const { classroomMembership } = useClassroomMembership();
 
   const [isPending, setIsPending] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   const exitClassroom = useMutation(api.classrooms.exitClassroom);
 
   async function onSubmit() {
@@ -42,10 +43,11 @@ export function ExitClassroomDialog() {
     }
 
     setIsPending(false);
+    setIsOpen(false);
   }
 
   return (
-    <Credenza>
+    <Credenza open={isOpen} onOpenChange={setIsOpen}>
       <CredenzaTrigger>
         <Button variant="destructive">Exit classroom</Button>
       </CredenzaTrigger>

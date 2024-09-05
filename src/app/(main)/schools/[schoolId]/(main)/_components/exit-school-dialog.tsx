@@ -25,6 +25,8 @@ export function ExitSchoolDialog() {
   const { school } = useSchool();
 
   const [isPending, setIsPending] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   const exit = useMutation(api.schools.exitSchool);
 
   async function onSubmit() {
@@ -41,10 +43,11 @@ export function ExitSchoolDialog() {
     }
 
     setIsPending(false);
+    setIsOpen(false);
   }
 
   return (
-    <Credenza>
+    <Credenza open={isOpen} onOpenChange={setIsOpen}>
       <CredenzaTrigger>
         <Button variant="destructive">Exit school</Button>
       </CredenzaTrigger>

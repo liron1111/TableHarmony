@@ -1,8 +1,9 @@
 import { ConvexError, v } from "convex/values";
 import { internalMutation, internalQuery, query } from "./_generated/server";
 import { getCurrentUser } from "./users";
+import { getMembership } from "./schoolMemberships";
 
-export const assertMembershipAccess = internalQuery({
+export const assertClassroomMembershipAccess = internalQuery({
   args: { membershipId: v.id("classroomMemberships") },
   async handler(ctx, args) {
     const membership = await ctx.db.get(args.membershipId);
@@ -19,7 +20,7 @@ export const assertMembershipAccess = internalQuery({
   },
 });
 
-export const getMembership = query({
+export const getClassroomMembership = query({
   args: { classroomId: v.id("classrooms"), userId: v.id("users") },
   async handler(ctx, args) {
     const membership = await ctx.db
@@ -33,21 +34,38 @@ export const getMembership = query({
   },
 });
 
-export const createMembership = internalMutation({
+export const createClassroomMembership = internalMutation({
   args: { classroomId: v.id("classrooms"), userId: v.id("users") },
   async handler(ctx, args) {
+    const classroom = await ctx.db.get(args.classroomId);
+
+    if (!classroom) throw new ConvexError("Classroom not found");
+
+    const membership = await getMembership(ctx, {
+      schoolId: classroom.schoolId,
+      userId: args.userId,
+    });
+
+    if (!membership) throw new ConvexError("Membership not found");
+
+    if (membership.role === "manager") {
+      throw new ConvexError(
+        "Managers are not allowed to be added to classrooms"
+      );
+    }
+
     await ctx.db.insert("classroomMemberships", {
       classroomId: args.classroomId,
       userId: args.userId,
-      role: "student",
+      role: membership.role,
     });
   },
 });
 
-export const deleteMembership = internalMutation({
+export const deleteClassroomMembership = internalMutation({
   args: { membershipId: v.id("classroomMemberships") },
   async handler(ctx, args) {
-    const membership = await assertMembershipAccess(ctx, {
+    const membership = await assertClassroomMembershipAccess(ctx, {
       membershipId: args.membershipId,
     });
 

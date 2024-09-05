@@ -26,6 +26,8 @@ export function JoinClassroomDialog() {
   const { classroom } = useClassroom();
 
   const [isPending, setIsPending] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   const joinClassroom = useMutation(api.classrooms.joinClassroom);
 
   async function onSubmit() {
@@ -42,10 +44,11 @@ export function JoinClassroomDialog() {
     }
 
     setIsPending(false);
+    setIsOpen(false);
   }
 
   return (
-    <Credenza>
+    <Credenza open={isOpen} onOpenChange={setIsOpen}>
       <CredenzaTrigger>
         <Button>Join classroom</Button>
       </CredenzaTrigger>

@@ -137,9 +137,10 @@ export const deleteSchool = mutation({
     if (!school)
       throw new ConvexError("You are not authorized to delete this school");
 
-    const [memberships, enrollments] = await Promise.all([
+    const [memberships, enrollments, classrooms] = await Promise.all([
       getSchoolMemberships(ctx, { schoolId: school._id }),
       getSchoolEnrollments(ctx, { schoolId: school._id }),
+      getSchoolClassrooms(ctx, { schoolId: school._id }),
     ]);
 
     await Promise.all([
@@ -149,6 +150,7 @@ export const deleteSchool = mutation({
       deleteEnrollments(ctx, {
         enrollmentIds: enrollments.map((enrollment) => enrollment._id),
       }),
+      ...classrooms.map((classroom) => ctx.db.delete(classroom._id)),
     ]);
 
     await ctx.db.delete(school._id);
@@ -171,6 +173,20 @@ export const getSchoolMemberships = query({
     );
 
     return membershipsWithUserInfo.filter((membership) => membership !== null);
+  },
+});
+
+export const getSchoolClassrooms = query({
+  args: {
+    schoolId: v.id("schools"),
+  },
+  async handler(ctx, args) {
+    const classrooms = await ctx.db
+      .query("classrooms")
+      .withIndex("by_schoolId", (q) => q.eq("schoolId", args.schoolId))
+      .collect();
+
+    return classrooms;
   },
 });
 

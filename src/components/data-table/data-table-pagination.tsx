@@ -29,7 +29,7 @@ export function DataTablePagination({
   const { table } = useContext(DataTableContext);
 
   return (
-    <div className="flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8">
+    <div className="flex w-full flex-col-reverse items-center justify-between gap-4 p-1 sm:flex-row sm:gap-8">
       <div className="flex-1 whitespace-nowrap text-sm text-muted-foreground">
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
         {table.getFilteredRowModel().rows.length} row(s) selected.

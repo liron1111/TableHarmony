@@ -35,10 +35,13 @@ export function ClassroomMembershipProvider({
   const { classroomId } = useParams();
   const user = useQuery(api.users.getCurrentUser);
 
-  const classroomMembership = useQuery(api.classroomMemberships.getMembership, {
-    classroomId: classroomId as Id<"classrooms">,
-    userId: user?._id!,
-  });
+  const classroomMembership = useQuery(
+    api.classroomMemberships.getClassroomMembership,
+    {
+      classroomId: classroomId as Id<"classrooms">,
+      userId: user?._id!,
+    }
+  );
 
   return (
     <ClassroomMembershipContext.Provider value={{ classroomMembership }}>

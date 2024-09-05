@@ -1,10 +1,10 @@
 import { ConvexError, v } from "convex/values";
 import { assertSchoolOwner } from "./schools";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import {
-  createMembership,
-  deleteMembership,
-  getMembership,
+  createClassroomMembership,
+  deleteClassroomMembership,
+  getClassroomMembership,
 } from "./classroomMemberships";
 import { assertAuthenticated } from "./users";
 
@@ -31,17 +31,17 @@ export const createClassroom = mutation({
   },
 });
 
-export const getSchoolClassrooms = query({
+export const getClassroomMemberships = query({
   args: {
-    schoolId: v.id("schools"),
+    classroomId: v.id("classrooms"),
   },
   async handler(ctx, args) {
-    const classrooms = await ctx.db
-      .query("classrooms")
-      .withIndex("by_schoolId", (q) => q.eq("schoolId", args.schoolId))
+    const memberships = await ctx.db
+      .query("classroomMemberships")
+      .withIndex("by_classroomId", (q) => q.eq("classroomId", args.classroomId))
       .collect();
 
-    return classrooms;
+    return memberships;
   },
 });
 
@@ -59,7 +59,17 @@ export const deleteClassroom = mutation({
     if (!user)
       throw new ConvexError("You are not authorized to delete this classroom");
 
-    //TODO: delete all classroom members
+    const [memberships] = await Promise.all([
+      getClassroomMemberships(ctx, {
+        classroomId: args.classroomId,
+      }),
+    ]);
+
+    await Promise.all([
+      deleteClassroomMemberships(ctx, {
+        membershipIds: memberships.map((membership) => membership._id),
+      }),
+    ]);
 
     await ctx.db.delete(args.classroomId);
   },
@@ -83,7 +93,7 @@ export const exitClassroom = mutation({
   async handler(ctx, args) {
     const user = await assertAuthenticated(ctx, {});
 
-    const membership = await getMembership(ctx, {
+    const membership = await getClassroomMembership(ctx, {
       classroomId: args.classroomId,
       userId: user._id,
     });
@@ -91,7 +101,7 @@ export const exitClassroom = mutation({
     if (!membership)
       throw new ConvexError("You are not a member of this classroom");
 
-    await deleteMembership(ctx, {
+    await deleteClassroomMembership(ctx, {
       membershipId: membership._id,
     });
   },
@@ -108,7 +118,7 @@ export const joinClassroom = mutation({
 
     if (!classroom) throw new ConvexError("Classroom not found");
 
-    const membership = await getMembership(ctx, {
+    const membership = await getClassroomMembership(ctx, {
       classroomId: args.classroomId,
       userId: user._id,
     });
@@ -116,9 +126,50 @@ export const joinClassroom = mutation({
     if (membership)
       throw new ConvexError("You are already a member of this classroom");
 
-    await createMembership(ctx, {
+    await createClassroomMembership(ctx, {
       classroomId: args.classroomId,
       userId: user._id,
+    });
+  },
+});
+
+export const deleteClassroomMemberships = internalMutation({
+  args: { membershipIds: v.array(v.id("classroomMemberships")) },
+  async handler(ctx, args) {
+    const memberships = args.membershipIds;
+
+    const deletionPromises = memberships.map((membership) =>
+      deleteClassroomMembership(ctx, { membershipId: membership })
+    );
+
+    await Promise.all(deletionPromises);
+  },
+});
+
+export const updateClassroom = mutation({
+  args: {
+    classroomId: v.id("classrooms"),
+    name: v.optional(v.string()),
+    description: v.optional(v.string()),
+  },
+  async handler(ctx, args) {
+    const classroom = await getClassroom(ctx, {
+      classroomId: args.classroomId,
+    });
+
+    if (!classroom)
+      throw new ConvexError("You are not authorized to update this classroom");
+
+    const user = await assertSchoolOwner(ctx, {
+      schoolId: classroom.schoolId,
+    });
+
+    if (!user)
+      throw new ConvexError("You are not authorized to update this classroom");
+
+    await ctx.db.patch(args.classroomId, {
+      name: args.name ?? classroom.name,
+      description: args.description ?? classroom.description,
     });
   },
 });

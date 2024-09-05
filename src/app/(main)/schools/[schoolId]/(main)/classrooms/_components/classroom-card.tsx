@@ -20,8 +20,9 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { EllipsisVerticalIcon, TrashIcon } from "lucide-react";
+import { EllipsisVerticalIcon, SettingsIcon, TrashIcon } from "lucide-react";
 import { DeleteClassroomDialog } from "./delete-classroom-dialog";
+import { useParams } from "next/navigation";
 
 export function ClassroomCard({ classroom }: { classroom: Doc<"classrooms"> }) {
   const { membership } = useMembership();
@@ -63,6 +64,7 @@ export function ClassroomCard({ classroom }: { classroom: Doc<"classrooms"> }) {
 
 function MenuButton({ classroomId }: { classroomId: Id<"classrooms"> }) {
   const [open, setOpen] = useState(false);
+  const { schoolId } = useParams();
 
   return (
     <DropdownMenu>
@@ -72,6 +74,13 @@ function MenuButton({ classroomId }: { classroomId: Id<"classrooms"> }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
+        <DropdownMenuItem className="cursor-pointer" asChild>
+          <Link
+            href={`/schools/${schoolId}/classrooms/${classroomId}/classroom-settings`}
+          >
+            <SettingsIcon className="mr-2 size-4" /> Settings
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer text-red-500 hover:!text-red-500"
           onClick={() => setOpen(true)}

@@ -13,7 +13,7 @@ import { useSearchParams } from "next/navigation";
 
 export function ClassroomList() {
   const { school } = useSchool();
-  const classrooms = useQuery(api.classrooms.getSchoolClassrooms, {
+  const classrooms = useQuery(api.schools.getSchoolClassrooms, {
     schoolId: school?._id!,
   });
 
