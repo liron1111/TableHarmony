@@ -6,7 +6,7 @@ import {
   deleteClassroomMembership,
   getClassroomMembership,
 } from "./classroomMemberships";
-import { assertAuthenticated } from "./users";
+import { assertAuthenticated, getUserById } from "./users";
 
 export const createClassroom = mutation({
   args: {
@@ -28,20 +28,6 @@ export const createClassroom = mutation({
       description: args.description,
       image: "/assets/classroom.svg",
     });
-  },
-});
-
-export const getClassroomMemberships = query({
-  args: {
-    classroomId: v.id("classrooms"),
-  },
-  async handler(ctx, args) {
-    const memberships = await ctx.db
-      .query("classroomMemberships")
-      .withIndex("by_classroomId", (q) => q.eq("classroomId", args.classroomId))
-      .collect();
-
-    return memberships;
   },
 });
 
@@ -171,5 +157,24 @@ export const updateClassroom = mutation({
       name: args.name ?? classroom.name,
       description: args.description ?? classroom.description,
     });
+  },
+});
+
+export const getClassroomMemberships = query({
+  args: { classroomId: v.id("classrooms") },
+  async handler(ctx, args) {
+    const memberships = await ctx.db
+      .query("classroomMemberships")
+      .withIndex("by_classroomId", (q) => q.eq("classroomId", args.classroomId))
+      .collect();
+
+    const membershipsWithUserInfo = await Promise.all(
+      memberships.map(async (membership) => {
+        const user = await getUserById(ctx, { userId: membership.userId });
+        return user ? { ...membership, user } : null;
+      })
+    );
+
+    return membershipsWithUserInfo.filter((membership) => membership !== null);
   },
 });

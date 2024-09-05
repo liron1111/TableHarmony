@@ -8,7 +8,6 @@ import { usePathname } from "next/navigation";
 import {
   AlignLeftIcon,
   ClipboardIcon,
-  EllipsisVerticalIcon,
   HomeIcon,
   SchoolIcon,
   SettingsIcon,
@@ -44,56 +43,57 @@ export const NavItems = () => {
   const { membership } = useMembership();
   const pathname = usePathname();
 
-  function isNavItemActive(pathname: string, nav: string) {
-    return pathname.includes(nav);
+  function isNavItemActive(nav: string) {
+    return pathname.endsWith(nav);
   }
 
   function schoolPath(path: string) {
     return `/schools/${school?._id}${path ? `/${path}` : ""}`;
   }
 
-  const navItems: NavItem[] = [];
-
-  navItems.push({
-    name: "Overview",
-    href: schoolPath("/"),
-    icon: <HomeIcon className="size-5" />,
-    active: pathname === schoolPath(""),
-    position: "top",
-  });
-
-  navItems.push({
-    name: "Classrooms",
-    href: schoolPath("classrooms"),
-    icon: <SchoolIcon className="size-5" />,
-    active: isNavItemActive(pathname, "/classrooms"),
-    position: "top",
-  });
+  const navItems: NavItem[] = [
+    {
+      name: "Overview",
+      href: schoolPath("/"),
+      icon: <HomeIcon className="size-5" />,
+      active: isNavItemActive("/"),
+      position: "top",
+    },
+    {
+      name: "Classrooms",
+      href: schoolPath("classrooms"),
+      icon: <SchoolIcon className="size-5" />,
+      active: isNavItemActive("classrooms"),
+      position: "top",
+    },
+  ];
 
   if (membership?.role === "manager") {
-    navItems.push({
-      name: "Enrollments",
-      href: schoolPath("enrollments"),
-      icon: <ClipboardIcon className="size-5" />,
-      active: isNavItemActive(pathname, "/enrollments"),
-      position: "bottom",
-    });
-
-    navItems.push({
-      name: "Memberships",
-      href: schoolPath("memberships"),
-      icon: <UsersIcon className="size-5" />,
-      active: isNavItemActive(pathname, "/memberships"),
-      position: "bottom",
-    });
-
-    navItems.push({
-      name: "Settings",
-      href: schoolPath("school-settings"),
-      icon: <SettingsIcon className="size-5" />,
-      active: isNavItemActive(pathname, "/school-settings"),
-      position: "bottom",
-    });
+    navItems.push(
+      ...[
+        {
+          name: "Enrollments",
+          href: schoolPath("enrollments"),
+          icon: <ClipboardIcon className="size-5" />,
+          active: isNavItemActive("/enrollments"),
+          position: "bottom",
+        },
+        {
+          name: "Memberships",
+          href: schoolPath("memberships"),
+          icon: <UsersIcon className="size-5" />,
+          active: isNavItemActive("/memberships"),
+          position: "bottom",
+        },
+        {
+          name: "Settings",
+          href: schoolPath("school-settings"),
+          icon: <SettingsIcon className="size-5" />,
+          active: isNavItemActive("/school-settings"),
+          position: "bottom",
+        },
+      ]
+    );
   }
 
   return navItems;
