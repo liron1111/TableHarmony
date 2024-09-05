@@ -28,6 +28,8 @@ function isManagerRoute(currentPath: string) {
     "/memberships",
     "/enrollments",
     "/school-settings/danger",
+    "/classroom-settings",
+    "/classroom-settings/danger",
   ];
 
   return managerPaths.some((path) => currentPath.endsWith(path));

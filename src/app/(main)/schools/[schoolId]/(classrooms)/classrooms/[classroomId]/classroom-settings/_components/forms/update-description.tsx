@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 
 import { useMutation } from "convex/react";
 import { api } from "../../../../../../../../../../../convex/_generated/api";
-import { useClassroom } from "@/app/(main)/schools/[schoolId]/(main)/classrooms/[classroomId]/_components/providers/classroom-provider";
+import { useClassroom } from "@/app/(main)/schools/[schoolId]/(classrooms)/classrooms/[classroomId]/_components/providers/classroom-provider";
 
 import {
   Form,

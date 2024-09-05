@@ -1,5 +1,3 @@
-import { SchoolProvider } from "../_components/providers/school-provider";
-import { MembershipProvider } from "../_components/providers/membership-provider";
 import { ScreensProvider } from "./onboarding/_components/screens-provider";
 import { Metadata } from "next";
 
@@ -13,14 +11,10 @@ export default function OnboardingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SchoolProvider>
-      <MembershipProvider>
-        <ScreensProvider>
-          <div className="flex min-h-[calc(100vh-65px)] w-full flex-col items-center bg-shapes-background bg-cover bg-center bg-no-repeat">
-            {children}
-          </div>
-        </ScreensProvider>
-      </MembershipProvider>
-    </SchoolProvider>
+    <ScreensProvider>
+      <div className="flex min-h-[calc(100vh-65px)] w-full flex-col items-center bg-shapes-background bg-cover bg-center bg-no-repeat">
+        {children}
+      </div>
+    </ScreensProvider>
   );
 }

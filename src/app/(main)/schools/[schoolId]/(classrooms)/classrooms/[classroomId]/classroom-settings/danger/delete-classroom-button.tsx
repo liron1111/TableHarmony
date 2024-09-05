@@ -3,8 +3,9 @@
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { useMembership } from "@/app/(main)/schools/[schoolId]/_components/providers/membership-provider";
 import { DeleteClassroomDialog } from "../../../_components/delete-classroom-dialog";
+
+import { useMembership } from "@/app/(main)/schools/[schoolId]/_components/providers/membership-provider";
 import { useClassroom } from "../../_components/providers/classroom-provider";
 
 export function DeleteClassroomButton() {

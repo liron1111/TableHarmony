@@ -1,4 +1,4 @@
-import { SchoolSidebar } from "./_components/sidebar";
+import { Sidebar } from "./_components/sidebar";
 
 export default function MainSchoolLayout({
   children,
@@ -7,7 +7,7 @@ export default function MainSchoolLayout({
 }) {
   return (
     <div className="flex">
-      <SchoolSidebar />
+      <Sidebar />
       <div className="relative w-full overflow-x-auto">
         <div className="overflow-auto md:h-[calc(100vh-65px)]">
           <div className="relative mx-auto w-full pb-4 pl-0 pr-4 md:pl-4 md:pr-6">

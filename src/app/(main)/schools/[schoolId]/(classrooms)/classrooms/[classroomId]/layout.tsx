@@ -32,7 +32,9 @@ export default function ClassroomLayout({
 }) {
   return (
     <ClassroomProvider>
-      <ClassroomMembershipProvider>{children}</ClassroomMembershipProvider>
+      <ClassroomMembershipProvider>
+        <div>{children}</div>
+      </ClassroomMembershipProvider>
     </ClassroomProvider>
   );
 }
