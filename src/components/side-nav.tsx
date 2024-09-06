@@ -48,7 +48,7 @@ export default function SideNav({ NavItems }: { NavItems: () => NavItem[] }) {
   };
 
   return (
-    <div className="h-full pr-4">
+    <div className="h-full">
       <div
         className={cn(
           isSidebarExpanded ? "w-[200px]" : "w-[68px]",
@@ -99,10 +99,10 @@ export default function SideNav({ NavItems }: { NavItems: () => NavItem[] }) {
             })}
           </div>
         </aside>
-        <div className="relative mb-[calc(calc(90vh)-40px)]">
+        <div className="relative mt-[calc(calc(90vh)-40px)]">
           <button
             type="button"
-            className="absolute right-[-12px] top-32 flex h-6 w-6 items-center justify-center rounded-full border border-muted-foreground/20 bg-accent shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg"
+            className="absolute bottom-32 right-[-12px] flex h-6 w-6 items-center justify-center rounded-full border border-muted-foreground/20 bg-accent shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg"
             onClick={toggleSidebar}
           >
             {isSidebarExpanded ? (

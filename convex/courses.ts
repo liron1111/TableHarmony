@@ -1,6 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { assertAuthenticated, getCurrentUser } from "./users";
+import { assertAuthenticated, getCurrentUser, getUserById } from "./users";
 import {
   createCourseMembership,
   getCourseMembership,
@@ -69,6 +69,7 @@ export const updateCourse = mutation({
     courseId: v.id("courses"),
     name: v.optional(v.string()),
     description: v.optional(v.string()),
+    info: v.optional(v.string()),
   },
   async handler(ctx, args) {
     const course = await assertCourseOwner(ctx, {
@@ -81,6 +82,7 @@ export const updateCourse = mutation({
     await ctx.db.patch(args.courseId, {
       name: args.name ?? course.name,
       description: args.description ?? course.description,
+      info: args.info ?? course.info,
     });
   },
 });
@@ -121,5 +123,26 @@ export const deleteCourse = mutation({
       throw new ConvexError("You are not authorized to delete this course");
 
     await ctx.db.delete(args.courseId);
+  },
+});
+
+export const getMemberships = query({
+  args: {
+    courseId: v.id("courses"),
+  },
+  async handler(ctx, args) {
+    const memberships = await ctx.db
+      .query("courseMemberships")
+      .withIndex("by_courseId", (q) => q.eq("courseId", args.courseId))
+      .collect();
+
+    const membershipsWithUserInfo = await Promise.all(
+      memberships.map(async (membership) => {
+        const user = await getUserById(ctx, { userId: membership.userId });
+        return user ? { ...membership, user } : null;
+      })
+    );
+
+    return membershipsWithUserInfo.filter((membership) => membership !== null);
   },
 });

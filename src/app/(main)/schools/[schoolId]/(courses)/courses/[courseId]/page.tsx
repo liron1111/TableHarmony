@@ -1,9 +1,9 @@
-import { CourseHeader } from "./_components/course-header";
+import { CourseInfo } from "./_components/course-info";
 
 export default function CoursePage() {
   return (
-    <div className="container">
-      <CourseHeader />
+    <div className="p-8">
+      <CourseInfo />
     </div>
   );
 }

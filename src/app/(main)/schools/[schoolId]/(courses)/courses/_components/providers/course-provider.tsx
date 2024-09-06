@@ -27,7 +27,11 @@ export function useCourse() {
 }
 
 function isManagerRoute(currentPath: string) {
-  const managerPaths = ["/course-settings", "/course-settings/danger"];
+  const managerPaths = [
+    "/course-settings",
+    "/course-settings/danger",
+    "/memberships",
+  ];
 
   return managerPaths.some((path) => currentPath.endsWith(path));
 }

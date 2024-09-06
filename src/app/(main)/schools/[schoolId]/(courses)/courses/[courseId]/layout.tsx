@@ -5,6 +5,7 @@ import { fetchQuery } from "convex/nextjs";
 import { createMetadata } from "@/utils/metadata";
 
 import { CourseProvider } from "../_components/providers/course-provider";
+import { CourseHeader } from "./_components/course-header";
 
 export async function generateMetadata({
   params,
@@ -30,5 +31,10 @@ export default function CourseLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <CourseProvider>{children}</CourseProvider>;
+  return (
+    <CourseProvider>
+      <CourseHeader />
+      {children}
+    </CourseProvider>
+  );
 }

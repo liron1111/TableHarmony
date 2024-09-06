@@ -5,7 +5,12 @@ import { Doc } from "../../../../../../../convex/_generated/dataModel";
 import { api } from "../../../../../../../convex/_generated/api";
 
 import React, { createContext, useContext } from "react";
-import { redirect, usePathname } from "next/navigation";
+import {
+  redirect,
+  useParams,
+  usePathname,
+  useSearchParams,
+} from "next/navigation";
 import { useSchool } from "./school-provider";
 
 interface MembershipContextType {
@@ -44,6 +49,7 @@ export function MembershipProvider({
   const user = useQuery(api.users.getCurrentUser);
 
   const path = usePathname();
+  const { courseId } = useParams();
 
   const membership = useQuery(api.schoolMemberships.getMembership, {
     schoolId: school?._id!,
@@ -58,7 +64,7 @@ export function MembershipProvider({
 
     if (membership === null && !school.isPublic) redirect("/schools");
 
-    if (isManagerRoute(path) && membership?.role !== "manager")
+    if (!courseId && isManagerRoute(path) && membership?.role !== "manager")
       redirect(`/schools/${school._id}`);
   }
 
