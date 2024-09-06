@@ -7,8 +7,8 @@ export function ComingSoon() {
     <div className={cn(cardStyles)}>
       <Image
         src="/assets/under-construction.svg"
-        width="300"
-        height="300"
+        width="250"
+        height="250"
         alt="under construction"
       />
 

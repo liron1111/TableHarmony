@@ -48,7 +48,7 @@ export const NavItems = () => {
   }
 
   function schoolPath(path: string) {
-    return `/schools/${school?._id}${path ? `/${path}` : ""}`;
+    return `/schools/${school?._id}${path}`;
   }
 
   const navItems: NavItem[] = [
@@ -60,10 +60,10 @@ export const NavItems = () => {
       position: "top",
     },
     {
-      name: "Classrooms",
-      href: schoolPath("classrooms"),
+      name: "Courses",
+      href: schoolPath("/courses"),
       icon: <SchoolIcon className="size-5" />,
-      active: isNavItemActive("classrooms"),
+      active: isNavItemActive("/courses"),
       position: "top",
     },
   ];
@@ -73,23 +73,23 @@ export const NavItems = () => {
       ...[
         {
           name: "Enrollments",
-          href: schoolPath("enrollments"),
+          href: schoolPath("/enrollments"),
           icon: <ClipboardIcon className="size-5" />,
           active: isNavItemActive("/enrollments"),
           position: "bottom",
         },
         {
           name: "Memberships",
-          href: schoolPath("memberships"),
+          href: schoolPath("/memberships"),
           icon: <UsersIcon className="size-5" />,
           active: isNavItemActive("/memberships"),
           position: "bottom",
         },
         {
           name: "Settings",
-          href: schoolPath("school-settings"),
+          href: schoolPath("/school-settings"),
           icon: <SettingsIcon className="size-5" />,
-          active: isNavItemActive("/school-settings"),
+          active: pathname.includes("/school-settings"),
           position: "bottom",
         },
       ]

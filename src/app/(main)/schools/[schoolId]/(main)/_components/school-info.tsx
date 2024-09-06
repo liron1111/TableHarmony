@@ -36,9 +36,9 @@ function Info() {
         </div>
         <Image
           src="/assets/welcome-cats.svg"
-          alt="Enrollments"
-          width={500}
-          height={500}
+          alt="school"
+          width="500"
+          height="500"
         />
       </div>
     );

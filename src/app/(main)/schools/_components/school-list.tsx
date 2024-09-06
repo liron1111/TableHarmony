@@ -27,9 +27,9 @@ export function SchoolList({ searchQuery }: { searchQuery: string }) {
         </div>
         <Image
           src="/assets/education.svg"
-          alt="Enrollments"
-          width="300"
-          height="300"
+          alt="schools"
+          width="250"
+          height="250"
         />
       </div>
     );
@@ -47,8 +47,8 @@ export function SchoolList({ searchQuery }: { searchQuery: string }) {
         <span className="font-semibold">No schools found</span>
         <Image
           src="/assets/no-data.svg"
-          width="300"
-          height="300"
+          width="200"
+          height="200"
           alt="no schools placeholder image"
         />
       </div>
@@ -90,20 +90,6 @@ export function SchoolList({ searchQuery }: { searchQuery: string }) {
 }
 
 function CategorySchoolList({ schools }: { schools: Doc<"schools">[] }) {
-  if (schools.length === 0) {
-    return (
-      <div className={cardStyles}>
-        <Image
-          src="/assets/no-data.svg"
-          width="150"
-          height="150"
-          alt="no schools placeholder image"
-        />
-        <span className="font-semibold">No schools found</span>
-      </div>
-    );
-  }
-
   return (
     <div className={gridStyles}>
       {schools.map((school) => (

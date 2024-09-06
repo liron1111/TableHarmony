@@ -12,8 +12,8 @@ export const schoolEnrollmentRoleType = v.union(
   v.literal("student")
 );
 
-export const classroomRoleType = v.union(
-  v.literal("teacher"),
+export const courseRoleType = v.union(
+  v.literal("manager"),
   v.literal("student")
 );
 
@@ -63,18 +63,19 @@ export default defineSchema({
     .index("by_schoolId_userId", ["schoolId", "userId"])
     .index("by_schoolId", ["schoolId"])
     .index("by_userId", ["userId"]),
-  classrooms: defineTable({
+  courses: defineTable({
     schoolId: v.id("schools"),
     name: v.string(),
     description: v.string(),
     image: v.string(),
+    creatorId: v.id("users"),
   }).index("by_schoolId", ["schoolId"]),
-  classroomMemberships: defineTable({
-    classroomId: v.id("classrooms"),
+  courseMemberships: defineTable({
+    courseId: v.id("courses"),
     userId: v.id("users"),
-    role: classroomRoleType,
+    role: courseRoleType,
   })
-    .index("by_classroomId_userId", ["classroomId", "userId"])
-    .index("by_classroomId", ["classroomId"])
+    .index("by_courseId_userId", ["courseId", "userId"])
+    .index("by_courseId", ["courseId"])
     .index("by_userId", ["userId"]),
 });

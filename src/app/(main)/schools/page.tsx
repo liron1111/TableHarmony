@@ -6,7 +6,7 @@ import {
 } from "@/components/page-header";
 import { CreateSchoolSheet } from "./_components/create-school-sheet";
 import { SchoolList } from "./_components/school-list";
-import { SearchForm } from "./_components/search-form";
+import { SearchForm } from "../../../components/search-form";
 
 import { createMetadata } from "@/utils/metadata";
 

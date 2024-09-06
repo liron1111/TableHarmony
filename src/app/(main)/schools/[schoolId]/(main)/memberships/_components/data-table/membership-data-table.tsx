@@ -40,8 +40,8 @@ export function MembershipDataTable() {
         <Image
           src="/assets/selecting-teams.svg"
           alt="Members"
-          width={300}
-          height={300}
+          width="250"
+          height="250"
         />
       </div>
     );

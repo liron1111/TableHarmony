@@ -27,8 +27,8 @@ export function PublicSchoolList({ searchQuery }: { searchQuery: string }) {
         <Image
           src="/assets/no-data.svg"
           alt="No public schools available"
-          width={250}
-          height={250}
+          width="200"
+          height="200"
         />
       </div>
     );
