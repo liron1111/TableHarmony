@@ -3,9 +3,14 @@ import { mutation, query } from "./_generated/server";
 import { assertAuthenticated, getCurrentUser, getUserById } from "./users";
 import {
   createCourseMembership,
+  deleteCourseMembership,
   getCourseMembership,
 } from "./courseMemberships";
 import { getMembership } from "./schoolMemberships";
+import {
+  createCourseEnrollment,
+  deleteCourseEnrollment,
+} from "./courseEnrollments";
 
 export const createCourse = mutation({
   args: {
@@ -144,5 +149,95 @@ export const getMemberships = query({
     );
 
     return membershipsWithUserInfo.filter((membership) => membership !== null);
+  },
+});
+
+export const getEnrollments = query({
+  args: {
+    courseId: v.id("courses"),
+  },
+  async handler(ctx, args) {
+    const enrollments = await ctx.db
+      .query("courseEnrollments")
+      .withIndex("by_courseId", (q) => q.eq("courseId", args.courseId))
+      .collect();
+
+    const enrollmentsWithUserInfo = await Promise.all(
+      enrollments.map(async (enrollment) => {
+        const user = await getUserById(ctx, { userId: enrollment.userId });
+        return user ? { ...enrollment, user } : null;
+      })
+    );
+
+    return enrollmentsWithUserInfo.filter((enrollment) => enrollment !== null);
+  },
+});
+
+export const enrollCourse = mutation({
+  args: {
+    courseId: v.id("courses"),
+  },
+  async handler(ctx, args) {
+    const user = await assertAuthenticated(ctx, {});
+
+    await createCourseEnrollment(ctx, {
+      courseId: args.courseId,
+      userId: user._id,
+    });
+  },
+});
+
+export const approveEnrollments = mutation({
+  args: {
+    enrollmentIds: v.array(v.id("courseEnrollments")),
+  },
+  async handler(ctx, args) {
+    const enrollments = args.enrollmentIds;
+
+    const promises = enrollments.map(async (enrollmentId) => {
+      const enrollment = await ctx.db.get(enrollmentId);
+
+      if (!enrollment) throw new ConvexError("Enrollment not found");
+
+      await createCourseMembership(ctx, {
+        courseId: enrollment.courseId,
+        userId: enrollment.userId,
+        role: "student",
+      });
+
+      await deleteCourseEnrollment(ctx, { enrollmentId });
+    });
+
+    await Promise.all(promises);
+  },
+});
+
+export const deleteEnrollments = mutation({
+  args: {
+    enrollmentIds: v.array(v.id("courseEnrollments")),
+  },
+  async handler(ctx, args) {
+    const enrollments = args.enrollmentIds;
+
+    const promises = enrollments.map(async (enrollmentId) => {
+      await deleteCourseEnrollment(ctx, { enrollmentId });
+    });
+
+    await Promise.all(promises);
+  },
+});
+
+export const deleteMemberships = mutation({
+  args: {
+    membershipIds: v.array(v.id("courseMemberships")),
+  },
+  async handler(ctx, args) {
+    const memberships = args.membershipIds;
+
+    const promises = memberships.map(async (membershipId) => {
+      await deleteCourseMembership(ctx, { membershipId });
+    });
+
+    await Promise.all(promises);
   },
 });

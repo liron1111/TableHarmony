@@ -13,10 +13,8 @@ export const metadata: Metadata = {
 export default function MembershipsPage() {
   return (
     <div className="container">
-      <PageHeader className="px-2 py-4 md:py-6 md:pb-4 lg:py-10">
-        <PageHeaderHeading className="text-2xl font-semibold md:text-3xl">
-          Memberships
-        </PageHeaderHeading>
+      <PageHeader>
+        <PageHeaderHeading>Memberships</PageHeaderHeading>
         <PageHeaderDescription>
           View and manage course members
         </PageHeaderDescription>

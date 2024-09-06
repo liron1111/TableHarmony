@@ -79,4 +79,11 @@ export default defineSchema({
     .index("by_courseId_userId", ["courseId", "userId"])
     .index("by_courseId", ["courseId"])
     .index("by_userId", ["userId"]),
+  courseEnrollments: defineTable({
+    courseId: v.id("courses"),
+    userId: v.id("users"),
+  })
+    .index("by_courseId_userId", ["courseId", "userId"])
+    .index("by_courseId", ["courseId"])
+    .index("by_userId", ["userId"]),
 });

@@ -13,9 +13,7 @@ export default function CourseSettingsPage() {
   return (
     <div className="container">
       <PageHeader>
-        <PageHeaderHeading className="text-2xl font-semibold md:text-3xl">
-          Course settings
-        </PageHeaderHeading>
+        <PageHeaderHeading>Course settings</PageHeaderHeading>
         <PageHeaderDescription>
           Manage course settings and set preferences.
         </PageHeaderDescription>

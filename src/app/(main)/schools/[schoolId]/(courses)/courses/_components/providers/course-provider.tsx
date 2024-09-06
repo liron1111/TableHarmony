@@ -10,6 +10,7 @@ import {
 
 import React, { createContext, useContext } from "react";
 import { redirect, useParams, usePathname } from "next/navigation";
+import { useMembership } from "../../../../_components/providers/membership-provider";
 
 interface CourseContextType {
   course?: Doc<"courses">;
@@ -37,6 +38,7 @@ function isManagerRoute(currentPath: string) {
 }
 
 export function CourseProvider({ children }: { children: React.ReactNode }) {
+  const { membership: schoolMembership } = useMembership();
   const { courseId, schoolId } = useParams();
   const pathname = usePathname();
 
@@ -53,7 +55,11 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
   });
 
   if (membership !== undefined && course !== undefined) {
-    if (isManagerRoute(pathname) && membership?.role !== "manager")
+    if (
+      isManagerRoute(pathname) &&
+      membership?.role !== "manager" &&
+      schoolMembership?.role !== "manager"
+    )
       redirect(`/schools/${schoolId}/courses/${course._id}`);
   }
 
