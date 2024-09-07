@@ -123,8 +123,6 @@ function MemberCell({ user }: { user: Doc<"users"> }) {
       <Link
         className="text-blue-500 underline-offset-2 hover:underline"
         href={`/schools/${schoolId}/students/${user._id}`}
-        target="_blank"
-        rel="noreferrer"
       >
         {user?.name}
       </Link>

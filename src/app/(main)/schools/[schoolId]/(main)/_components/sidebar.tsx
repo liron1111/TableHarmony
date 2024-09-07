@@ -12,6 +12,7 @@ import {
   HomeIcon,
   SchoolIcon,
   SettingsIcon,
+  UserIcon,
   UsersIcon,
 } from "lucide-react";
 import SideNav, { NavItem } from "@/components/side-nav";
@@ -64,7 +65,10 @@ export const NavItems = () => {
       name: "Courses",
       href: schoolPath("/courses"),
       icon: <SchoolIcon className="size-5" />,
-      active: isNavItemActive("/courses"),
+      active:
+        isNavItemActive("/courses") &&
+        !pathname.includes("students") &&
+        !pathname.includes("teachers"),
       position: "top",
     },
     {
@@ -102,6 +106,16 @@ export const NavItems = () => {
         },
       ]
     );
+  } else {
+    const path = `/${membership?.role}s/${membership?.userId}`;
+
+    navItems.push({
+      name: "Profile",
+      href: schoolPath(path),
+      icon: <UserIcon className="size-5" />,
+      active: pathname.includes(path),
+      position: "top",
+    });
   }
 
   return navItems;

@@ -78,6 +78,9 @@ function TabsSection() {
         <TabsTrigger value={studentId as string} asChild>
           <Link href={calculatePath("/")}>Info</Link>
         </TabsTrigger>
+        <TabsTrigger value="courses" asChild>
+          <Link href={calculatePath("/courses")}>Courses</Link>
+        </TabsTrigger>
       </TabsList>
     </Tabs>
   );

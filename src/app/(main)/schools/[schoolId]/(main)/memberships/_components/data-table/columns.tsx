@@ -73,8 +73,6 @@ export const columns: ColumnDef<any>[] = [
             <Link
               href={path}
               className="text-blue-500 underline-offset-2 hover:underline"
-              target="_blank"
-              rel="noreferrer"
             >
               {user?.name}
             </Link>

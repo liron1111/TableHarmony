@@ -9,6 +9,7 @@ import {
 import { schoolRoleType } from "./schema";
 import { assertSchoolOwner, getSchool } from "./schools";
 import { getCurrentUser } from "./users";
+import { deleteCourse, getUserCourses } from "./courses";
 
 export const assertMembershipAccess = internalQuery({
   args: { membershipId: v.id("schoolMemberships") },
@@ -98,6 +99,17 @@ export const deleteMembership = internalMutation({
 
     if (!membership)
       throw new ConvexError("You are not authorized to delete this membership");
+
+    if (membership.role === "teacher") {
+      const courses = await getUserCourses(ctx, {
+        userId: membership.userId,
+        schoolId: membership.schoolId,
+      });
+
+      await Promise.all(
+        courses.map((course) => deleteCourse(ctx, { courseId: course._id }))
+      );
+    }
 
     await ctx.db.delete(membership._id);
   },

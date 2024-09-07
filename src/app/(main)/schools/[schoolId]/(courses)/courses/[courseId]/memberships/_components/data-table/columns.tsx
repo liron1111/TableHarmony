@@ -155,8 +155,6 @@ function MemberCell({
       <Link
         className="text-blue-500 underline-offset-2 hover:underline"
         href={path}
-        target="_blank"
-        rel="noreferrer"
       >
         {user?.name}
       </Link>

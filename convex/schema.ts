@@ -72,7 +72,9 @@ export default defineSchema({
     image: v.string(),
     creatorId: v.id("users"),
     info: v.optional(v.string()),
-  }).index("by_schoolId", ["schoolId"]),
+  })
+    .index("by_schoolId", ["schoolId"])
+    .index("by_schoolId_creatorId", ["creatorId", "schoolId"]),
   courseMemberships: defineTable({
     courseId: v.id("courses"),
     userId: v.id("users"),

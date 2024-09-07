@@ -45,6 +45,23 @@ export const createCourse = mutation({
   },
 });
 
+export const getUserCourses = query({
+  args: {
+    userId: v.id("users"),
+    schoolId: v.id("schools"),
+  },
+  async handler(ctx, args) {
+    const courses = await ctx.db
+      .query("courses")
+      .withIndex("by_schoolId_creatorId", (q) =>
+        q.eq("creatorId", args.userId).eq("schoolId", args.schoolId)
+      )
+      .collect();
+
+    return courses;
+  },
+});
+
 export const getSchoolCourses = query({
   args: {
     schoolId: v.id("schools"),
@@ -302,5 +319,27 @@ export const getEvents = query({
       .collect();
 
     return events;
+  },
+});
+
+export const getStudentCourses = query({
+  args: {
+    schoolId: v.id("schools"),
+    userId: v.id("users"),
+  },
+  async handler(ctx, args) {
+    const memberships = await ctx.db
+      .query("courseMemberships")
+      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+      .collect();
+
+    const courses = await Promise.all(
+      memberships.map(async (membership) => {
+        const course = await getCourse(ctx, { courseId: membership.courseId });
+        return { course, membership };
+      })
+    );
+
+    return courses;
   },
 });

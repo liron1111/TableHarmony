@@ -7,7 +7,6 @@ import {
   PageHeaderDescription,
 } from "@/components/page-header";
 import { EnrollSchoolSheet } from "./enroll-school-sheet";
-import { ExitSchoolDialog } from "./exit-school-dialog";
 import { useMembership } from "@/app/(main)/schools/[schoolId]/_components/providers/membership-provider";
 
 export function SchoolHeader() {
@@ -23,11 +22,6 @@ export function SchoolHeader() {
         {membership === null && (
           <PageActions>
             <EnrollSchoolSheet />
-          </PageActions>
-        )}
-        {(membership?.role === "teacher" || membership?.role === "student") && (
-          <PageActions>
-            <ExitSchoolDialog />
           </PageActions>
         )}
       </PageHeader>
