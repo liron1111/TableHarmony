@@ -39,7 +39,7 @@ export function CourseHeader() {
   return (
     <div className="w-full border-b border-border">
       <div className="container">
-        <PageHeader className="px-2 py-4 md:py-6 md:pb-4 lg:py-6 lg:pb-5">
+        <PageHeader>
           <div className="flex gap-4">
             <Avatar className="md:size-16">
               <AvatarImage src={course?.image} alt="Course Image" />

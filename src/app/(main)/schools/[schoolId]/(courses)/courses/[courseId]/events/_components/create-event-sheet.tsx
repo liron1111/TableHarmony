@@ -31,6 +31,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { shapeErrors } from "@/utils/errors";
 import { useCourse } from "../../../_components/providers/course-provider";
+import { useMutation } from "convex/react";
+import { api } from "../../../../../../../../../../convex/_generated/api";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = z.object({
   name: z
@@ -43,6 +52,7 @@ const formSchema = z.object({
       message: "Description is required",
     })
     .max(50),
+  type: z.enum(["exam", "assignment"]),
 });
 
 function CreateEventForm({
@@ -50,16 +60,31 @@ function CreateEventForm({
 }: {
   setShowSheet: Dispatch<SetStateAction<boolean>>;
 }) {
-  //const createEvent = useMutation(api.events.createEvent);
+  const createEvent = useMutation(api.courseEvents.createCourseEvent);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      type: "assignment",
+    },
   });
+
+  const { course } = useCourse();
 
   const isLoading = form.formState.isSubmitting;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!course) return;
+
     try {
+      await createEvent({
+        courseId: course._id,
+        name: values.name,
+        description: values.description,
+        type: "exam",
+        startDate: Date.now(),
+        endDate: Date.now(),
+      });
       toast.success("Created event successfully!");
     } catch (error) {
       const formattedError = shapeErrors({ error });
@@ -104,6 +129,34 @@ function CreateEventForm({
                 />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem {...field}>
+              <FormLabel>Label</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={isLoading}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {["exam", "assignment"].map((label) => (
+                      <SelectItem key={label} value={label}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
             </FormItem>
           )}
         />

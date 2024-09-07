@@ -14,6 +14,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Link from "next/link";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -50,13 +51,36 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => {
       const user = row.original.user;
 
+      const calculatePath = () => {
+        if (row.original.role === "student")
+          return `/schools/${row.original.schoolId}/students/${user?._id}`;
+
+        if (row.original.role === "teacher")
+          return `/schools/${row.original.schoolId}/teachers/${user?._id}`;
+
+        return "";
+      };
+
+      const path = calculatePath();
+
       return (
         <div className="flex items-center gap-2">
           <Avatar className="size-5">
             <AvatarImage src={user?.image} alt={`${user?.name} avatar`} />
             <AvatarFallback className="text-xs">SC</AvatarFallback>
           </Avatar>
-          <span>{user?.name}</span>
+          {path ? (
+            <Link
+              href={path}
+              className="text-blue-500 underline-offset-2 hover:underline"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {user?.name}
+            </Link>
+          ) : (
+            <span>{user?.name}</span>
+          )}
         </div>
       );
     },

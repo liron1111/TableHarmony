@@ -143,9 +143,10 @@ export const deleteCourse = mutation({
       throw new ConvexError("You are not authorized to delete this course");
     }
 
-    const [memberships, enrollments] = await Promise.all([
+    const [memberships, enrollments, events] = await Promise.all([
       getMemberships(ctx, { courseId: args.courseId }),
       getEnrollments(ctx, { courseId: args.courseId }),
+      getEvents(ctx, { courseId: args.courseId }),
     ]);
 
     await Promise.all([
@@ -154,6 +155,9 @@ export const deleteCourse = mutation({
       }),
       enrollments.map((enrollment) => {
         ctx.db.delete(enrollment._id);
+      }),
+      events.map((event) => {
+        ctx.db.delete(event._id);
       }),
     ]);
 
@@ -284,5 +288,19 @@ export const deleteMemberships = mutation({
     });
 
     await Promise.all(promises);
+  },
+});
+
+export const getEvents = query({
+  args: {
+    courseId: v.id("courses"),
+  },
+  async handler(ctx, args) {
+    const events = await ctx.db
+      .query("courseEvents")
+      .withIndex("by_courseId", (q) => q.eq("courseId", args.courseId))
+      .collect();
+
+    return events;
   },
 });

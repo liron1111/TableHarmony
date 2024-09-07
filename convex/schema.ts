@@ -17,6 +17,8 @@ export const courseRoleType = v.union(
   v.literal("student")
 );
 
+export const eventType = v.union(v.literal("exam"), v.literal("assignment"));
+
 export default defineSchema({
   users: defineTable({
     clerkId: v.string(),
@@ -86,4 +88,12 @@ export default defineSchema({
     .index("by_courseId_userId", ["courseId", "userId"])
     .index("by_courseId", ["courseId"])
     .index("by_userId", ["userId"]),
+  courseEvents: defineTable({
+    courseId: v.id("courses"),
+    name: v.string(),
+    type: eventType,
+    description: v.string(),
+    startDate: v.number(),
+    endDate: v.number(),
+  }).index("by_courseId", ["courseId"]),
 });

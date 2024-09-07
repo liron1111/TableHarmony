@@ -42,7 +42,7 @@ export const getUserByClerkId = internalQuery({
   },
 });
 
-export const getUserById = internalQuery({
+export const getUserById = query({
   args: { userId: v.id("users") },
   async handler(ctx, args) {
     const user = await ctx.db

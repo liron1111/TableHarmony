@@ -14,6 +14,9 @@ import {
 import { Trash2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DeleteMembershipsDialog } from "./delete-memberships-dialog";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { Doc } from "../../../../../../../../../../../convex/_generated/dataModel";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -48,17 +51,7 @@ export const columns: ColumnDef<any>[] = [
       <DataTableColumnHeader column={column} title="Member" />
     ),
     cell: ({ row }) => {
-      const user = row.original.user;
-
-      return (
-        <div className="flex items-center gap-2">
-          <Avatar className="size-5">
-            <AvatarImage src={user?.image} alt={`${user?.name} avatar`} />
-            <AvatarFallback className="text-xs">SC</AvatarFallback>
-          </Avatar>
-          <span>{user?.name}</span>
-        </div>
-      );
+      return <MemberCell user={row.original.user} role={row.original.role} />;
     },
     filterFn: (row, id, value) => {
       return row.original.user.name.toLowerCase().includes(value.toLowerCase());
@@ -133,3 +126,40 @@ export const columns: ColumnDef<any>[] = [
     },
   },
 ];
+
+function MemberCell({
+  user,
+  role,
+}: {
+  user: Doc<"users">;
+  role: "teacher" | "student";
+}) {
+  const { schoolId } = useParams();
+
+  const calculatePath = () => {
+    if (role === "student") {
+      return `/schools/${schoolId}/students/${user._id}`;
+    }
+
+    return `/schools/${schoolId}/teachers/${user._id}`;
+  };
+
+  const path = calculatePath();
+
+  return (
+    <div className="flex items-center gap-2">
+      <Avatar className="size-5">
+        <AvatarImage src={user?.image} alt={`${user?.name} avatar`} />
+        <AvatarFallback className="text-xs">SC</AvatarFallback>
+      </Avatar>
+      <Link
+        className="text-blue-500 underline-offset-2 hover:underline"
+        href={path}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {user?.name}
+      </Link>
+    </div>
+  );
+}

@@ -4,6 +4,7 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import { CreateEventSheet } from "./_components/create-event-sheet";
+import { EventsList } from "./_components/events-list";
 
 export default function EventsPage() {
   return (
@@ -14,6 +15,7 @@ export default function EventsPage() {
           <CreateEventSheet />
         </PageActions>
       </PageHeader>
+      <EventsList />
     </div>
   );
 }

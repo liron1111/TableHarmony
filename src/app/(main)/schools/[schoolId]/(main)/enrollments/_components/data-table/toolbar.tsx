@@ -39,7 +39,7 @@ export function EnrollmentsDataTableToolbar() {
   return (
     <div className="flex flex-col gap-2.5 md:flex-row md:justify-between">
       <div className="relative">
-        <SearchIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 transform text-neutral-500" />
+        <SearchIcon className="absolute right-3 top-1/2 size-4 -translate-y-1/2 transform text-neutral-500" />
         <Input
           placeholder="Search"
           value={
@@ -48,7 +48,7 @@ export function EnrollmentsDataTableToolbar() {
           onChange={(event) =>
             table.getColumn("Assignee")?.setFilterValue(event.target.value)
           }
-          className="pl-10 md:w-[300px] lg:w-[350px]"
+          className="md:w-[300px] lg:w-[350px]"
         />
       </div>
 
