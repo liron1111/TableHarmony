@@ -57,7 +57,12 @@ function LeaveCourseForm({
       >
         Cancel
       </Button>
-      <LoaderButton isLoading={isPending} className="w-full" onClick={onSubmit}>
+      <LoaderButton
+        variant="destructive"
+        isLoading={isPending}
+        className="w-full"
+        onClick={onSubmit}
+      >
         Confirm
       </LoaderButton>
     </div>

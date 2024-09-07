@@ -2,7 +2,7 @@ import { ConvexError, v } from "convex/values";
 import { internalMutation, query } from "./_generated/server";
 import { courseRoleType } from "./schema";
 import { assertAuthenticated } from "./users";
-import { getCourse } from "./courses";
+import { assertCourseOwner, getCourse } from "./courses";
 
 export const createCourseMembership = internalMutation({
   args: {
@@ -57,7 +57,13 @@ export const deleteCourseMembership = internalMutation({
 
     const user = await assertAuthenticated(ctx, {});
 
-    //TODO: assert available
+    const course = await assertCourseOwner(ctx, {
+      courseId: membership.courseId,
+    });
+
+    if (!course && user._id !== membership.userId) {
+      throw new ConvexError("Unauthorized to delete this membership");
+    }
 
     await ctx.db.delete(membership._id);
   },

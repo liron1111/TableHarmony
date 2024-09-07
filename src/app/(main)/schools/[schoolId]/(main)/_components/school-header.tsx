@@ -9,11 +9,6 @@ import {
 import { EnrollSchoolSheet } from "./enroll-school-sheet";
 import { ExitSchoolDialog } from "./exit-school-dialog";
 import { useMembership } from "@/app/(main)/schools/[schoolId]/_components/providers/membership-provider";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  description: "General info about this school",
-};
 
 export function SchoolHeader() {
   const { membership } = useMembership();

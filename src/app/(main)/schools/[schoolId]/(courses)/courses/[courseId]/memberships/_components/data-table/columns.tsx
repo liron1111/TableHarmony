@@ -115,7 +115,7 @@ export const columns: ColumnDef<any>[] = [
       const role = row.original.role;
 
       if (role === "manager") {
-        return null;
+        return <div className="py-5" />;
       }
 
       return (

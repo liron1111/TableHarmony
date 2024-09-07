@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 
 import {
   AlignLeftIcon,
+  CalendarIcon,
   ClipboardIcon,
   HomeIcon,
   SchoolIcon,
@@ -64,6 +65,13 @@ export const NavItems = () => {
       href: schoolPath("/courses"),
       icon: <SchoolIcon className="size-5" />,
       active: isNavItemActive("/courses"),
+      position: "top",
+    },
+    {
+      name: "Semesters",
+      href: schoolPath("/semesters"),
+      icon: <CalendarIcon className="size-5" />,
+      active: isNavItemActive("/semesters"),
       position: "top",
     },
   ];

@@ -16,6 +16,7 @@ import {
   deleteEnrollment,
   deleteEnrollments,
 } from "./schoolEnrollments";
+import { deleteCourses, getSchoolCourses } from "./courses";
 
 export const createSchool = mutation({
   args: {
@@ -137,9 +138,10 @@ export const deleteSchool = mutation({
     if (!school)
       throw new ConvexError("You are not authorized to delete this school");
 
-    const [memberships, enrollments] = await Promise.all([
+    const [memberships, enrollments, courses] = await Promise.all([
       getSchoolMemberships(ctx, { schoolId: school._id }),
       getSchoolEnrollments(ctx, { schoolId: school._id }),
+      getSchoolCourses(ctx, { schoolId: school._id }),
     ]);
 
     await Promise.all([
@@ -148,6 +150,9 @@ export const deleteSchool = mutation({
       }),
       deleteEnrollments(ctx, {
         enrollmentIds: enrollments.map((enrollment) => enrollment._id),
+      }),
+      deleteCourses(ctx, {
+        courseIds: courses.map((course) => course._id),
       }),
     ]);
 

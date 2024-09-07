@@ -6,6 +6,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge, BadgeProps } from "@/components/ui/badge";
+import { DeleteMembershipsSheet } from "./delete-memberships-sheet";
+import { Button } from "@/components/ui/button";
+import { TrashIcon } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -98,6 +106,30 @@ export const columns: ColumnDef<any>[] = [
       const date = new Date(row.getValue(columnId));
       const dateString = date.toLocaleDateString("en-GB");
       return dateString.toLowerCase().includes(filterValue.toLowerCase());
+    },
+  },
+  {
+    accessorKey: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      const role = row.original.role;
+
+      if (role === "manager") {
+        return <div className="py-5" />;
+      }
+
+      return (
+        <DeleteMembershipsSheet membershipIds={[row.original._id]}>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button size="icon" variant="ghost">
+                <TrashIcon className="size-4 text-destructive" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Delete</TooltipContent>
+          </Tooltip>
+        </DeleteMembershipsSheet>
+      );
     },
   },
 ];

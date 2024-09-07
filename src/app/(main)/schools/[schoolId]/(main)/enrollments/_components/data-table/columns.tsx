@@ -14,7 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { CheckIcon, Trash2Icon } from "lucide-react";
+import { PlusCircleIcon, Trash2Icon } from "lucide-react";
 import { AcceptEnrollmentsDialog } from "./accept-enrollments-dialog";
 
 type Enrollment = Doc<"schoolEnrollments"> & {
@@ -134,7 +134,7 @@ export const columns: ColumnDef<Enrollment>[] = [
             <Tooltip>
               <TooltipTrigger>
                 <Button variant="ghost" size="icon" aria-label="Accept">
-                  <CheckIcon className="size-4" />
+                  <PlusCircleIcon className="size-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Accept</TooltipContent>

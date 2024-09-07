@@ -1,5 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { assertAuthenticated, getCurrentUser, getUserById } from "./users";
 import {
   createCourseMembership,
@@ -143,7 +143,36 @@ export const deleteCourse = mutation({
       throw new ConvexError("You are not authorized to delete this course");
     }
 
+    const [memberships, enrollments] = await Promise.all([
+      getMemberships(ctx, { courseId: args.courseId }),
+      getEnrollments(ctx, { courseId: args.courseId }),
+    ]);
+
+    await Promise.all([
+      memberships.map((membership) => {
+        ctx.db.delete(membership._id);
+      }),
+      enrollments.map((enrollment) => {
+        ctx.db.delete(enrollment._id);
+      }),
+    ]);
+
     await ctx.db.delete(args.courseId);
+  },
+});
+
+export const deleteCourses = internalMutation({
+  args: {
+    courseIds: v.array(v.id("courses")),
+  },
+  async handler(ctx, args) {
+    const courses = args.courseIds;
+
+    const promises = courses.map(async (courseId) => {
+      await deleteCourse(ctx, { courseId });
+    });
+
+    await Promise.all(promises);
   },
 });
 
