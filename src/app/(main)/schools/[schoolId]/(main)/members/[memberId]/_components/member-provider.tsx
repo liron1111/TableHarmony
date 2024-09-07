@@ -11,39 +11,39 @@ import React, { createContext, useContext } from "react";
 import { redirect, useParams } from "next/navigation";
 import { api } from "../../../../../../../../../convex/_generated/api";
 
-interface TeacherContextType {
-  teacher?: Doc<"users"> | null;
+interface MemberContextType {
+  member?: Doc<"users"> | null;
   membership?: Doc<"schoolMemberships"> | null;
 }
 
-const TeacherContext = createContext<TeacherContextType>({});
+const MemberContext = createContext<MemberContextType>({});
 
-export function useTeacher() {
-  const context = useContext(TeacherContext);
+export function useMember() {
+  const context = useContext(MemberContext);
   if (context === undefined) {
-    throw new Error("useStudent must be used within a StudentProvider");
+    throw new Error("useMember must be used within a MemberProvider");
   }
   return context;
 }
 
-export function TeacherProvider({ children }: { children: React.ReactNode }) {
-  const { teacherId, schoolId } = useParams();
+export function MemberProvider({ children }: { children: React.ReactNode }) {
+  const { memberId, schoolId } = useParams();
 
   const user = useQuery(api.users.getUserById, {
-    userId: teacherId as Id<"users">,
+    userId: memberId as Id<"users">,
   });
 
   const membership = useQuery(api.schoolMemberships.getMembership, {
-    userId: teacherId as Id<"users">,
+    userId: memberId as Id<"users">,
     schoolId: schoolId as Id<"schools">,
   });
 
-  if (membership === null || (membership && membership.role !== "teacher"))
+  if (membership === null || membership?.role === "manager")
     redirect(`/schools/${schoolId}`);
 
   return (
-    <TeacherContext.Provider value={{ teacher: user, membership }}>
+    <MemberContext.Provider value={{ member: user, membership }}>
       {children}
-    </TeacherContext.Provider>
+    </MemberContext.Provider>
   );
 }

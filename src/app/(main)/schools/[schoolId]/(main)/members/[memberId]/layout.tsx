@@ -3,16 +3,17 @@ import { Id } from "../../../../../../../../convex/_generated/dataModel";
 import { fetchQuery } from "convex/nextjs";
 
 import { createMetadata } from "@/utils/metadata";
-import { TeacherProvider } from "./_components/teacher-provider";
-import { TeacherHeader } from "./_components/teacher-header";
+
+import { MemberProvider } from "./_components/member-provider";
+import { MemberHeader } from "./_components/member-header";
 
 export async function generateMetadata({
   params,
 }: {
-  params: { schoolId: Id<"schools">; teacherId: Id<"users"> };
+  params: { schoolId: Id<"schools">; memberId: Id<"users"> };
 }) {
-  const teacher = await fetchQuery(api.users.getUserById, {
-    userId: params.teacherId,
+  const member = await fetchQuery(api.users.getUserById, {
+    userId: params.memberId,
   });
 
   const school = await fetchQuery(api.schools.getSchool, {
@@ -20,19 +21,19 @@ export async function generateMetadata({
   });
 
   return createMetadata({
-    title: `${teacher?.name} | ${school?.name}`,
+    title: `${member?.name} | ${school?.name}`,
   });
 }
 
-export default function TeacherLayout({
+export default function MemberLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <TeacherProvider>
-      <TeacherHeader />
+    <MemberProvider>
+      <MemberHeader />
       <div className="pb-4">{children}</div>
-    </TeacherProvider>
+    </MemberProvider>
   );
 }

@@ -10,6 +10,7 @@ import { SchoolCard } from "../schools/_components/school-card";
 
 export function PublicSchoolList({ searchQuery }: { searchQuery: string }) {
   const schools = useQuery(api.schools.getPublicSchools);
+  const user = useQuery(api.users.getCurrentUser);
 
   if (!schools) return <SchoolListSkeleton />;
 
@@ -58,7 +59,7 @@ export function PublicSchoolList({ searchQuery }: { searchQuery: string }) {
     <div className="space-y-4">
       <div className={gridStyles}>
         {displaySchools.map((school) => (
-          <SchoolCard key={school._id} school={school} />
+          <SchoolCard key={school._id} school={school} userId={user?._id!} />
         ))}
       </div>
     </div>

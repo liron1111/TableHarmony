@@ -136,16 +136,6 @@ function MemberCell({
 }) {
   const { schoolId } = useParams();
 
-  const calculatePath = () => {
-    if (role === "student") {
-      return `/schools/${schoolId}/students/${user._id}`;
-    }
-
-    return `/schools/${schoolId}/teachers/${user._id}`;
-  };
-
-  const path = calculatePath();
-
   return (
     <div className="flex items-center gap-2">
       <Avatar className="size-5">
@@ -154,7 +144,7 @@ function MemberCell({
       </Avatar>
       <Link
         className="text-blue-500 underline-offset-2 hover:underline"
-        href={path}
+        href={`/schools/${schoolId}/members/${user._id}`}
       >
         {user?.name}
       </Link>

@@ -65,10 +65,7 @@ export const NavItems = () => {
       name: "Courses",
       href: schoolPath("/courses"),
       icon: <SchoolIcon className="size-5" />,
-      active:
-        isNavItemActive("/courses") &&
-        !pathname.includes("students") &&
-        !pathname.includes("teachers"),
+      active: isNavItemActive("/courses") && !pathname.includes("members"),
       position: "top",
     },
     {
@@ -107,7 +104,7 @@ export const NavItems = () => {
       ]
     );
   } else {
-    const path = `/${membership?.role}s/${membership?.userId}`;
+    const path = `/members/${membership?.userId}`;
 
     navItems.push({
       name: "Profile",

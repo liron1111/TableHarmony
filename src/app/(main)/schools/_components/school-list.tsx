@@ -7,10 +7,11 @@ import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cardStyles, gridStyles } from "@/styles/common";
 import { SchoolCard } from "./school-card";
-import { Doc } from "../../../../../convex/_generated/dataModel";
+import { Doc, Id } from "../../../../../convex/_generated/dataModel";
 
 export function SchoolList({ searchQuery }: { searchQuery: string }) {
   const schools = useQuery(api.schools.getUserSchools);
+  const user = useQuery(api.users.getCurrentUser);
 
   if (!schools) return <SchoolListSkeleton />;
 
@@ -70,30 +71,36 @@ export function SchoolList({ searchQuery }: { searchQuery: string }) {
       {ownedSchools.length !== 0 && (
         <div className="space-y-3">
           <h2 className="text-lg font-semibold">Owned schools</h2>
-          <CategorySchoolList schools={ownedSchools} />
+          <CategorySchoolList schools={ownedSchools} userId={user?._id!} />
         </div>
       )}
       {teachingSchools.length !== 0 && (
         <div className="space-y-3">
           <h2 className="text-lg font-semibold">Teaching schools</h2>
-          <CategorySchoolList schools={teachingSchools} />
+          <CategorySchoolList schools={teachingSchools} userId={user?._id!} />
         </div>
       )}
       {studentSchools.length !== 0 && (
         <div className="space-y-3">
           <h2 className="text-lg font-semibold">Student schools</h2>
-          <CategorySchoolList schools={studentSchools} />
+          <CategorySchoolList schools={studentSchools} userId={user?._id!} />
         </div>
       )}
     </div>
   );
 }
 
-function CategorySchoolList({ schools }: { schools: Doc<"schools">[] }) {
+function CategorySchoolList({
+  schools,
+  userId,
+}: {
+  schools: Doc<"schools">[];
+  userId: Id<"users">;
+}) {
   return (
     <div className={gridStyles}>
       {schools.map((school) => (
-        <SchoolCard key={school._id} school={school} />
+        <SchoolCard key={school._id} school={school} userId={userId} />
       ))}
     </div>
   );

@@ -52,7 +52,7 @@ export default function SideNav({ NavItems }: { NavItems: () => NavItem[] }) {
       <div
         className={cn(
           isSidebarExpanded ? "w-[200px]" : "w-[68px]",
-          "hidden h-full transform border-r bg-accent transition-all duration-300 ease-in-out sm:flex"
+          "hidden h-full transform border-r border-border bg-accent transition-all duration-300 ease-in-out dark:bg-inherit sm:flex"
         )}
       >
         <aside className="flex h-full w-full columns-1 flex-col overflow-x-hidden break-words px-4">

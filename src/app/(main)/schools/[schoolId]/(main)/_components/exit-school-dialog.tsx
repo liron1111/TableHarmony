@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/credenza";
 import { Button } from "@/components/ui/button";
 import { shapeErrors } from "@/utils/errors";
+import { LogOutIcon } from "lucide-react";
 
 export function ExitSchoolDialog() {
   const { school } = useSchool();
@@ -49,7 +50,10 @@ export function ExitSchoolDialog() {
   return (
     <Credenza open={isOpen} onOpenChange={setIsOpen}>
       <CredenzaTrigger>
-        <Button variant="destructive">Exit school</Button>
+        <Button variant="destructive">
+          <LogOutIcon className="mr-2 h-4 w-4" />
+          Exit school
+        </Button>
       </CredenzaTrigger>
       <CredenzaContent>
         <CredenzaHeader>

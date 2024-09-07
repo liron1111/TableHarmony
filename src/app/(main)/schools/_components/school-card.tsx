@@ -1,8 +1,4 @@
-"use client";
-
 import { Doc, Id } from "../../../../../convex/_generated/dataModel";
-import { api } from "../../../../../convex/_generated/api";
-import { useQuery } from "convex/react";
 
 import Link from "next/link";
 
@@ -15,7 +11,6 @@ import {
 } from "@/components/ui/card";
 import { EllipsisVerticalIcon, SettingsIcon, TrashIcon } from "lucide-react";
 import { DeleteSchoolDialog } from "./delete-school-dialog";
-import Image from "next/image";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -24,33 +19,34 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export function SchoolCard({ school }: { school: Doc<"schools"> }) {
-  const user = useQuery(api.users.getCurrentUser);
-
-  //TODO: better looking card
+export function SchoolCard({
+  school,
+  userId,
+}: {
+  school: Doc<"schools">;
+  userId: Id<"users">;
+}) {
   return (
     <div className="relative rounded-md transition-all duration-200 hover:shadow-md dark:border dark:hover:border-white">
       <Link href={`/schools/${school._id}`} aria-label="school">
-        <Card>
-          <CardHeader className="flex flex-row items-center gap-4">
-            <Image
-              alt="school image"
-              src={school.image}
-              width="35"
-              height="35"
-              className="rounded-md"
-            />
+        <Card className="p-4">
+          <CardHeader className="flex flex-row items-center gap-4 p-2">
+            <Avatar>
+              <AvatarImage src={school.image} alt="School" />
+              <AvatarFallback>SC</AvatarFallback>
+            </Avatar>
             <div>
-              <CardTitle>{school.name}</CardTitle>
-              <CardDescription className="line-clamp-4">
+              <CardTitle className="font-semibold">{school.name}</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 {school.description}
               </CardDescription>
             </div>
           </CardHeader>
         </Card>
       </Link>
-      {user?._id === school.creatorId && (
+      {userId === school.creatorId && (
         <div className="absolute right-4 top-4 flex flex-row items-center">
           <div className="flex items-center">
             <MenuButton schoolId={school._id} />

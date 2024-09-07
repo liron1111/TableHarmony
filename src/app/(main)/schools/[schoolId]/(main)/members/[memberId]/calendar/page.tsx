@@ -1,13 +1,11 @@
 import { PageHeader, PageHeaderHeading } from "@/components/page-header";
-import { CourseList } from "./course-list";
 
-export default function StudentCoursesPage() {
+export default function StudentCalendarPage() {
   return (
     <div className="container">
       <PageHeader>
-        <PageHeaderHeading>Courses</PageHeaderHeading>
+        <PageHeaderHeading>Calendar</PageHeaderHeading>
       </PageHeader>
-      <CourseList />
     </div>
   );
 }

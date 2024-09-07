@@ -122,7 +122,7 @@ function MemberCell({ user }: { user: Doc<"users"> }) {
       </Avatar>
       <Link
         className="text-blue-500 underline-offset-2 hover:underline"
-        href={`/schools/${schoolId}/students/${user._id}`}
+        href={`/schools/${schoolId}/members/${user._id}`}
       >
         {user?.name}
       </Link>
