@@ -5,6 +5,15 @@ import { DataTableColumnHeader } from "@/components/data-table";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DeleteEnrollmentsDialog } from "./delete-enrollments-dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import { PlusCircleIcon, Trash2Icon } from "lucide-react";
+import { AcceptEnrollmentsDialog } from "./accept-enrollments-dialog";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -69,6 +78,42 @@ export const columns: ColumnDef<any>[] = [
       const date = new Date(row.getValue(columnId));
       const dateString = date.toLocaleDateString("en-GB");
       return dateString.toLowerCase().includes(filterValue.toLowerCase());
+    },
+  },
+  {
+    accessorKey: "actions",
+    header: () => <p>Actions</p>,
+    cell: ({ row }) => {
+      const role = row.original.role;
+
+      if (role === "manager") {
+        return null;
+      }
+
+      return (
+        <div>
+          <DeleteEnrollmentsDialog enrollmentIds={[row.original._id]}>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button variant="ghost" size="icon" aria-label="Delete">
+                  <Trash2Icon className="size-4 text-destructive" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Delete</TooltipContent>
+            </Tooltip>
+          </DeleteEnrollmentsDialog>
+          <AcceptEnrollmentsDialog enrollmentIds={[row.original._id]}>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button variant="ghost" size="icon" aria-label="Accept">
+                  <PlusCircleIcon className="size-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Accept</TooltipContent>
+            </Tooltip>
+          </AcceptEnrollmentsDialog>
+        </div>
+      );
     },
   },
 ];

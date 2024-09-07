@@ -2,7 +2,8 @@
 
 import { Dispatch, SetStateAction, useState } from "react";
 
-import { api } from "../../../../../../../../../convex/_generated/api";
+import { api } from "../../../../../../../../../../../convex/_generated/api";
+import { Id } from "../../../../../../../../../../../convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 
 import {
@@ -17,28 +18,25 @@ import { toast } from "sonner";
 import { LoaderButton } from "@/components/loader-button";
 import { Button } from "@/components/ui/button";
 import { shapeErrors } from "@/utils/errors";
-import { useCourse } from "../../_components/providers/course-provider";
 
-function LeaveCourseForm({
+function DeleteMembershipsForm({
+  membershipsIds,
   setShowDialog,
 }: {
+  membershipsIds: string[];
   setShowDialog: Dispatch<SetStateAction<boolean>>;
 }) {
   const [isPending, setIsPending] = useState(false);
-  const deleteMembership = useMutation(api.courses.deleteMemberships);
-
-  const { membership } = useCourse();
+  const deleteMemberships = useMutation(api.courses.deleteMemberships);
 
   async function onSubmit() {
-    if (!membership) return;
-
     setIsPending(true);
 
     try {
-      await deleteMembership({
-        membershipIds: [membership?._id],
+      await deleteMemberships({
+        membershipIds: membershipsIds as Id<"courseMemberships">[],
       });
-      toast.success("Left course successfully!");
+      toast.success("Deleted memberships successfully!");
     } catch (error) {
       const formattedError = shapeErrors({ error });
       toast.error(formattedError.message);
@@ -57,14 +55,25 @@ function LeaveCourseForm({
       >
         Cancel
       </Button>
-      <LoaderButton isLoading={isPending} className="w-full" onClick={onSubmit}>
+      <LoaderButton
+        variant="destructive"
+        isLoading={isPending}
+        className="w-full"
+        onClick={onSubmit}
+      >
         Confirm
       </LoaderButton>
     </div>
   );
 }
 
-export function LeaveCourseDialog({ children }: { children: React.ReactNode }) {
+export function DeleteMembershipsDialog({
+  membershipsIds,
+  children,
+}: {
+  membershipsIds: string[];
+  children: React.ReactNode;
+}) {
   const [showDialog, setShowDialog] = useState(false);
 
   return (
@@ -73,13 +82,16 @@ export function LeaveCourseDialog({ children }: { children: React.ReactNode }) {
 
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>Leave course</CredenzaTitle>
+          <CredenzaTitle>Delete memberships</CredenzaTitle>
           <CredenzaDescription>
-            Are you sure you want to leave this course?
+            Are you sure you want to delete these memberships?
           </CredenzaDescription>
         </CredenzaHeader>
 
-        <LeaveCourseForm setShowDialog={setShowDialog} />
+        <DeleteMembershipsForm
+          membershipsIds={membershipsIds}
+          setShowDialog={setShowDialog}
+        />
       </CredenzaContent>
     </Credenza>
   );

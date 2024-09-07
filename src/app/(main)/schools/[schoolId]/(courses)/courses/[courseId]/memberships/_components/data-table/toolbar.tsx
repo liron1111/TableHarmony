@@ -7,9 +7,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { useContext } from "react";
 import { SearchIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useCourse } from "../../../../_components/providers/course-provider";
+import { DeleteMembershipsDialog } from "./delete-memberships-dialog";
 
 export function MembershipsDataTableToolbar() {
   const { table } = useContext(DataTableContext);
+  const { membership } = useCourse();
 
   const selectedMemberships = table
     .getSelectedRowModel()
@@ -43,6 +47,17 @@ export function MembershipsDataTableToolbar() {
             },
           ]}
         />
+        {selectedMemberships.length !== 0 && (
+          <>
+            {!selectedMemberships.includes(membership?._id) && (
+              <DeleteMembershipsDialog membershipsIds={selectedMemberships}>
+                <Button variant="destructive">
+                  Delete {selectedMemberships.length} selected
+                </Button>
+              </DeleteMembershipsDialog>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

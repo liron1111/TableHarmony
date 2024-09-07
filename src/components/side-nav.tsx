@@ -48,7 +48,7 @@ export default function SideNav({ NavItems }: { NavItems: () => NavItem[] }) {
   };
 
   return (
-    <div className="h-full">
+    <div className="h-full pr-4">
       <div
         className={cn(
           isSidebarExpanded ? "w-[200px]" : "w-[68px]",

@@ -9,10 +9,9 @@ import { DeleteCourseDialog } from "../../../_components/delete-course-dialog";
 
 export function DeleteCourseButton() {
   const [open, setOpen] = useState(false);
+  const { course } = useCourse();
 
-  const { course, membership } = useCourse();
-
-  if (!course || membership?.role !== "manager") return null;
+  if (!course) return null;
 
   return (
     <>

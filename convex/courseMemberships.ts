@@ -11,21 +11,12 @@ export const createCourseMembership = internalMutation({
     role: courseRoleType,
   },
   async handler(ctx, args) {
-    const user = await assertAuthenticated(ctx, {});
+    await assertAuthenticated(ctx, {});
 
     const course = await getCourse(ctx, { courseId: args.courseId });
 
     if (!course) {
       throw new ConvexError("Course not found");
-    }
-
-    const membership = await getCourseMembership(ctx, {
-      courseId: args.courseId,
-      userId: user._id,
-    });
-
-    if (membership?.role !== "manager") {
-      throw new ConvexError("Unauthorized to create course membership");
     }
 
     await ctx.db.insert("courseMemberships", {

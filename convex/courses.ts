@@ -120,12 +120,28 @@ export const deleteCourse = mutation({
     courseId: v.id("courses"),
   },
   async handler(ctx, args) {
-    const course = await assertCourseOwner(ctx, {
-      courseId: args.courseId,
-    });
+    const user = await assertAuthenticated(ctx, {});
 
-    if (!course)
+    const course = await ctx.db.get(args.courseId);
+    if (!course) throw new ConvexError("Course not found");
+
+    // Check if the user is the course manager
+    const courseMembership = await getCourseMembership(ctx, {
+      courseId: args.courseId,
+      userId: user._id,
+    });
+    const isCourseOwner = courseMembership?.role === "manager";
+
+    // Check if the user is the school manager
+    const schoolMembership = await getMembership(ctx, {
+      schoolId: course.schoolId,
+      userId: user._id,
+    });
+    const isSchoolOwner = schoolMembership?.role === "manager";
+
+    if (!isCourseOwner && !isSchoolOwner) {
       throw new ConvexError("You are not authorized to delete this course");
+    }
 
     await ctx.db.delete(args.courseId);
   },
