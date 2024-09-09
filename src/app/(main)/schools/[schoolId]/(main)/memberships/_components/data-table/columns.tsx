@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge, BadgeProps } from "@/components/ui/badge";
-import { DeleteMembershipsSheet } from "./delete-memberships-sheet";
+import { DeleteMembershipsDialog } from "./delete-memberships-dialog";
 import { Button } from "@/components/ui/button";
 import { TrashIcon } from "lucide-react";
 import {
@@ -129,7 +129,7 @@ export const columns: ColumnDef<any>[] = [
       }
 
       return (
-        <DeleteMembershipsSheet membershipIds={[row.original._id]}>
+        <DeleteMembershipsDialog membershipIds={[row.original._id]}>
           <Tooltip>
             <TooltipTrigger>
               <Button size="icon" variant="ghost">
@@ -138,7 +138,7 @@ export const columns: ColumnDef<any>[] = [
             </TooltipTrigger>
             <TooltipContent>Delete</TooltipContent>
           </Tooltip>
-        </DeleteMembershipsSheet>
+        </DeleteMembershipsDialog>
       );
     },
   },

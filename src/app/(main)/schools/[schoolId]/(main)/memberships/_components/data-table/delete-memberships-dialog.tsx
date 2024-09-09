@@ -7,13 +7,13 @@ import { Id } from "../../../../../../../../../convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  Credenza,
+  CredenzaContent,
+  CredenzaDescription,
+  CredenzaHeader,
+  CredenzaTitle,
+  CredenzaTrigger,
+} from "@/components/ui/credenza";
 import { toast } from "sonner";
 import { LoaderButton } from "@/components/loader-button";
 import { Button } from "@/components/ui/button";
@@ -22,10 +22,10 @@ import { shapeErrors } from "@/utils/errors";
 
 function DeleteMembershipsForm({
   membershipIds,
-  setShowSheet,
+  setShowCredenza,
 }: {
   membershipIds: Id<"schoolMemberships">[];
-  setShowSheet: Dispatch<SetStateAction<boolean>>;
+  setShowCredenza: Dispatch<SetStateAction<boolean>>;
 }) {
   const [isPending, setIsPending] = useState(false);
   const deleteMemberships = useMutation(
@@ -44,7 +44,7 @@ function DeleteMembershipsForm({
     }
 
     setIsPending(false);
-    setShowSheet(false);
+    setShowCredenza(false);
   }
 
   return (
@@ -52,7 +52,7 @@ function DeleteMembershipsForm({
       <Button
         variant="outline"
         className="w-full"
-        onClick={() => setShowSheet(false)}
+        onClick={() => setShowCredenza(false)}
       >
         Cancel
       </Button>
@@ -68,33 +68,33 @@ function DeleteMembershipsForm({
   );
 }
 
-export function DeleteMembershipsSheet({
+export function DeleteMembershipsDialog({
   membershipIds,
   children,
 }: {
   membershipIds: string[];
   children: React.ReactNode;
 }) {
-  const [showSheet, setShowSheet] = useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
-    <Sheet open={showSheet} onOpenChange={setShowSheet}>
-      <SheetTrigger>{children}</SheetTrigger>
+    <Credenza open={open} onOpenChange={setOpen}>
+      <CredenzaTrigger>{children}</CredenzaTrigger>
 
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Delete Memberships</SheetTitle>
-          <SheetDescription>
+      <CredenzaContent>
+        <CredenzaHeader>
+          <CredenzaTitle>Delete Memberships</CredenzaTitle>
+          <CredenzaDescription>
             These memberships will immediately be deleted. Once deleted,
             you&apos;ll no longer be able to view or modify it.
-          </SheetDescription>
-        </SheetHeader>
+          </CredenzaDescription>
+        </CredenzaHeader>
 
         <DeleteMembershipsForm
           membershipIds={membershipIds as Id<"schoolMemberships">[]}
-          setShowSheet={setShowSheet}
+          setShowCredenza={setOpen}
         />
-      </SheetContent>
-    </Sheet>
+      </CredenzaContent>
+    </Credenza>
   );
 }

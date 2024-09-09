@@ -12,7 +12,7 @@ import { useMember } from "./member-provider";
 import { useMembership } from "../../../../_components/providers/membership-provider";
 import { ExitSchoolDialog } from "../../../_components/exit-school-dialog";
 import { Button } from "@/components/ui/button";
-import { DeleteMembershipsSheet } from "../../../memberships/_components/data-table/delete-memberships-sheet";
+import { DeleteMembershipsDialog } from "../../../memberships/_components/data-table/delete-memberships-dialog";
 import { Id } from "../../../../../../../../../convex/_generated/dataModel";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
@@ -54,11 +54,11 @@ function MembershipButtons() {
   if (membership?.role !== "manager") return null;
 
   return (
-    <DeleteMembershipsSheet
+    <DeleteMembershipsDialog
       membershipIds={[memberMembership?._id as Id<"schoolMemberships">]}
     >
       <Button variant="destructive">Delete member</Button>
-    </DeleteMembershipsSheet>
+    </DeleteMembershipsDialog>
   );
 }
 

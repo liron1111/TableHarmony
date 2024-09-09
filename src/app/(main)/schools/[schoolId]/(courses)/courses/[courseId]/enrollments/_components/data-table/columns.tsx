@@ -12,7 +12,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { PlusCircleIcon, Trash2Icon } from "lucide-react";
+import { PlusCircleIcon, TrashIcon } from "lucide-react";
 import { AcceptEnrollmentsDialog } from "./accept-enrollments-dialog";
 import { useParams } from "next/navigation";
 import Link from "next/link";
@@ -89,7 +89,7 @@ export const columns: ColumnDef<any>[] = [
             <Tooltip>
               <TooltipTrigger>
                 <Button variant="ghost" size="icon" aria-label="Delete">
-                  <Trash2Icon className="size-4 text-destructive" />
+                  <TrashIcon className="size-4 text-destructive" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Delete</TooltipContent>

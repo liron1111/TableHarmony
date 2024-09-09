@@ -7,6 +7,7 @@ import {
   createCourseMembership,
   deleteCourseMembership,
   getCourseMembership,
+  getUserCourseMemberships,
 } from "./courseMemberships";
 import {
   createCourseEnrollment,
@@ -32,7 +33,6 @@ export const createCourse = mutation({
 
     const courseId = await ctx.db.insert("courses", {
       schoolId: args.schoolId,
-      creatorId: user._id,
       name: args.name,
       description: args.description,
       image: "/assets/course.svg",
@@ -52,14 +52,20 @@ export const getUserCourses = query({
     schoolId: v.id("schools"),
   },
   async handler(ctx, args) {
-    const courses = await ctx.db
-      .query("courses")
-      .withIndex("by_schoolId_creatorId", (q) =>
-        q.eq("schoolId", args.schoolId).eq("creatorId", args.userId)
-      )
-      .collect();
+    const memberships = await getUserCourseMemberships(ctx, {
+      schoolId: args.schoolId,
+      userId: args.userId,
+    });
 
-    return courses;
+    const courses = await Promise.all(
+      memberships.map(async (membership) => {
+        const course = await ctx.db.get(membership.courseId);
+
+        return course ? { membership, course } : null;
+      })
+    );
+
+    return courses.filter((course) => course !== null);
   },
 });
 

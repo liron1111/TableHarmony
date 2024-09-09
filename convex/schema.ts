@@ -41,13 +41,12 @@ export default defineSchema({
     message: v.string(),
   }),
   schools: defineTable({
-    creatorId: v.id("users"),
     name: v.string(),
     description: v.string(),
     isPublic: v.boolean(),
     image: v.string(),
     info: v.optional(v.string()),
-  }).index("by_creatorId", ["creatorId"]),
+  }),
   schoolMemberships: defineTable({
     schoolId: v.id("schools"),
     userId: v.id("users"),
@@ -70,12 +69,8 @@ export default defineSchema({
     name: v.string(),
     description: v.string(),
     image: v.string(),
-    creatorId: v.id("users"),
     info: v.optional(v.string()),
-  })
-    .index("by_schoolId", ["schoolId"])
-    .index("creator_id", ["creatorId"])
-    .index("by_schoolId_creatorId", ["schoolId", "creatorId"]),
+  }).index("by_schoolId", ["schoolId"]),
   courseMemberships: defineTable({
     courseId: v.id("courses"),
     userId: v.id("users"),

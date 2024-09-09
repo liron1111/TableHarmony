@@ -8,7 +8,7 @@ import {
 } from "@/components/data-table";
 import { Input } from "@/components/ui/input";
 import { useContext } from "react";
-import { DeleteMembershipsSheet } from "./delete-memberships-sheet";
+import { DeleteMembershipsDialog } from "./delete-memberships-dialog";
 import { SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -49,22 +49,18 @@ export function MembershipsDataTableToolbar() {
         />
       </div>
       <div className="flex flex-wrap gap-2">
+        {table.getSelectedRowModel().rows.length !== 0 && (
+          <DeleteMembershipsDialog membershipIds={selectedMemberships}>
+            <Button variant="destructive">
+              Delete {selectedMemberships.length} selected
+            </Button>
+          </DeleteMembershipsDialog>
+        )}
         <DataTableFacetedFilter
           column={table.getColumn("Role")}
           title="Role"
           options={roles}
         />
-        {table.getSelectedRowModel().rows.length !== 0 && (
-          <>
-            {!selectedMemberships.includes(membership?._id) && (
-              <DeleteMembershipsSheet membershipIds={selectedMemberships}>
-                <Button variant="destructive">
-                  Delete {selectedMemberships.length} selected
-                </Button>
-              </DeleteMembershipsSheet>
-            )}
-          </>
-        )}
       </div>
     </div>
   );

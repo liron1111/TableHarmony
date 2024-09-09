@@ -6,7 +6,15 @@ import {
 } from "@/components/data-table";
 import { useContext } from "react";
 import { Input } from "@/components/ui/input";
-import { SearchIcon } from "lucide-react";
+import { PlusCircleIcon, SearchIcon, TrashIcon } from "lucide-react";
+import { DeleteEnrollmentsDialog } from "./delete-enrollments-dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import { AcceptEnrollmentsDialog } from "./accept-enrollments-dialog";
 
 export function EnrollmentsDataTableToolbar() {
   const { table } = useContext(DataTableContext);
@@ -32,6 +40,30 @@ export function EnrollmentsDataTableToolbar() {
       </div>
 
       <div className="flex flex-wrap gap-2">
+        {selectedEnrollments.length !== 0 && (
+          <>
+            <DeleteEnrollmentsDialog enrollmentIds={selectedEnrollments}>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button variant="ghost" size="icon" aria-label="Delete">
+                    <TrashIcon className="size-4 text-destructive" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Delete</TooltipContent>
+              </Tooltip>
+            </DeleteEnrollmentsDialog>
+            <AcceptEnrollmentsDialog enrollmentIds={selectedEnrollments}>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button variant="ghost" size="icon" aria-label="Accept">
+                    <PlusCircleIcon className="size-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Accept</TooltipContent>
+              </Tooltip>
+            </AcceptEnrollmentsDialog>
+          </>
+        )}
         <DataTableFacetedFilter
           column={table.getColumn("Role")}
           title="Role"

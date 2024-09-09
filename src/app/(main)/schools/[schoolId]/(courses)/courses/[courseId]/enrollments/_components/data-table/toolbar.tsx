@@ -7,6 +7,11 @@ import { PlusCircleIcon, SearchIcon, TrashIcon } from "lucide-react";
 import { AcceptEnrollmentsDialog } from "./accept-enrollments-dialog";
 import { Button } from "@/components/ui/button";
 import { DeleteEnrollmentsDialog } from "./delete-enrollments-dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function EnrollmentsDataTableToolbar() {
   const { table } = useContext(DataTableContext);
@@ -32,16 +37,24 @@ export function EnrollmentsDataTableToolbar() {
         {selectedEnrollments.length !== 0 && (
           <>
             <DeleteEnrollmentsDialog enrollmentIds={selectedEnrollments}>
-              <Button variant="destructive">
-                <TrashIcon className="mr-2 size-4" />
-                Delete
-              </Button>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button variant="ghost" size="icon" aria-label="Delete">
+                    <TrashIcon className="size-4 text-destructive" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Delete</TooltipContent>
+              </Tooltip>
             </DeleteEnrollmentsDialog>
             <AcceptEnrollmentsDialog enrollmentIds={selectedEnrollments}>
-              <Button>
-                <PlusCircleIcon className="mr-2 size-4" />
-                Accept
-              </Button>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Button variant="ghost" size="icon" aria-label="Accept">
+                    <PlusCircleIcon className="size-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Accept</TooltipContent>
+              </Tooltip>
             </AcceptEnrollmentsDialog>
           </>
         )}

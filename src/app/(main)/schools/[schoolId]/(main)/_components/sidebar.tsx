@@ -3,7 +3,7 @@
 import useMediaQuery from "@/hooks/use-media-query";
 import { useSchool } from "@/app/(main)/schools/[schoolId]/_components/providers/school-provider";
 import { useMembership } from "@/app/(main)/schools/[schoolId]/_components/providers/membership-provider";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 
 import {
   AlignLeftIcon,
@@ -41,7 +41,7 @@ export function SchoolSidebar() {
 }
 
 export const NavItems = () => {
-  const { school } = useSchool();
+  const { schoolId } = useParams();
   const { membership } = useMembership();
   const pathname = usePathname();
 
@@ -50,7 +50,7 @@ export const NavItems = () => {
   }
 
   function schoolPath(path: string) {
-    return `/schools/${school?._id}${path}`;
+    return `/schools/${schoolId}${path}`;
   }
 
   const navItems: NavItem[] = [
@@ -77,7 +77,9 @@ export const NavItems = () => {
     },
   ];
 
-  if (membership?.role === "manager") {
+  if (!membership) return navItems;
+
+  if (membership.role === "manager") {
     navItems.push(
       ...[
         {
@@ -103,17 +105,15 @@ export const NavItems = () => {
         },
       ]
     );
-  } else {
-    const path = `/members/${membership?.userId}`;
-
-    navItems.push({
-      name: "Profile",
-      href: schoolPath(path),
-      icon: <UserIcon className="size-5" />,
-      active: pathname.includes(path),
-      position: "top",
-    });
   }
+
+  navItems.push({
+    name: "Profile",
+    href: schoolPath(`/members/${membership?.userId}`),
+    icon: <UserIcon className="size-5" />,
+    active: pathname.includes(`/members/${membership?.userId}`),
+    position: "top",
+  });
 
   return navItems;
 };

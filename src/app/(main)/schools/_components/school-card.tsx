@@ -20,6 +20,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useQuery } from "convex/react";
+import { api } from "../../../../../convex/_generated/api";
 
 export function SchoolCard({
   school,
@@ -28,6 +30,11 @@ export function SchoolCard({
   school: Doc<"schools">;
   userId: Id<"users">;
 }) {
+  const membership = useQuery(api.schoolMemberships.getSchoolMembership, {
+    userId,
+    schoolId: school._id,
+  });
+
   return (
     <div className="relative rounded-md transition-all duration-200 hover:shadow-md dark:border dark:hover:border-white">
       <Link href={`/schools/${school._id}`} aria-label="school">
@@ -46,7 +53,7 @@ export function SchoolCard({
           </CardHeader>
         </Card>
       </Link>
-      {userId === school.creatorId && (
+      {membership?.role === "manager" && (
         <div className="absolute right-4 top-4 flex flex-row items-center">
           <div className="flex items-center">
             <MenuButton schoolId={school._id} />

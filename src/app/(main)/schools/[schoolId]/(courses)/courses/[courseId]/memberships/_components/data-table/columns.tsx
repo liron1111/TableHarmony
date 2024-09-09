@@ -11,7 +11,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Trash2Icon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DeleteMembershipsDialog } from "./delete-memberships-dialog";
 import Link from "next/link";
@@ -116,7 +116,7 @@ export const columns: ColumnDef<any>[] = [
           <Tooltip>
             <TooltipTrigger>
               <Button variant="ghost" size="icon" aria-label="Delete">
-                <Trash2Icon className="size-4 text-destructive" />
+                <TrashIcon className="size-4 text-destructive" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Delete</TooltipContent>

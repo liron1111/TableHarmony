@@ -33,6 +33,18 @@ export function MembershipsDataTableToolbar() {
         />
       </div>
       <div className="flex flex-wrap gap-2">
+        {selectedMemberships.length !== 0 && (
+          <>
+            {!selectedMemberships.includes(membership?._id) && (
+              <DeleteMembershipsDialog membershipIds={selectedMemberships}>
+                <Button variant="destructive">
+                  Delete {selectedMemberships.length} selected
+                </Button>
+              </DeleteMembershipsDialog>
+            )}
+          </>
+        )}
+
         <DataTableFacetedFilter
           column={table.getColumn("Role")}
           title="Role"
@@ -47,17 +59,6 @@ export function MembershipsDataTableToolbar() {
             },
           ]}
         />
-        {selectedMemberships.length !== 0 && (
-          <>
-            {!selectedMemberships.includes(membership?._id) && (
-              <DeleteMembershipsDialog membershipIds={selectedMemberships}>
-                <Button variant="destructive">
-                  Delete {selectedMemberships.length} selected
-                </Button>
-              </DeleteMembershipsDialog>
-            )}
-          </>
-        )}
       </div>
     </div>
   );

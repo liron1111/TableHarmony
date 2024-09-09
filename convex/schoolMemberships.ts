@@ -10,6 +10,8 @@ import { schoolRoleType } from "./schema";
 
 import { assertSchoolManager } from "./schools";
 import { getCurrentUser } from "./users";
+import { deleteCourse, getUserCourses } from "./courses";
+import { Id } from "./_generated/dataModel";
 
 export const assertSchoolMembershipAccess = internalQuery({
   args: { membershipId: v.id("schoolMemberships") },
@@ -22,15 +24,8 @@ export const assertSchoolMembershipAccess = internalQuery({
 
     if (!user) return null;
 
-    if (membership.userId === user._id) return membership;
-
-    const school = await assertSchoolManager(ctx, {
-      schoolId: membership.schoolId,
-    });
-
-    console.log(school);
-
-    if (!school) return null;
+    if (membership.userId === user._id || membership.role === "manager")
+      return membership;
 
     return membership;
   },
@@ -90,7 +85,10 @@ export const getSchoolMembership = query({
         q.eq("schoolId", args.schoolId).eq("userId", args.userId)
       )
       .first();
+    const id = "js7bbfyzr9zd6a46phz33sk9d570et5y" as Id<"schoolMemberships">;
 
+    const x = await ctx.db.get(id);
+    console.log("x", x, "membership", membership);
     return membership;
   },
 });
@@ -103,10 +101,19 @@ export const deleteSchoolMembership = internalMutation({
     });
 
     if (!membership)
-      throw new ConvexError("Unauthorized to delete this membership");
+      throw new ConvexError("Unauthorized to delete this membership1");
 
     if (membership.role === "teacher") {
-      //TODO: delete all courses e.t.c
+      const courses = await getUserCourses(ctx, {
+        userId: membership.userId,
+        schoolId: membership.schoolId,
+      });
+      await Promise.all(
+        courses.map(
+          async ({ course }) =>
+            await deleteCourse(ctx, { courseId: course?._id })
+        )
+      );
     }
 
     if (membership.role === "student") {

@@ -38,8 +38,7 @@ export function MemberProvider({ children }: { children: React.ReactNode }) {
     schoolId: schoolId as Id<"schools">,
   });
 
-  if (membership === null || membership?.role === "manager")
-    redirect(`/schools/${schoolId}`);
+  if (membership === null) redirect(`/schools/${schoolId}`);
 
   return (
     <MemberContext.Provider value={{ member: user, membership }}>

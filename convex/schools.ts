@@ -10,7 +10,6 @@ import { ConvexError } from "convex/values";
 import { schoolEnrollmentRoleType } from "./schema";
 
 import { assertAuthenticated, getCurrentUser, getUserById } from "./users";
-import { deleteCourse } from "./courses";
 import {
   createSchoolMembership,
   deleteSchoolMembership,
@@ -19,7 +18,6 @@ import {
   getUserSchoolMemberships,
 } from "./schoolMemberships";
 import { createScoolEnrollment } from "./schoolEnrollments";
-import { Id } from "./_generated/dataModel";
 
 export const createSchool = mutation({
   args: {
@@ -33,7 +31,6 @@ export const createSchool = mutation({
     const schoolId = await ctx.db.insert("schools", {
       name: args.name,
       description: args.description,
-      creatorId: user._id,
       image: "/assets/school.svg",
       isPublic: args.isPublic,
     });
@@ -153,9 +150,10 @@ export const deleteSchool = mutation({
     ]);
 
     await Promise.all([
-      deleteSchoolMemberships(ctx, {
-        membershipIds: memberships.map((membership) => membership._id),
-      }),
+      memberships.map(
+        async (membership) =>
+          await deleteSchoolMembership(ctx, { membershipId: membership._id })
+      ),
       enrollments.map((enrollment) => ctx.db.delete(enrollment._id)),
     ]);
 
