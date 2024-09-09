@@ -52,6 +52,7 @@
     "lucide-react": "^0.364.0",
     "next": "^14.2.8",
     "next-mdx-remote": "^5.0.0",
+    "next-pwa": "^5.6.0",
     "next-themes": "^0.3.0",
     "nextjs-toploader": "^1.6.12",
     "react": "^18.3.1",

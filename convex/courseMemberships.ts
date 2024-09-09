@@ -9,7 +9,7 @@ import {
 import { courseRoleType } from "./schema";
 
 import { assertAuthenticated } from "./users";
-import { assertCourseManager, getCourse } from "./courses";
+import { assertCourseManager } from "./courses";
 
 export const createCourseMembership = internalMutation({
   args: {

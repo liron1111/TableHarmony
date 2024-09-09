@@ -85,10 +85,7 @@ export const getSchoolMembership = query({
         q.eq("schoolId", args.schoolId).eq("userId", args.userId)
       )
       .first();
-    const id = "js7bbfyzr9zd6a46phz33sk9d570et5y" as Id<"schoolMemberships">;
 
-    const x = await ctx.db.get(id);
-    console.log("x", x, "membership", membership);
     return membership;
   },
 });

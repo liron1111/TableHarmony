@@ -38,9 +38,9 @@ export const createCourse = mutation({
       image: "/assets/course.svg",
     });
 
-    await createCourseMembership(ctx, {
-      courseId: courseId,
+    await ctx.db.insert("courseMemberships", {
       userId: user._id,
+      courseId: courseId,
       role: "manager",
     });
   },
