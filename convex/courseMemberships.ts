@@ -1,8 +1,10 @@
 import { ConvexError, v } from "convex/values";
-import { internalMutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
+
 import { courseRoleType } from "./schema";
+
 import { assertAuthenticated } from "./users";
-import { assertCourseOwner, getCourse } from "./courses";
+import { assertCourseManager, getCourse } from "./courses";
 
 export const createCourseMembership = internalMutation({
   args: {
@@ -11,7 +13,7 @@ export const createCourseMembership = internalMutation({
     role: courseRoleType,
   },
   async handler(ctx, args) {
-    await assertAuthenticated(ctx, {});
+    const user = await assertAuthenticated(ctx, {});
 
     const course = await getCourse(ctx, { courseId: args.courseId });
 
@@ -19,9 +21,16 @@ export const createCourseMembership = internalMutation({
       throw new ConvexError("Course not found");
     }
 
+    const courseMembership = await getCourseMembership(ctx, {
+      userId: user._id,
+      courseId: course._id,
+    });
+
+    if (courseMembership) throw new ConvexError("Already a member in course");
+
     await ctx.db.insert("courseMemberships", {
-      userId: args.userId,
-      courseId: args.courseId,
+      userId: user._id,
+      courseId: course._id,
       role: args.role,
     });
   },
@@ -57,7 +66,7 @@ export const deleteCourseMembership = internalMutation({
 
     const user = await assertAuthenticated(ctx, {});
 
-    const course = await assertCourseOwner(ctx, {
+    const course = await assertCourseManager(ctx, {
       courseId: membership.courseId,
     });
 
@@ -65,6 +74,21 @@ export const deleteCourseMembership = internalMutation({
       throw new ConvexError("Unauthorized to delete this membership");
     }
 
+    //TODO: delete all related material to user
+
     await ctx.db.delete(membership._id);
+  },
+});
+
+export const deleteCourseMemberships = mutation({
+  args: {
+    membershipIds: v.array(v.id("courseMemberships")),
+  },
+  async handler(ctx, args) {
+    const promises = args.membershipIds.map((membershipId) =>
+      deleteCourseMembership(ctx, { membershipId })
+    );
+
+    await Promise.all(promises);
   },
 });

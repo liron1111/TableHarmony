@@ -1,10 +1,9 @@
 import { ConvexError, v } from "convex/values";
 import { internalMutation, mutation, query } from "./_generated/server";
-import { assertCourseOwner, getCourse } from "./courses";
-import { getSchool } from "./schools";
-import { getMembership } from "./schoolMemberships";
+
+import { assertCourseManager, getCourse } from "./courses";
+import { getSchoolMembership } from "./schoolMemberships";
 import { getCourseMembership } from "./courseMemberships";
-import { assertAuthenticated } from "./users";
 
 export const getEnrollment = query({
   args: {
@@ -35,13 +34,13 @@ export const createCourseEnrollment = mutation({
       throw new ConvexError("Course not found");
     }
 
-    const school = await getSchool(ctx, { schoolId: course.schoolId });
+    const school = await ctx.db.get(course.schoolId);
 
     if (!school) {
       throw new ConvexError("School not found");
     }
 
-    const schoolMembership = await getMembership(ctx, {
+    const schoolMembership = await getSchoolMembership(ctx, {
       schoolId: school._id,
       userId: args.userId,
     });
@@ -86,7 +85,7 @@ export const deleteCourseEnrollment = internalMutation({
       throw new ConvexError("Enrollment not found");
     }
 
-    const course = await assertCourseOwner(ctx, {
+    const course = await assertCourseManager(ctx, {
       courseId: enrollment.courseId,
     });
 
@@ -95,5 +94,18 @@ export const deleteCourseEnrollment = internalMutation({
     }
 
     await ctx.db.delete(args.enrollmentId);
+  },
+});
+
+export const deleteCourseEnrollments = mutation({
+  args: {
+    enrollmentIds: v.array(v.id("courseEnrollments")),
+  },
+  async handler(ctx, args) {
+    const promises = args.enrollmentIds.map((enrollmentId) =>
+      deleteCourseEnrollment(ctx, { enrollmentId })
+    );
+
+    await Promise.all(promises);
   },
 });

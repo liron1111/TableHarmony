@@ -14,7 +14,7 @@ import { useSearchParams } from "next/navigation";
 
 export function CourseList() {
   const { school } = useSchool();
-  const courses = useQuery(api.courses.getSchoolCourses, {
+  const courses = useQuery(api.schools.getSchoolCourses, {
     schoolId: school?._id!,
   });
 

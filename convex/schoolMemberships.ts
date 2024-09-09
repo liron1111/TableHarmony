@@ -7,11 +7,11 @@ import {
 } from "./_generated/server";
 
 import { schoolRoleType } from "./schema";
-import { assertSchoolOwner, getSchool } from "./schools";
-import { getCurrentUser } from "./users";
-import { deleteCourse, getUserCourses } from "./courses";
 
-export const assertMembershipAccess = internalQuery({
+import { assertSchoolManager } from "./schools";
+import { getCurrentUser } from "./users";
+
+export const assertSchoolMembershipAccess = internalQuery({
   args: { membershipId: v.id("schoolMemberships") },
   async handler(ctx, args) {
     const membership = await ctx.db.get(args.membershipId);
@@ -24,33 +24,38 @@ export const assertMembershipAccess = internalQuery({
 
     if (membership.userId === user._id) return membership;
 
-    const school = await getSchool(ctx, { schoolId: membership.schoolId });
-    if (school?.creatorId === user._id) return membership;
+    const school = await assertSchoolManager(ctx, {
+      schoolId: membership.schoolId,
+    });
 
-    return null;
+    console.log(school);
+
+    if (!school) return null;
+
+    return membership;
   },
 });
 
-export const createMembership = internalMutation({
+export const createSchoolMembership = internalMutation({
   args: {
     schoolId: v.id("schools"),
     userId: v.id("users"),
     role: schoolRoleType,
   },
   async handler(ctx, args) {
-    const school = await assertSchoolOwner(ctx, { schoolId: args.schoolId });
+    const school = await assertSchoolManager(ctx, { schoolId: args.schoolId });
 
     if (!school)
       throw new ConvexError(
-        "You are not authorized to create memberships for this school"
+        "Unauthorized to create memberships for this school"
       );
 
-    const membership = await getMembership(ctx, {
+    const membership = await getSchoolMembership(ctx, {
       schoolId: school._id,
       userId: args.userId,
     });
 
-    if (membership) throw new ConvexError("User already has a membership");
+    if (membership) throw new ConvexError("User already a member ");
 
     await ctx.db.insert("schoolMemberships", {
       userId: args.userId,
@@ -61,7 +66,7 @@ export const createMembership = internalMutation({
   },
 });
 
-export const getUserMemberships = internalQuery({
+export const getUserSchoolMemberships = internalQuery({
   async handler(ctx) {
     const user = await getCurrentUser(ctx, {});
 
@@ -76,7 +81,7 @@ export const getUserMemberships = internalQuery({
   },
 });
 
-export const getMembership = query({
+export const getSchoolMembership = query({
   args: { schoolId: v.id("schools"), userId: v.id("users") },
   async handler(ctx, args) {
     const membership = await ctx.db
@@ -90,55 +95,48 @@ export const getMembership = query({
   },
 });
 
-export const deleteMembership = internalMutation({
+export const deleteSchoolMembership = internalMutation({
   args: { membershipId: v.id("schoolMemberships") },
   async handler(ctx, args) {
-    const membership = await assertMembershipAccess(ctx, {
+    const membership = await assertSchoolMembershipAccess(ctx, {
       membershipId: args.membershipId,
     });
 
     if (!membership)
-      throw new ConvexError("You are not authorized to delete this membership");
+      throw new ConvexError("Unauthorized to delete this membership");
 
     if (membership.role === "teacher") {
-      const courses = await getUserCourses(ctx, {
-        userId: membership.userId,
-        schoolId: membership.schoolId,
-      });
+      //TODO: delete all courses e.t.c
+    }
 
-      await Promise.all(
-        courses.map((course) => deleteCourse(ctx, { courseId: course._id }))
-      );
+    if (membership.role === "student") {
+      //TODO: delete all course memberships/enrollments e.t.c
     }
 
     await ctx.db.delete(membership._id);
   },
 });
 
-export const deleteMemberships = mutation({
+export const deleteSchoolMemberships = mutation({
   args: { membershipIds: v.array(v.id("schoolMemberships")) },
   async handler(ctx, args) {
-    const memberships = args.membershipIds;
-
-    const deletionPromises = memberships.map((membership) =>
-      deleteMembership(ctx, { membershipId: membership })
+    const promises = args.membershipIds.map((membershipId) =>
+      deleteSchoolMembership(ctx, { membershipId })
     );
 
-    await Promise.all(deletionPromises);
+    await Promise.all(promises);
   },
 });
 
 export const completeOnboarding = mutation({
   args: { membershipId: v.id("schoolMemberships") },
   async handler(ctx, args) {
-    const membership = await assertMembershipAccess(ctx, {
+    const membership = await assertSchoolMembershipAccess(ctx, {
       membershipId: args.membershipId,
     });
 
     if (!membership)
-      throw new ConvexError(
-        "You are not authorized to complete onboarding for this membership"
-      );
+      throw new ConvexError("Unauthorized to complete onboarding");
 
     await ctx.db.patch(membership._id, {
       boardingComplete: true,

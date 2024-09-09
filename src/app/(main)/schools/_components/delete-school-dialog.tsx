@@ -59,7 +59,7 @@ export function DeleteSchoolDialog({
 
   const onSubmit = async () => {
     try {
-      await deleteSchool({ schoolId: schoolId });
+      await deleteSchool({ schoolId });
       toast.success("Deleted school successfully!");
     } catch (error) {
       const formattedError = shapeErrors({ error });

@@ -19,7 +19,7 @@ import { MembershipsDataTableToolbar } from "./toolbar";
 export function MembershipDataTable() {
   const { course } = useCourse();
 
-  const data = useQuery(api.courses.getMemberships, {
+  const data = useQuery(api.courses.getCourseMemberships, {
     courseId: course?._id!,
   });
 

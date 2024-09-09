@@ -1,0 +1,12 @@
+{
+  "background_color": "#ffffff",
+  "description": "Track, maintain, and streamline every aspect of your schools with DevHarmony",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Dev Harmony",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Dev Harmony",
+  "start_url": "/",
+  "theme_color": "#ffffff"
+}

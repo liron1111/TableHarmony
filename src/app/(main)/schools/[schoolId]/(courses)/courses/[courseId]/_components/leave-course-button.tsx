@@ -25,7 +25,7 @@ function LeaveCourseForm({
   setShowDialog: Dispatch<SetStateAction<boolean>>;
 }) {
   const [isPending, setIsPending] = useState(false);
-  const deleteMembership = useMutation(api.courses.deleteMemberships);
+  const exit = useMutation(api.courses.exit);
 
   const { membership } = useCourse();
 
@@ -35,9 +35,7 @@ function LeaveCourseForm({
     setIsPending(true);
 
     try {
-      await deleteMembership({
-        membershipIds: [membership?._id],
-      });
+      await exit({ membershipId: membership._id });
       toast.success("Left course successfully!");
     } catch (error) {
       const formattedError = shapeErrors({ error });

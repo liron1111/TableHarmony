@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/select";
 import { shapeErrors } from "@/utils/errors";
 
-export function EnrollSchoolForm({
+function EnrollSchoolForm({
   setShowSheet,
 }: {
   setShowSheet: Dispatch<SetStateAction<boolean>>;

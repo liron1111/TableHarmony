@@ -51,7 +51,7 @@ export function MembershipProvider({
   const path = usePathname();
   const { courseId } = useParams();
 
-  const membership = useQuery(api.schoolMemberships.getMembership, {
+  const membership = useQuery(api.schoolMemberships.getSchoolMembership, {
     schoolId: school?._id!,
     userId: user?._id!,
   });

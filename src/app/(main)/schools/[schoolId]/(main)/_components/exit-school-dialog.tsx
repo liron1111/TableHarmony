@@ -28,7 +28,7 @@ export function ExitSchoolDialog() {
   const [isPending, setIsPending] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const exit = useMutation(api.schools.exitSchool);
+  const exit = useMutation(api.schools.exit);
 
   async function onSubmit() {
     if (!school) return;

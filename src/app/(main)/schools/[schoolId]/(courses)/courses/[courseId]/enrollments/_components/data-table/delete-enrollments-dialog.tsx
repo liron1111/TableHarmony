@@ -27,7 +27,9 @@ function DeleteEnrollmentsForm({
   setShowDialog: Dispatch<SetStateAction<boolean>>;
 }) {
   const [isPending, setIsPending] = useState(false);
-  const deleteEnrollments = useMutation(api.courses.deleteEnrollments);
+  const deleteEnrollments = useMutation(
+    api.courseEnrollments.deleteCourseEnrollments
+  );
 
   async function onSubmit() {
     setIsPending(true);

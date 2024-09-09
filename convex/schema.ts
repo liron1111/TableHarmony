@@ -74,7 +74,8 @@ export default defineSchema({
     info: v.optional(v.string()),
   })
     .index("by_schoolId", ["schoolId"])
-    .index("by_schoolId_creatorId", ["creatorId", "schoolId"]),
+    .index("creator_id", ["creatorId"])
+    .index("by_schoolId_creatorId", ["schoolId", "creatorId"]),
   courseMemberships: defineTable({
     courseId: v.id("courses"),
     userId: v.id("users"),
@@ -90,12 +91,4 @@ export default defineSchema({
     .index("by_courseId_userId", ["courseId", "userId"])
     .index("by_courseId", ["courseId"])
     .index("by_userId", ["userId"]),
-  courseEvents: defineTable({
-    courseId: v.id("courses"),
-    name: v.string(),
-    type: eventType,
-    description: v.string(),
-    startDate: v.number(),
-    endDate: v.number(),
-  }).index("by_courseId", ["courseId"]),
 });

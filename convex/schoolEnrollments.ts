@@ -2,27 +2,33 @@ import { ConvexError, v } from "convex/values";
 import { internalMutation, internalQuery, mutation } from "./_generated/server";
 
 import { schoolEnrollmentRoleType } from "./schema";
-import { assertAuthenticated, getCurrentUser } from "./users";
-import { getSchool } from "./schools";
 
-export const assertEnrollmentAccess = internalQuery({
+import { assertAuthenticated, getCurrentUser } from "./users";
+import { assertSchoolManager } from "./schools";
+
+export const assertSchoolEnrollmentAccess = internalQuery({
   args: { enrollmentId: v.id("schoolEnrollments") },
   async handler(ctx, args) {
     const enrollment = await ctx.db.get(args.enrollmentId);
     if (!enrollment) return null;
 
     const user = await getCurrentUser(ctx, {});
-    const school = await getSchool(ctx, { schoolId: enrollment.schoolId });
 
     if (!user) return null;
 
-    if (school?.creatorId !== user._id) return null;
+    if (user._id === enrollment.userId) return enrollment;
+
+    const school = await assertSchoolManager(ctx, {
+      schoolId: enrollment.schoolId,
+    });
+
+    if (!school) return null;
 
     return enrollment;
   },
 });
 
-export const createEnrollment = internalMutation({
+export const createScoolEnrollment = internalMutation({
   args: {
     schoolId: v.id("schools"),
     role: schoolEnrollmentRoleType,
@@ -30,12 +36,10 @@ export const createEnrollment = internalMutation({
   async handler(ctx, args) {
     const user = await assertAuthenticated(ctx, {});
 
-    const enrollment = await ctx.db
-      .query("schoolEnrollments")
-      .withIndex("by_schoolId_userId", (q) =>
-        q.eq("schoolId", args.schoolId).eq("userId", user._id)
-      )
-      .first();
+    const enrollment = await getSchoolEnrollment(ctx, {
+      schoolId: args.schoolId,
+      userId: user._id,
+    });
 
     if (enrollment) throw new ConvexError("Already enrolled");
 
@@ -47,10 +51,27 @@ export const createEnrollment = internalMutation({
   },
 });
 
-export const deleteEnrollment = internalMutation({
+export const getSchoolEnrollment = internalQuery({
+  args: {
+    userId: v.id("users"),
+    schoolId: v.id("schools"),
+  },
+  async handler(ctx, args) {
+    const enrollment = await ctx.db
+      .query("schoolEnrollments")
+      .withIndex("by_schoolId_userId", (q) =>
+        q.eq("schoolId", args.schoolId).eq("userId", args.userId)
+      )
+      .first();
+
+    return enrollment;
+  },
+});
+
+export const deleteSchoolEnrollment = mutation({
   args: { enrollmentId: v.id("schoolEnrollments") },
   async handler(ctx, args) {
-    const enrollment = await assertEnrollmentAccess(ctx, {
+    const enrollment = await assertSchoolEnrollmentAccess(ctx, {
       enrollmentId: args.enrollmentId,
     });
 
@@ -61,15 +82,13 @@ export const deleteEnrollment = internalMutation({
   },
 });
 
-export const deleteEnrollments = mutation({
+export const deleteSchoolEnrollments = mutation({
   args: { enrollmentIds: v.array(v.id("schoolEnrollments")) },
   async handler(ctx, args) {
-    const enrollments = args.enrollmentIds;
-
-    const deletionPromises = enrollments.map((enrollment) =>
-      deleteEnrollment(ctx, { enrollmentId: enrollment })
+    const promises = args.enrollmentIds.map((enrollmentId) =>
+      deleteSchoolEnrollment(ctx, { enrollmentId })
     );
 
-    await Promise.all(deletionPromises);
+    await Promise.all(promises);
   },
 });

@@ -50,7 +50,7 @@ export function MembershipsDataTableToolbar() {
         {selectedMemberships.length !== 0 && (
           <>
             {!selectedMemberships.includes(membership?._id) && (
-              <DeleteMembershipsDialog membershipsIds={selectedMemberships}>
+              <DeleteMembershipsDialog membershipIds={selectedMemberships}>
                 <Button variant="destructive">
                   Delete {selectedMemberships.length} selected
                 </Button>

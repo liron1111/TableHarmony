@@ -33,7 +33,7 @@ export function MemberProvider({ children }: { children: React.ReactNode }) {
     userId: memberId as Id<"users">,
   });
 
-  const membership = useQuery(api.schoolMemberships.getMembership, {
+  const membership = useQuery(api.schoolMemberships.getSchoolMembership, {
     userId: memberId as Id<"users">,
     schoolId: schoolId as Id<"schools">,
   });

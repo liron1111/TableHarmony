@@ -112,7 +112,7 @@ export const columns: ColumnDef<any>[] = [
       }
 
       return (
-        <DeleteMembershipsDialog membershipsIds={[row.original._id]}>
+        <DeleteMembershipsDialog membershipIds={[row.original._id]}>
           <Tooltip>
             <TooltipTrigger>
               <Button variant="ghost" size="icon" aria-label="Delete">

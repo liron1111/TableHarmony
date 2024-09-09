@@ -19,7 +19,7 @@ import { LoaderButton } from "@/components/loader-button";
 import { Button } from "@/components/ui/button";
 import { shapeErrors } from "@/utils/errors";
 
-function DeleteEnrollmentsForm({
+function DeleteEnrollmentForm({
   enrollmentIds,
   setShowDialog,
 }: {
@@ -28,7 +28,7 @@ function DeleteEnrollmentsForm({
 }) {
   const [isPending, setIsPending] = useState(false);
   const deleteEnrollments = useMutation(
-    api.schoolEnrollments.deleteEnrollments
+    api.schoolEnrollments.deleteSchoolEnrollments
   );
 
   async function onSubmit() {
@@ -82,15 +82,13 @@ export function DeleteEnrollmentsDialog({
 
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>
-            Delete Enrollment {enrollmentIds.length > 1 && "s"}
-          </CredenzaTitle>
+          <CredenzaTitle>Delete Enrollment</CredenzaTitle>
           <CredenzaDescription>
             Once deleted, you&apos;ll no longer be able to view or modify it.
           </CredenzaDescription>
         </CredenzaHeader>
 
-        <DeleteEnrollmentsForm
+        <DeleteEnrollmentForm
           enrollmentIds={enrollmentIds as Id<"schoolEnrollments">[]}
           setShowDialog={setShowDialog}
         />

@@ -20,22 +20,22 @@ import { Button } from "@/components/ui/button";
 import { shapeErrors } from "@/utils/errors";
 
 function DeleteMembershipsForm({
-  membershipsIds,
+  membershipIds,
   setShowDialog,
 }: {
-  membershipsIds: string[];
+  membershipIds: Id<"courseMemberships">[];
   setShowDialog: Dispatch<SetStateAction<boolean>>;
 }) {
   const [isPending, setIsPending] = useState(false);
-  const deleteMemberships = useMutation(api.courses.deleteMemberships);
+  const deleteMemberships = useMutation(
+    api.courseMemberships.deleteCourseMemberships
+  );
 
   async function onSubmit() {
     setIsPending(true);
 
     try {
-      await deleteMemberships({
-        membershipIds: membershipsIds as Id<"courseMemberships">[],
-      });
+      await deleteMemberships({ membershipIds });
       toast.success("Deleted memberships successfully!");
     } catch (error) {
       const formattedError = shapeErrors({ error });
@@ -68,10 +68,10 @@ function DeleteMembershipsForm({
 }
 
 export function DeleteMembershipsDialog({
-  membershipsIds,
+  membershipIds,
   children,
 }: {
-  membershipsIds: string[];
+  membershipIds: string[];
   children: React.ReactNode;
 }) {
   const [showDialog, setShowDialog] = useState(false);
@@ -89,7 +89,7 @@ export function DeleteMembershipsDialog({
         </CredenzaHeader>
 
         <DeleteMembershipsForm
-          membershipsIds={membershipsIds}
+          membershipIds={membershipIds as Id<"courseMemberships">[]}
           setShowDialog={setShowDialog}
         />
       </CredenzaContent>

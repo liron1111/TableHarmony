@@ -1,12 +1,13 @@
 import { ConvexError, v } from "convex/values";
 import { internalMutation, mutation, query } from "./_generated/server";
+
 import { assertAuthenticated, getCurrentUser, getUserById } from "./users";
+import { getSchoolMembership } from "./schoolMemberships";
 import {
   createCourseMembership,
   deleteCourseMembership,
   getCourseMembership,
 } from "./courseMemberships";
-import { getMembership } from "./schoolMemberships";
 import {
   createCourseEnrollment,
   deleteCourseEnrollment,
@@ -21,13 +22,13 @@ export const createCourse = mutation({
   async handler(ctx, args) {
     const user = await assertAuthenticated(ctx, {});
 
-    const membership = await getMembership(ctx, {
+    const membership = await getSchoolMembership(ctx, {
       schoolId: args.schoolId,
       userId: user._id,
     });
 
     if (membership?.role !== "teacher")
-      throw new ConvexError("You are not authorized to create a course");
+      throw new ConvexError("Unauthorized to create a course");
 
     const courseId = await ctx.db.insert("courses", {
       schoolId: args.schoolId,
@@ -54,22 +55,8 @@ export const getUserCourses = query({
     const courses = await ctx.db
       .query("courses")
       .withIndex("by_schoolId_creatorId", (q) =>
-        q.eq("creatorId", args.userId).eq("schoolId", args.schoolId)
+        q.eq("schoolId", args.schoolId).eq("creatorId", args.userId)
       )
-      .collect();
-
-    return courses;
-  },
-});
-
-export const getSchoolCourses = query({
-  args: {
-    schoolId: v.id("schools"),
-  },
-  async handler(ctx, args) {
-    const courses = await ctx.db
-      .query("courses")
-      .withIndex("by_schoolId", (q) => q.eq("schoolId", args.schoolId))
       .collect();
 
     return courses;
@@ -94,12 +81,11 @@ export const updateCourse = mutation({
     info: v.optional(v.string()),
   },
   async handler(ctx, args) {
-    const course = await assertCourseOwner(ctx, {
+    const course = await assertCourseManager(ctx, {
       courseId: args.courseId,
     });
 
-    if (!course)
-      throw new ConvexError("You are not authorized to update this course");
+    if (!course) throw new ConvexError("Unauthorized to update this course");
 
     await ctx.db.patch(args.courseId, {
       name: args.name ?? course.name,
@@ -108,7 +94,8 @@ export const updateCourse = mutation({
     });
   },
 });
-export const assertCourseOwner = query({
+
+export const assertCourseManager = query({
   args: {
     courseId: v.id("courses"),
   },
@@ -142,28 +129,27 @@ export const deleteCourse = mutation({
     const course = await ctx.db.get(args.courseId);
     if (!course) throw new ConvexError("Course not found");
 
-    // Check if the user is the course manager
+    // Check if user is the course manager
     const courseMembership = await getCourseMembership(ctx, {
       courseId: args.courseId,
       userId: user._id,
     });
     const isCourseOwner = courseMembership?.role === "manager";
 
-    // Check if the user is the school manager
-    const schoolMembership = await getMembership(ctx, {
+    // Check if user is the school manager
+    const schoolMembership = await getSchoolMembership(ctx, {
       schoolId: course.schoolId,
       userId: user._id,
     });
     const isSchoolOwner = schoolMembership?.role === "manager";
 
     if (!isCourseOwner && !isSchoolOwner) {
-      throw new ConvexError("You are not authorized to delete this course");
+      throw new ConvexError("Unauthorized to delete this course");
     }
 
-    const [memberships, enrollments, events] = await Promise.all([
-      getMemberships(ctx, { courseId: args.courseId }),
-      getEnrollments(ctx, { courseId: args.courseId }),
-      getEvents(ctx, { courseId: args.courseId }),
+    const [memberships, enrollments] = await Promise.all([
+      getCourseMemberships(ctx, { courseId: args.courseId }),
+      getCourseEnrollments(ctx, { courseId: args.courseId }),
     ]);
 
     await Promise.all([
@@ -173,31 +159,13 @@ export const deleteCourse = mutation({
       enrollments.map((enrollment) => {
         ctx.db.delete(enrollment._id);
       }),
-      events.map((event) => {
-        ctx.db.delete(event._id);
-      }),
     ]);
 
     await ctx.db.delete(args.courseId);
   },
 });
 
-export const deleteCourses = internalMutation({
-  args: {
-    courseIds: v.array(v.id("courses")),
-  },
-  async handler(ctx, args) {
-    const courses = args.courseIds;
-
-    const promises = courses.map(async (courseId) => {
-      await deleteCourse(ctx, { courseId });
-    });
-
-    await Promise.all(promises);
-  },
-});
-
-export const getMemberships = query({
+export const getCourseMemberships = query({
   args: {
     courseId: v.id("courses"),
   },
@@ -218,7 +186,7 @@ export const getMemberships = query({
   },
 });
 
-export const getEnrollments = query({
+export const getCourseEnrollments = query({
   args: {
     courseId: v.id("courses"),
   },
@@ -239,7 +207,7 @@ export const getEnrollments = query({
   },
 });
 
-export const enrollCourse = mutation({
+export const enroll = mutation({
   args: {
     courseId: v.id("courses"),
   },
@@ -253,72 +221,44 @@ export const enrollCourse = mutation({
   },
 });
 
+export const exit = mutation({
+  args: {
+    membershipId: v.id("courseMemberships"),
+  },
+  async handler(ctx, args) {
+    await deleteCourseMembership(ctx, { membershipId: args.membershipId });
+  },
+});
+
+export const approveEnrollment = internalMutation({
+  args: {
+    enrollmentId: v.id("courseEnrollments"),
+  },
+  async handler(ctx, args) {
+    const enrollment = await ctx.db.get(args.enrollmentId);
+
+    if (!enrollment) throw new ConvexError("Enrollment not found");
+
+    await createCourseMembership(ctx, {
+      courseId: enrollment.courseId,
+      userId: enrollment.userId,
+      role: "student",
+    });
+
+    await deleteCourseEnrollment(ctx, { enrollmentId: enrollment._id });
+  },
+});
+
 export const approveEnrollments = mutation({
   args: {
     enrollmentIds: v.array(v.id("courseEnrollments")),
   },
   async handler(ctx, args) {
-    const enrollments = args.enrollmentIds;
-
-    const promises = enrollments.map(async (enrollmentId) => {
-      const enrollment = await ctx.db.get(enrollmentId);
-
-      if (!enrollment) throw new ConvexError("Enrollment not found");
-
-      await createCourseMembership(ctx, {
-        courseId: enrollment.courseId,
-        userId: enrollment.userId,
-        role: "student",
-      });
-
-      await deleteCourseEnrollment(ctx, { enrollmentId });
-    });
+    const promises = args.enrollmentIds.map((enrollmentId) =>
+      approveEnrollment(ctx, { enrollmentId })
+    );
 
     await Promise.all(promises);
-  },
-});
-
-export const deleteEnrollments = mutation({
-  args: {
-    enrollmentIds: v.array(v.id("courseEnrollments")),
-  },
-  async handler(ctx, args) {
-    const enrollments = args.enrollmentIds;
-
-    const promises = enrollments.map(async (enrollmentId) => {
-      await deleteCourseEnrollment(ctx, { enrollmentId });
-    });
-
-    await Promise.all(promises);
-  },
-});
-
-export const deleteMemberships = mutation({
-  args: {
-    membershipIds: v.array(v.id("courseMemberships")),
-  },
-  async handler(ctx, args) {
-    const memberships = args.membershipIds;
-
-    const promises = memberships.map(async (membershipId) => {
-      await deleteCourseMembership(ctx, { membershipId });
-    });
-
-    await Promise.all(promises);
-  },
-});
-
-export const getEvents = query({
-  args: {
-    courseId: v.id("courses"),
-  },
-  async handler(ctx, args) {
-    const events = await ctx.db
-      .query("courseEvents")
-      .withIndex("by_courseId", (q) => q.eq("courseId", args.courseId))
-      .collect();
-
-    return events;
   },
 });
 

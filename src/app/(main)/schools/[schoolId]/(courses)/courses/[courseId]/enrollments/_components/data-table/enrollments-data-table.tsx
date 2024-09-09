@@ -19,7 +19,7 @@ import { EnrollmentsDataTableToolbar } from "./toolbar";
 export function EnrollmentsDataTable() {
   const { course } = useCourse();
 
-  const data = useQuery(api.courses.getEnrollments, {
+  const data = useQuery(api.courses.getCourseEnrollments, {
     courseId: course?._id!,
   });
 

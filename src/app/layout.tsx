@@ -40,7 +40,9 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",

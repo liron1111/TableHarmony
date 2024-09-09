@@ -26,7 +26,7 @@ function EnrollCourseForm({
   setShowDialog: Dispatch<SetStateAction<boolean>>;
 }) {
   const [isPending, setIsPending] = useState(false);
-  const enrollCourse = useMutation(api.courses.enrollCourse);
+  const enrollCourse = useMutation(api.courses.enroll);
 
   const { courseId } = useParams();
 

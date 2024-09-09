@@ -29,7 +29,7 @@ function DeleteMembershipsForm({
 }) {
   const [isPending, setIsPending] = useState(false);
   const deleteMemberships = useMutation(
-    api.schoolMemberships.deleteMemberships
+    api.schoolMemberships.deleteSchoolMemberships
   );
 
   async function onSubmit() {
