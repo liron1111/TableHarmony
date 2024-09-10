@@ -96,7 +96,7 @@ export const deleteSchoolMembership = internalMutation({
     });
 
     if (!membership)
-      throw new ConvexError("Unauthorized to delete this membership1");
+      throw new ConvexError("Unauthorized: Cannot delete this membership1");
 
     if (membership.role === "teacher") {
       const courses = await getUserCourses(ctx, {

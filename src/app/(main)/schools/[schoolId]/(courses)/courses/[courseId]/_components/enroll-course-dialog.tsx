@@ -76,7 +76,7 @@ export function EnrollCourseDialog({
         <CredenzaHeader>
           <CredenzaTitle>Enroll</CredenzaTitle>
           <CredenzaDescription>
-            Are you sure you want to enroll to this course?
+            Are you sure you want to enroll to this course ?
           </CredenzaDescription>
         </CredenzaHeader>
 

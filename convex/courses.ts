@@ -120,12 +120,23 @@ export const assertCourseManager = internalQuery({
 
     if (!course) return null;
 
-    const membership = await getCourseMembership(ctx, {
-      courseId: course._id,
-      userId: user._id,
-    });
+    const [schoolMembership, courseMembership] = await Promise.all([
+      getSchoolMembership(ctx, {
+        schoolId: course.schoolId,
+        userId: user._id,
+      }),
+      getCourseMembership(ctx, {
+        courseId: course._id,
+        userId: user._id,
+      }),
+    ]);
+    console.log("assertCourseManager", schoolMembership, courseMembership);
 
-    if (membership?.role !== "manager") return null;
+    if (
+      schoolMembership?.role !== "manager" &&
+      courseMembership?.role !== "manager"
+    )
+      return null;
 
     return course;
   },
@@ -136,19 +147,9 @@ export const deleteCourse = mutation({
     courseId: v.id("courses"),
   },
   async handler(ctx, args) {
-    const user = await assertAuthenticated(ctx, {});
+    const course = await assertCourseManager(ctx, { courseId: args.courseId });
 
-    const course = await ctx.db.get(args.courseId);
-    if (!course) throw new ConvexError("Course not found");
-
-    const courseMembership = await getCourseMembership(ctx, {
-      courseId: args.courseId,
-      userId: user._id,
-    });
-
-    if (courseMembership?.role !== "manager") {
-      throw new ConvexError("Unauthorized: Cannot delete course");
-    }
+    if (!course) throw new ConvexError("Unauthorized: Cannot delete course");
 
     const [memberships, enrollments] = await Promise.all([
       getCourseMemberships(ctx, { courseId: args.courseId }),
@@ -159,8 +160,8 @@ export const deleteCourse = mutation({
       deleteCourseMemberships(ctx, {
         membershipIds: memberships.map((membership) => membership._id),
       }),
-      enrollments.map(async (enrollment) => {
-        await ctx.db.delete(enrollment._id);
+      enrollments.map((enrollment) => {
+        ctx.db.delete(enrollment._id);
       }),
     ]);
 

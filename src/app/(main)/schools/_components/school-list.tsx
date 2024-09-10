@@ -9,6 +9,8 @@ import { cardStyles, gridStyles } from "@/styles/common";
 import { SchoolCard } from "./school-card";
 import { Doc, Id } from "../../../../../convex/_generated/dataModel";
 
+type Role = "manager" | "teacher" | "student";
+
 export function SchoolList({ searchQuery }: { searchQuery: string }) {
   const schools = useQuery(api.schools.getUserSchools);
   const user = useQuery(api.users.getCurrentUser);
@@ -56,36 +58,22 @@ export function SchoolList({ searchQuery }: { searchQuery: string }) {
     );
   }
 
-  const ownedSchools = displaySchools.filter(
-    (school) => school.membership.role === "manager"
-  );
-  const teachingSchools = displaySchools.filter(
-    (school) => school.membership.role === "teacher"
-  );
-  const studentSchools = displaySchools.filter(
-    (school) => school.membership.role === "student"
+  const organized = Object.groupBy(
+    displaySchools,
+    ({ membership }) => membership.role
   );
 
   return (
     <div className="flex flex-col space-y-12">
-      {ownedSchools.length !== 0 && (
-        <div className="space-y-3">
-          <h2 className="text-lg font-semibold">Owned schools</h2>
-          <CategorySchoolList schools={ownedSchools} userId={user?._id!} />
+      {Object.keys(organized).map((role) => (
+        <div className="space-y-3" key={role}>
+          <h2 className="text-lg font-semibold capitalize">{role} schools</h2>
+          <CategorySchoolList
+            schools={organized[role as Role]!}
+            userId={user?._id!}
+          />
         </div>
-      )}
-      {teachingSchools.length !== 0 && (
-        <div className="space-y-3">
-          <h2 className="text-lg font-semibold">Teaching schools</h2>
-          <CategorySchoolList schools={teachingSchools} userId={user?._id!} />
-        </div>
-      )}
-      {studentSchools.length !== 0 && (
-        <div className="space-y-3">
-          <h2 className="text-lg font-semibold">Student schools</h2>
-          <CategorySchoolList schools={studentSchools} userId={user?._id!} />
-        </div>
-      )}
+      ))}
     </div>
   );
 }

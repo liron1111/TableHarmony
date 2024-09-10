@@ -10,6 +10,7 @@ import React, { createContext, useContext } from "react";
 
 import { redirect, useParams } from "next/navigation";
 import { api } from "../../../../../../../../../convex/_generated/api";
+import { AuthorizationError } from "@/utils/errors";
 
 interface MemberContextType {
   member?: Doc<"users"> | null;
@@ -38,7 +39,7 @@ export function MemberProvider({ children }: { children: React.ReactNode }) {
     schoolId: schoolId as Id<"schools">,
   });
 
-  if (membership === null) redirect(`/schools/${schoolId}`);
+  if (membership === null) throw new AuthorizationError();
 
   return (
     <MemberContext.Provider value={{ member: user, membership }}>

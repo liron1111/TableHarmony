@@ -48,6 +48,12 @@ export default defineSchema({
     image: v.string(),
     info: v.optional(v.string()),
   }),
+  semesters: defineTable({
+    schoolId: v.id("schools"),
+    name: v.string(),
+    from: v.number(),
+    to: v.number(),
+  }).index("by_schoolId", ["schoolId"]),
   schoolMemberships: defineTable({
     schoolId: v.id("schools"),
     userId: v.id("users"),

@@ -11,6 +11,7 @@ import {
 import React, { createContext, useContext } from "react";
 import { redirect, useParams, usePathname } from "next/navigation";
 import { useMembership } from "../../../../_components/providers/membership-provider";
+import { AuthorizationError } from "@/utils/errors";
 
 interface CourseContextType {
   course?: Doc<"courses">;
@@ -32,6 +33,7 @@ function isManagerRoute(currentPath: string) {
     "/course-settings",
     "/course-settings/danger",
     "/memberships",
+    "/enrollments",
   ];
 
   return managerPaths.some((path) => currentPath.endsWith(path));
@@ -60,7 +62,7 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
       membership?.role !== "manager" &&
       schoolMembership?.role !== "manager"
     )
-      redirect(`/schools/${schoolId}/courses/${course._id}`);
+      throw new AuthorizationError();
   }
 
   return (

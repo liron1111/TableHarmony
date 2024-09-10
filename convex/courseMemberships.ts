@@ -51,7 +51,7 @@ export const getCourseMembership = query({
         q.eq("courseId", args.courseId).eq("userId", args.userId)
       )
       .first();
-    console.log("getCourseMembership", membership, args);
+
     return membership;
   },
 });

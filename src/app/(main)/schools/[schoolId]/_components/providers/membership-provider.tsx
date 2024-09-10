@@ -12,6 +12,7 @@ import {
   useSearchParams,
 } from "next/navigation";
 import { useSchool } from "./school-provider";
+import { AuthorizationError } from "@/utils/errors";
 
 interface MembershipContextType {
   membership?: Doc<"schoolMemberships"> | null;
@@ -60,10 +61,10 @@ export function MembershipProvider({
         redirect(`/schools/${school._id}/onboarding`);
     } else if (membership?.boardingComplete) redirect(`/schools/${school._id}`);
 
-    if (membership === null && !school.isPublic) redirect("/schools");
+    if (membership === null && !school.isPublic) throw new AuthorizationError();
 
     if (!courseId && isManagerRoute(path) && membership?.role !== "manager")
-      redirect(`/schools/${school._id}`);
+      throw new AuthorizationError();
   }
 
   return (

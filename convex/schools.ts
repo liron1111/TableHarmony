@@ -17,6 +17,7 @@ import {
   getUserSchoolMemberships,
 } from "./schoolMemberships";
 import { createScoolEnrollment } from "./schoolEnrollments";
+import { deleteSemester } from "./semesters";
 
 export const createSchool = mutation({
   args: {
@@ -140,9 +141,10 @@ export const deleteSchool = mutation({
     if (!school)
       throw new ConvexError("You are not authorized to delete this school");
 
-    const [memberships, enrollments] = await Promise.all([
+    const [memberships, enrollments, semesters] = await Promise.all([
       getSchoolMemberships(ctx, { schoolId: school._id }),
       getSchoolEnrollments(ctx, { schoolId: school._id }),
+      getSchoolSemesters(ctx, { schoolId: school._id }),
     ]);
 
     await Promise.all([
@@ -151,6 +153,10 @@ export const deleteSchool = mutation({
           await deleteSchoolMembership(ctx, { membershipId: membership._id })
       ),
       enrollments.map((enrollment) => ctx.db.delete(enrollment._id)),
+      semesters.map(
+        async (semester) =>
+          await deleteSemester(ctx, { semesterId: semester._id })
+      ),
     ]);
 
     await ctx.db.delete(school._id);
@@ -206,6 +212,39 @@ export const getSchoolCourses = query({
       .collect();
 
     return courses;
+  },
+});
+
+export const getSchoolSemesters = query({
+  args: {
+    schoolId: v.id("schools"),
+  },
+  async handler(ctx, args) {
+    const semesters = await ctx.db
+      .query("semesters")
+      .withIndex("by_schoolId", (q) => q.eq("schoolId", args.schoolId))
+      .collect();
+
+    return semesters;
+  },
+});
+
+export const getCurrentSemester = query({
+  args: {
+    schoolId: v.id("schools"),
+  },
+  async handler(ctx, args) {
+    const now = Date.now();
+
+    const semester = await ctx.db
+      .query("semesters")
+      .withIndex("by_schoolId", (q) => q.eq("schoolId", args.schoolId))
+      .filter((q) =>
+        q.and(q.gte(q.field("from"), now), q.lte(q.field("to"), now))
+      )
+      .first();
+
+    return semester;
   },
 });
 
