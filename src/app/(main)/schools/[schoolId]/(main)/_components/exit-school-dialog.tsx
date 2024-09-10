@@ -59,7 +59,7 @@ export function ExitSchoolDialog() {
         <CredenzaHeader>
           <CredenzaTitle>Exit school</CredenzaTitle>
           <CredenzaDescription>
-            Are you sure you want to exit this school?
+            Are you sure you want to exit this school ?
           </CredenzaDescription>
         </CredenzaHeader>
         <CredenzaFooter>

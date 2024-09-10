@@ -13,7 +13,6 @@ import { assertAuthenticated, getCurrentUser, getUserById } from "./users";
 import {
   createSchoolMembership,
   deleteSchoolMembership,
-  deleteSchoolMemberships,
   getSchoolMembership,
   getUserSchoolMemberships,
 } from "./schoolMemberships";
@@ -64,10 +63,7 @@ export const getUserSchools = query({
 
     const schools = await Promise.all(
       memberships.map(async (membership) => {
-        const school = await getSchool(ctx, {
-          schoolId: membership.schoolId,
-        });
-
+        const school = await ctx.db.get(membership.schoolId);
         return school ? { ...school, membership } : null;
       })
     );
@@ -256,7 +252,8 @@ export const approveEnrollment = internalMutation({
       schoolId: enrollment.schoolId,
     });
 
-    if (!school) throw new ConvexError("Unauthorized to approve enrollment");
+    if (!school)
+      throw new ConvexError("Unauthorized: Cannot approve school enrollment");
 
     await createSchoolMembership(ctx, {
       schoolId: school._id,

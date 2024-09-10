@@ -46,7 +46,7 @@ export const createCourseEnrollment = mutation({
     });
 
     if (!schoolMembership || schoolMembership.role !== "student") {
-      throw new ConvexError("Unauthorized to enroll in course");
+      throw new ConvexError("Unauthorized: Cannot enroll to course");
     }
 
     const courseMembership = await getCourseMembership(ctx, {
@@ -90,7 +90,7 @@ export const deleteCourseEnrollment = internalMutation({
     });
 
     if (!course) {
-      throw new ConvexError("Unauthorized to delete enrollment");
+      throw new ConvexError("Unauthorized: Cannot delete course enrollment");
     }
 
     await ctx.db.delete(args.enrollmentId);

@@ -1,11 +1,17 @@
 import { ConvexError, v } from "convex/values";
-import { internalMutation, mutation, query } from "./_generated/server";
+import {
+  internalMutation,
+  internalQuery,
+  mutation,
+  query,
+} from "./_generated/server";
 
 import { assertAuthenticated, getCurrentUser, getUserById } from "./users";
 import { getSchoolMembership } from "./schoolMemberships";
 import {
   createCourseMembership,
   deleteCourseMembership,
+  deleteCourseMemberships,
   getCourseMembership,
   getUserCourseMemberships,
 } from "./courseMemberships";
@@ -29,7 +35,7 @@ export const createCourse = mutation({
     });
 
     if (membership?.role !== "teacher")
-      throw new ConvexError("Unauthorized to create a course");
+      throw new ConvexError("Unauthorized: Cannot create a course");
 
     const courseId = await ctx.db.insert("courses", {
       schoolId: args.schoolId,
@@ -91,7 +97,7 @@ export const updateCourse = mutation({
       courseId: args.courseId,
     });
 
-    if (!course) throw new ConvexError("Unauthorized to update this course");
+    if (!course) throw new ConvexError("Unauthorized: Cannot update course");
 
     await ctx.db.patch(args.courseId, {
       name: args.name ?? course.name,
@@ -101,7 +107,7 @@ export const updateCourse = mutation({
   },
 });
 
-export const assertCourseManager = query({
+export const assertCourseManager = internalQuery({
   args: {
     courseId: v.id("courses"),
   },
@@ -110,12 +116,12 @@ export const assertCourseManager = query({
 
     if (!user) return null;
 
-    const course = await getCourse(ctx, { courseId: args.courseId });
+    const course = await ctx.db.get(args.courseId);
 
     if (!course) return null;
 
     const membership = await getCourseMembership(ctx, {
-      courseId: args.courseId,
+      courseId: course._id,
       userId: user._id,
     });
 
@@ -135,22 +141,13 @@ export const deleteCourse = mutation({
     const course = await ctx.db.get(args.courseId);
     if (!course) throw new ConvexError("Course not found");
 
-    // Check if user is the course manager
     const courseMembership = await getCourseMembership(ctx, {
       courseId: args.courseId,
       userId: user._id,
     });
-    const isCourseOwner = courseMembership?.role === "manager";
 
-    // Check if user is the school manager
-    const schoolMembership = await getSchoolMembership(ctx, {
-      schoolId: course.schoolId,
-      userId: user._id,
-    });
-    const isSchoolOwner = schoolMembership?.role === "manager";
-
-    if (!isCourseOwner && !isSchoolOwner) {
-      throw new ConvexError("Unauthorized to delete this course");
+    if (courseMembership?.role !== "manager") {
+      throw new ConvexError("Unauthorized: Cannot delete course");
     }
 
     const [memberships, enrollments] = await Promise.all([
@@ -159,11 +156,11 @@ export const deleteCourse = mutation({
     ]);
 
     await Promise.all([
-      memberships.map((membership) => {
-        ctx.db.delete(membership._id);
+      deleteCourseMemberships(ctx, {
+        membershipIds: memberships.map((membership) => membership._id),
       }),
-      enrollments.map((enrollment) => {
-        ctx.db.delete(enrollment._id);
+      enrollments.map(async (enrollment) => {
+        await ctx.db.delete(enrollment._id);
       }),
     ]);
 

@@ -82,10 +82,23 @@ export function DeleteMembershipsDialog({
 
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>Delete memberships</CredenzaTitle>
-          <CredenzaDescription>
-            Are you sure you want to delete these memberships?
-          </CredenzaDescription>
+          {membershipIds.length > 1 ? (
+            <>
+              <CredenzaTitle>Delete selected memberships</CredenzaTitle>
+              <CredenzaDescription>
+                These memberships will immediately be deleted. Once deleted,
+                yo&apos;ll no longer be able to view or modify it.
+              </CredenzaDescription>
+            </>
+          ) : (
+            <>
+              <CredenzaTitle>Delete membership</CredenzaTitle>
+              <CredenzaDescription>
+                This membership will immediately be deleted. Once deleted,
+                yo&apos;ll no longer be able to view or modify it.
+              </CredenzaDescription>
+            </>
+          )}
         </CredenzaHeader>
 
         <DeleteMembershipsForm

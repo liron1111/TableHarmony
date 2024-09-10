@@ -75,10 +75,23 @@ export function AcceptEnrollmentsDialog({
 
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>Accept Enrollments</CredenzaTitle>
-          <CredenzaDescription>
-            Accept these enrollments to your school.
-          </CredenzaDescription>
+          {enrollmentIds.length > 1 ? (
+            <>
+              <CredenzaTitle>Accept selected enrollments</CredenzaTitle>
+              <CredenzaDescription>
+                These enrollments will immediately be accepted. Are you sure you
+                want to accept these enrollments ?
+              </CredenzaDescription>
+            </>
+          ) : (
+            <>
+              <CredenzaTitle>Accept enrollment</CredenzaTitle>
+              <CredenzaDescription>
+                This enrollment will immediately be accepted. Are you sure you
+                want to accept it ?
+              </CredenzaDescription>
+            </>
+          )}
         </CredenzaHeader>
 
         <AcceptEnrollmentsForm

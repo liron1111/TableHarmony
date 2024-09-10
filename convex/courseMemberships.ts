@@ -21,7 +21,7 @@ export const createCourseMembership = internalMutation({
     const course = await assertCourseManager(ctx, { courseId: args.courseId });
 
     if (!course) {
-      throw new ConvexError("Unauthorized to create a course membership");
+      throw new ConvexError("Unauthorized: Cannot create a course membership");
     }
 
     const courseMembership = await getCourseMembership(ctx, {
@@ -51,7 +51,7 @@ export const getCourseMembership = query({
         q.eq("courseId", args.courseId).eq("userId", args.userId)
       )
       .first();
-
+    console.log("getCourseMembership", membership, args);
     return membership;
   },
 });
@@ -74,7 +74,7 @@ export const deleteCourseMembership = internalMutation({
     });
 
     if (!course && user._id !== membership.userId) {
-      throw new ConvexError("Unauthorized to delete this membership");
+      throw new ConvexError("Unauthorized: Cannot delete course membership");
     }
 
     //TODO: delete all related material to user

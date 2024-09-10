@@ -82,12 +82,23 @@ export function DeleteEnrollmentsDialog({
 
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>
-            Delete Enrollment {enrollmentIds.length > 1 && "s"}
-          </CredenzaTitle>
-          <CredenzaDescription>
-            Once deleted, you&apos;ll no longer be able to view or modify it.
-          </CredenzaDescription>
+          {enrollmentIds.length > 1 ? (
+            <>
+              <CredenzaTitle>Delete selected enrollments</CredenzaTitle>
+              <CredenzaDescription>
+                These enrollments will immediately be deleted. Once deleted,
+                yo&apos;ll no longer be able to view or modify it.
+              </CredenzaDescription>
+            </>
+          ) : (
+            <>
+              <CredenzaTitle>Delete enrollment</CredenzaTitle>
+              <CredenzaDescription>
+                This enrollment will immediately be deleted. Once deleted,
+                yo&apos;ll no longer be able to view or modify it.
+              </CredenzaDescription>
+            </>
+          )}
         </CredenzaHeader>
 
         <DeleteEnrollmentsForm
