@@ -35,7 +35,9 @@ function EnrollSchoolForm({
   const [isPending, setIsPending] = useState(false);
   const enroll = useMutation(api.schools.enroll);
 
-  const [role, setRole] = useState<"teacher" | "student">("student");
+  const [role, setRole] = useState<"teacher" | "student" | "manager">(
+    "student"
+  );
 
   async function onSubmit() {
     if (!school) return;
@@ -43,7 +45,7 @@ function EnrollSchoolForm({
     setIsPending(true);
 
     try {
-      await enroll({ role: role, schoolId: school._id });
+      await enroll({ role, schoolId: school._id });
       toast.success("Enrolled successfully!");
     } catch (error) {
       const formattedError = shapeErrors({ error });
@@ -59,13 +61,15 @@ function EnrollSchoolForm({
       <Select
         disabled={isPending}
         value={role}
-        onValueChange={(value: "teacher" | "student") => setRole(value)}
+        onValueChange={(value: "teacher" | "student" | "manager") =>
+          setRole(value)
+        }
       >
         <SelectTrigger>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          {["teacher", "student"].map((label) => (
+          {["student", "teacher", "manager"].map((label) => (
             <SelectItem key={label} value={label}>
               {label}
             </SelectItem>

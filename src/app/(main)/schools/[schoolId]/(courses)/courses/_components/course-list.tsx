@@ -31,12 +31,12 @@ export function CourseList() {
             No Courses Available
           </span>
           <p className="text-balance text-muted-foreground">
-            There are currently no classrooms listed for this school.
+            There are currently no courses listed for this school.
           </p>
         </div>
         <Image
           src="/assets/educator.svg"
-          alt="Empty classroom list"
+          alt="Empty course list"
           width={250}
           height={250}
         />
@@ -53,7 +53,7 @@ export function CourseList() {
   if (displayCourses.length === 0) {
     return (
       <div className={cardStyles}>
-        <span className="font-semibold">No matching classrooms</span>
+        <span className="font-semibold">No matching courses</span>
         <Image
           src="/assets/educator.svg"
           width="200"

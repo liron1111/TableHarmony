@@ -15,6 +15,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Link from "next/link";
+import { useMembership } from "../../../../_components/providers/membership-provider";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -121,25 +122,27 @@ export const columns: ColumnDef<any>[] = [
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => {
-      const role = row.original.role;
-
-      if (role === "manager") {
-        return <div className="py-5" />;
-      }
-
-      return (
-        <DeleteMembershipsDialog membershipIds={[row.original._id]}>
-          <Tooltip>
-            <TooltipTrigger>
-              <Button size="icon" variant="ghost">
-                <TrashIcon className="size-4 text-destructive" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Delete</TooltipContent>
-          </Tooltip>
-        </DeleteMembershipsDialog>
-      );
-    },
+    cell: ({ row }) => <Actions membershipId={row.original._id} />,
   },
 ];
+
+function Actions({ membershipId }: { membershipId: string }) {
+  const { membership } = useMembership();
+
+  if (membershipId === membership?._id) {
+    return <div className="py-5" />;
+  }
+
+  return (
+    <DeleteMembershipsDialog membershipIds={[membershipId]}>
+      <Tooltip>
+        <TooltipTrigger>
+          <Button size="icon" variant="ghost">
+            <TrashIcon className="size-4 text-destructive" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Delete</TooltipContent>
+      </Tooltip>
+    </DeleteMembershipsDialog>
+  );
+}

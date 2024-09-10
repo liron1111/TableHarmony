@@ -79,6 +79,14 @@ export const NavItems = () => {
 
   if (!membership) return navItems;
 
+  navItems.push({
+    name: "Profile",
+    href: schoolPath(`/members/${membership?.userId}`),
+    icon: <UserIcon className="size-5" />,
+    active: pathname.includes(`/members/${membership?.userId}`),
+    position: "top",
+  });
+
   if (membership.role === "manager") {
     navItems.push(
       ...[
@@ -107,14 +115,6 @@ export const NavItems = () => {
     );
   }
 
-  navItems.push({
-    name: "Profile",
-    href: schoolPath(`/members/${membership?.userId}`),
-    icon: <UserIcon className="size-5" />,
-    active: pathname.includes(`/members/${membership?.userId}`),
-    position: "top",
-  });
-
   return navItems;
 };
 
@@ -133,7 +133,7 @@ export function SchoolSidebarMobile() {
           <AlignLeftIcon className="size-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left">
+      <SheetContent>
         <SheetHeader>
           <SheetTitle className="truncate">{school?.name}</SheetTitle>
           <SheetDescription className="truncate">

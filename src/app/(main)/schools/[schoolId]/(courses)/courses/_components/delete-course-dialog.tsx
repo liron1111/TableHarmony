@@ -61,7 +61,7 @@ export function DeleteCourseDialog({
 
   const onSubmit = async () => {
     try {
-      await deleteCourse({ courseId: courseId });
+      await deleteCourse({ courseId });
       toast.success("Deleted course successfully!");
     } catch (error) {
       const formattedError = shapeErrors({ error });

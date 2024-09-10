@@ -49,12 +49,16 @@ export function MembershipsDataTableToolbar() {
         />
       </div>
       <div className="flex flex-wrap gap-2">
-        {table.getSelectedRowModel().rows.length !== 0 && (
-          <DeleteMembershipsDialog membershipIds={selectedMemberships}>
-            <Button variant="destructive">
-              Delete {selectedMemberships.length} selected
-            </Button>
-          </DeleteMembershipsDialog>
+        {selectedMemberships.length !== 0 && (
+          <>
+            {!selectedMemberships.includes(membership?._id) && (
+              <DeleteMembershipsDialog membershipIds={selectedMemberships}>
+                <Button variant="destructive">
+                  Delete {selectedMemberships.length} selected
+                </Button>
+              </DeleteMembershipsDialog>
+            )}
+          </>
         )}
         <DataTableFacetedFilter
           column={table.getColumn("Role")}

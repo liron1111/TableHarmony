@@ -9,7 +9,8 @@ export const schoolRoleType = v.union(
 
 export const schoolEnrollmentRoleType = v.union(
   v.literal("teacher"),
-  v.literal("student")
+  v.literal("student"),
+  v.literal("manager")
 );
 
 export const courseRoleType = v.union(
