@@ -47,7 +47,7 @@ const DAYS_OF_WEEK = [
   "monday",
   "tuesday",
   "wednesday",
-  "Thursday",
+  "thursday",
   "friday",
   "saturday",
 ];
@@ -164,11 +164,9 @@ function CreateClassForm({
 
 export function CreateClassSheet() {
   const [showSheet, setShowSheet] = useState(false);
-  const { membership } = useMembership();
-  const { membership: courseMembership } = useCourse();
+  const { membership } = useCourse();
 
-  if (courseMembership?.role !== "manager" && membership?.role !== "manager")
-    return null;
+  if (membership?.role !== "manager") return null;
 
   return (
     <Sheet open={showSheet} onOpenChange={setShowSheet}>

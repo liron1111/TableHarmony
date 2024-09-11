@@ -17,7 +17,6 @@ import {
   getUserSchoolMemberships,
 } from "./schoolMemberships";
 import { createScoolEnrollment } from "./schoolEnrollments";
-import { deleteSemester } from "./semesters";
 
 export const createSchool = mutation({
   args: {
@@ -153,10 +152,7 @@ export const deleteSchool = mutation({
           await deleteSchoolMembership(ctx, { membershipId: membership._id })
       ),
       enrollments.map((enrollment) => ctx.db.delete(enrollment._id)),
-      semesters.map(
-        async (semester) =>
-          await deleteSemester(ctx, { semesterId: semester._id })
-      ),
+      semesters.map((semester) => ctx.db.delete(semester._id)),
     ]);
 
     await ctx.db.delete(school._id);

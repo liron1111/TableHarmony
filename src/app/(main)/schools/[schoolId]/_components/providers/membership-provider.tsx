@@ -61,10 +61,10 @@ export function MembershipProvider({
         redirect(`/schools/${school._id}/onboarding`);
     } else if (membership?.boardingComplete) redirect(`/schools/${school._id}`);
 
-    if (membership === null && !school.isPublic) throw new AuthorizationError();
+    if (membership === null && !school.isPublic) redirect("/schools");
 
     if (!courseId && isManagerRoute(path) && membership?.role !== "manager")
-      throw new AuthorizationError();
+      redirect(`/schools/${school._id}`);
   }
 
   return (

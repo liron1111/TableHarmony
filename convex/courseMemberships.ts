@@ -73,11 +73,8 @@ export const deleteCourseMembership = internalMutation({
       courseId: membership.courseId,
     });
 
-    if (!course && user._id !== membership.userId) {
+    if (!course && user._id !== membership.userId)
       throw new ConvexError("Unauthorized: Cannot delete course membership");
-    }
-
-    //TODO: delete all related material to user
 
     await ctx.db.delete(membership._id);
   },
