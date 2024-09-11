@@ -25,6 +25,21 @@ export function CourseInfo() {
 function Info() {
   const { course } = useCourse();
 
+  if (!course?.info)
+    return (
+      <div className={cardStyles}>
+        <div className="flex flex-col items-center gap-2 text-center">
+          <span className="text-balance text-lg font-semibold md:text-xl">
+            Welcome to {course?.name}!
+          </span>
+          <p className="text-balance text-muted-foreground">
+            {course?.description}
+          </p>
+        </div>
+        <Image src="/assets/hello.svg" alt="course" width="500" height="500" />
+      </div>
+    );
+
   return (
     <div className="w-full space-y-4 rounded-md border border-border">
       <EditorProvider

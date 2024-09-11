@@ -1,7 +1,11 @@
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
-import { assertSchoolManager, getSchoolSemesters } from "./schools";
-import { startOfToday } from "date-fns";
+import { internalMutation, mutation, query } from "./_generated/server";
+import {
+  assertSchoolManager,
+  getCurrentSemester,
+  getSchoolSemesters,
+} from "./schools";
+import { startOfDay, startOfToday } from "date-fns";
 
 export const createSemester = mutation({
   args: {
@@ -11,12 +15,14 @@ export const createSemester = mutation({
     to: v.number(),
   },
   async handler(ctx, args) {
+    const from = startOfDay(args.from).getTime();
+    const to = startOfDay(args.to).getTime();
+
     const school = await assertSchoolManager(ctx, { schoolId: args.schoolId });
 
     if (!school) throw new ConvexError("Unauthorized: Cannot create semester");
 
-    const today = startOfToday().getTime();
-    if (args.from <= today || args.to <= args.from)
+    if (from < startOfToday().getTime() || to <= from)
       throw new ConvexError("Invalid date range");
 
     const existingSemesters = await getSchoolSemesters(ctx, {
@@ -24,7 +30,7 @@ export const createSemester = mutation({
     });
 
     const overlappingSemesters = existingSemesters.filter(
-      (semester) => args.from < semester.to && args.to > semester.from
+      (semester) => from < semester.to && to > semester.from
     );
 
     if (overlappingSemesters.length > 0)
@@ -33,8 +39,8 @@ export const createSemester = mutation({
     await ctx.db.insert("semesters", {
       schoolId: school._id,
       name: args.name,
-      from: args.from,
-      to: args.to,
+      from,
+      to,
     });
   },
 });
@@ -47,6 +53,12 @@ export const updateSemester = mutation({
     to: v.number(),
   },
   async handler(ctx, args) {
+    const from = startOfDay(args.from).getTime();
+    const to = startOfDay(args.to).getTime();
+
+    if (from < startOfToday().getTime() || to <= from)
+      throw new ConvexError("Invalid date range");
+
     const semester = await ctx.db.get(args.semesterId);
 
     if (!semester) throw new ConvexError("Semester not found");
@@ -63,8 +75,8 @@ export const updateSemester = mutation({
 
     const overlappingSemesters = existingSemesters.filter(
       (semester) =>
-        args.from < semester.to &&
-        args.to > semester.from &&
+        from < semester.to &&
+        to > semester.from &&
         args.semesterId !== semester._id
     );
 
@@ -73,8 +85,8 @@ export const updateSemester = mutation({
 
     await ctx.db.patch(args.semesterId, {
       name: args.name,
-      from: args.from,
-      to: args.to,
+      from,
+      to,
     });
   },
 });
@@ -105,5 +117,22 @@ export const getSemester = query({
   async handler(ctx, args) {
     const semester = await ctx.db.get(args.semesterId);
     return semester;
+  },
+});
+
+export const endSemester = mutation({
+  args: {
+    schoolId: v.id("schools"),
+  },
+  async handler(ctx, args) {
+    const semester = await getCurrentSemester(ctx, { schoolId: args.schoolId });
+
+    if (!semester) throw new ConvexError("Semester not found");
+
+    if (semester.to > startOfToday().getTime())
+      throw new ConvexError("Semester has not ended");
+
+    //TODO: delete events enrollments and memberships
+    await ctx.db.delete(semester._id);
   },
 });

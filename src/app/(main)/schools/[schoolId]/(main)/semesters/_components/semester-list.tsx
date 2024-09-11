@@ -16,10 +16,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { compareAsc, format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, PencilIcon, TrashIcon } from "lucide-react";
 import { UpdateSemesterSheet } from "./update-semester-sheet";
 import { DeleteSemesterDialog } from "./delete-semester-dialog";
 import { Button } from "@/components/ui/button";
+import { useMembership } from "../../../_components/providers/membership-provider";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function SemesterList() {
   const { schoolId } = useParams();
@@ -63,6 +69,8 @@ export function SemesterList() {
 }
 
 function SemesterCard({ semester }: { semester: Doc<"semesters"> }) {
+  const { membership } = useMembership();
+
   return (
     <Card>
       <CardHeader>
@@ -72,12 +80,30 @@ function SemesterCard({ semester }: { semester: Doc<"semesters"> }) {
           {format(semester.from, "LLL dd")} - {format(semester.to, "LLL dd, y")}
         </CardDescription>
       </CardHeader>
-      <CardFooter>
-        <DeleteSemesterDialog semesterId={semester._id}>
-          <Button variant="destructive">Delete</Button>
-        </DeleteSemesterDialog>
-        <UpdateSemesterSheet semesterId={semester._id} />
-      </CardFooter>
+      {membership?.role === "manager" && (
+        <CardFooter>
+          <DeleteSemesterDialog semesterId={semester._id}>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button variant="ghost" aria-label="delete">
+                  <TrashIcon className="size-4 text-destructive" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Delete</TooltipContent>
+            </Tooltip>
+          </DeleteSemesterDialog>
+          <UpdateSemesterSheet semesterId={semester._id}>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button variant="ghost" aria-label="edit">
+                  <PencilIcon className="size-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Edit</TooltipContent>
+            </Tooltip>
+          </UpdateSemesterSheet>
+        </CardFooter>
+      )}
     </Card>
   );
 }

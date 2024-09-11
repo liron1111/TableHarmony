@@ -94,7 +94,7 @@ function CreateCourseForm({
                 <Input
                   {...field}
                   disabled={isLoading}
-                  placeholder="Enter school name"
+                  placeholder="Enter course name"
                 />
               </FormControl>
               <FormMessage />
@@ -112,7 +112,7 @@ function CreateCourseForm({
                   {...field}
                   disabled={isLoading}
                   className="h-[200px]"
-                  placeholder="Provide a detailed description of the school."
+                  placeholder="Provide a detailed description of the course."
                 />
               </FormControl>
               <FormMessage />

@@ -19,6 +19,7 @@ import { LoaderButton } from "@/components/loader-button";
 import { Button } from "@/components/ui/button";
 
 import { shapeErrors } from "@/utils/errors";
+import { useMembership } from "../../../_components/providers/membership-provider";
 
 function DeleteSemesterForm({
   semesterId,
@@ -74,6 +75,9 @@ export function DeleteSemesterDialog({
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const { membership } = useMembership();
+
+  if (membership?.role !== "manager") return null;
 
   return (
     <Credenza open={open} onOpenChange={setOpen}>

@@ -114,17 +114,6 @@ function MembershipButtons() {
           <DropdownMenuContent className="space-y-1">
             <DropdownMenuItem asChild>
               <Link
-                href={calculatePath("memberships")}
-                className={cn("cursor-pointer", {
-                  "bg-accent": isActive("memberships"),
-                })}
-              >
-                <UsersIcon className="mr-2 size-4" />
-                Members
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link
                 href={calculatePath("enrollments")}
                 className={cn("cursor-pointer", {
                   "bg-accent": isActive("enrollments"),
@@ -132,6 +121,17 @@ function MembershipButtons() {
               >
                 <ClipboardIcon className="mr-2 size-4" />
                 Enrolls
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
+                href={calculatePath("memberships")}
+                className={cn("cursor-pointer", {
+                  "bg-accent": isActive("memberships"),
+                })}
+              >
+                <UsersIcon className="mr-2 size-4" />
+                Members
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />

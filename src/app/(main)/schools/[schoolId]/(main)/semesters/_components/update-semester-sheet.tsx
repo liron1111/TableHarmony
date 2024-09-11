@@ -146,8 +146,10 @@ function UpdateSemesterForm({
 }
 
 export function UpdateSemesterSheet({
+  children,
   semesterId,
 }: {
+  children: React.ReactNode;
   semesterId: Id<"semesters">;
 }) {
   const [showSheet, setShowSheet] = useState(false);
@@ -157,9 +159,7 @@ export function UpdateSemesterSheet({
 
   return (
     <Sheet open={showSheet} onOpenChange={setShowSheet}>
-      <SheetTrigger asChild>
-        <Button>Update semester</Button>
-      </SheetTrigger>
+      <SheetTrigger>{children}</SheetTrigger>
 
       <SheetContent>
         <SheetHeader>
