@@ -102,7 +102,7 @@ export default function SideNav({ NavItems }: { NavItems: () => NavItem[] }) {
         <div className="relative mt-[calc(calc(90vh)-40px)]">
           <button
             type="button"
-            className="absolute bottom-32 right-[-12px] flex h-6 w-6 items-center justify-center rounded-full border border-muted-foreground/20 bg-accent shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg"
+            className="absolute bottom-40 right-[-12px] flex h-6 w-6 items-center justify-center rounded-full border border-muted-foreground/20 bg-accent shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg"
             onClick={toggleSidebar}
           >
             {isSidebarExpanded ? (

@@ -130,7 +130,6 @@ export const assertCourseManager = internalQuery({
         userId: user._id,
       }),
     ]);
-    console.log("assertCourseManager", schoolMembership, courseMembership);
 
     if (
       schoolMembership?.role !== "manager" &&
@@ -151,9 +150,10 @@ export const deleteCourse = mutation({
 
     if (!course) throw new ConvexError("Unauthorized: Cannot delete course");
 
-    const [memberships, enrollments] = await Promise.all([
+    const [memberships, enrollments, classes] = await Promise.all([
       getCourseMemberships(ctx, { courseId: args.courseId }),
       getCourseEnrollments(ctx, { courseId: args.courseId }),
+      getCourseClasses(ctx, { courseId: args.courseId }),
     ]);
 
     await Promise.all([
@@ -162,6 +162,9 @@ export const deleteCourse = mutation({
       }),
       enrollments.map((enrollment) => {
         ctx.db.delete(enrollment._id);
+      }),
+      classes.map((courseClass) => {
+        ctx.db.delete(courseClass._id);
       }),
     ]);
 
@@ -208,6 +211,20 @@ export const getCourseEnrollments = query({
     );
 
     return enrollmentsWithUserInfo.filter((enrollment) => enrollment !== null);
+  },
+});
+
+export const getCourseClasses = query({
+  args: {
+    courseId: v.id("courses"),
+  },
+  async handler(ctx, args) {
+    const classes = await ctx.db
+      .query("classes")
+      .withIndex("by_courseId", (q) => q.eq("courseId", args.courseId))
+      .collect();
+
+    return classes;
   },
 });
 
@@ -263,27 +280,5 @@ export const approveEnrollments = mutation({
     );
 
     await Promise.all(promises);
-  },
-});
-
-export const getStudentCourses = query({
-  args: {
-    schoolId: v.id("schools"),
-    userId: v.id("users"),
-  },
-  async handler(ctx, args) {
-    const memberships = await ctx.db
-      .query("courseMemberships")
-      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
-      .collect();
-
-    const courses = await Promise.all(
-      memberships.map(async (membership) => {
-        const course = await getCourse(ctx, { courseId: membership.courseId });
-        return { course, membership };
-      })
-    );
-
-    return courses;
   },
 });

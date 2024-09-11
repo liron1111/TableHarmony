@@ -58,7 +58,7 @@ export const NavItems = () => {
       name: "Overview",
       href: schoolPath("/"),
       icon: <HomeIcon className="size-5" />,
-      active: isNavItemActive("/"),
+      active: isNavItemActive(schoolPath("")),
       position: "top",
     },
     {
