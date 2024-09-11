@@ -150,10 +150,11 @@ export const deleteCourse = mutation({
 
     if (!course) throw new ConvexError("Unauthorized: Cannot delete course");
 
-    const [memberships, enrollments, classes] = await Promise.all([
+    const [memberships, enrollments, classes, events] = await Promise.all([
       getCourseMemberships(ctx, { courseId: args.courseId }),
       getCourseEnrollments(ctx, { courseId: args.courseId }),
       getCourseClasses(ctx, { courseId: args.courseId }),
+      getCourseEvents(ctx, { courseId: args.courseId }),
     ]);
 
     await Promise.all([
@@ -165,6 +166,9 @@ export const deleteCourse = mutation({
       }),
       classes.map((courseClass) => {
         ctx.db.delete(courseClass._id);
+      }),
+      events.map((event) => {
+        ctx.db.delete(event._id);
       }),
     ]);
 
@@ -225,6 +229,20 @@ export const getCourseClasses = query({
       .collect();
 
     return classes;
+  },
+});
+
+export const getCourseEvents = query({
+  args: {
+    courseId: v.id("courses"),
+  },
+  async handler(ctx, args) {
+    const events = await ctx.db
+      .query("courseEvents")
+      .withIndex("by_courseId", (q) => q.eq("courseId", args.courseId))
+      .collect();
+
+    return events;
   },
 });
 

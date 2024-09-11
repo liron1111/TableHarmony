@@ -81,8 +81,8 @@ function TabsSection() {
         <TabsTrigger value="courses" asChild>
           <Link href={calculatePath("/courses")}>Courses</Link>
         </TabsTrigger>
-        <TabsTrigger value="calendar" asChild>
-          <Link href={calculatePath("/calendar")}>Calendar</Link>
+        <TabsTrigger value="schedule" asChild>
+          <Link href={calculatePath("/schedule")}>Schedule</Link>
         </TabsTrigger>
       </TabsList>
     </Tabs>

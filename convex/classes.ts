@@ -1,6 +1,10 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { assertCourseManager, getCourseClasses } from "./courses";
+import {
+  assertCourseManager,
+  getCourseClasses,
+  getUserCourses,
+} from "./courses";
 import { dayType } from "./schema";
 
 const timeSinceMidnight = (term: number) => {
@@ -126,5 +130,33 @@ export const getClass = query({
     if (!courseClass) throw new ConvexError("Class not found");
 
     return courseClass;
+  },
+});
+
+export const getUserClasses = query({
+  args: {
+    userId: v.id("users"),
+    schoolId: v.id("schools"),
+  },
+  async handler(ctx, args) {
+    const user = await ctx.db.get(args.userId);
+
+    if (!user) throw new ConvexError("User not found");
+
+    const courses = await getUserCourses(ctx, {
+      userId: args.userId,
+      schoolId: args.schoolId,
+    });
+
+    const classes = await Promise.all(
+      courses.map(async ({ course }) => {
+        const courseClasses = await getCourseClasses(ctx, {
+          courseId: course._id,
+        });
+        return { course, classes: courseClasses };
+      })
+    );
+
+    return classes;
   },
 });
