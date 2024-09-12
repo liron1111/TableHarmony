@@ -11,7 +11,6 @@ import { getSchoolMembership } from "./schoolMemberships";
 import {
   createCourseMembership,
   deleteCourseMembership,
-  deleteCourseMemberships,
   getCourseMembership,
   getUserCourseMemberships,
 } from "./courseMemberships";
@@ -131,48 +130,33 @@ export const assertCourseManager = internalQuery({
   },
 });
 
-export const assertCourseDeletion = internalQuery({
-  args: {
-    courseId: v.id("courses"),
-  },
-  async handler(ctx, args) {
-    const user = await getCurrentUser(ctx, {});
-
-    if (!user) return null;
-
-    const course = await ctx.db.get(args.courseId);
-
-    if (!course) return null;
-
-    const [schoolMembership, courseMembership] = await Promise.all([
-      getSchoolMembership(ctx, {
-        schoolId: course.schoolId,
-        userId: user._id,
-      }),
-      getCourseMembership(ctx, {
-        courseId: course._id,
-        userId: user._id,
-      }),
-    ]);
-
-    if (
-      schoolMembership?.role !== "manager" &&
-      courseMembership?.role !== "manager"
-    )
-      return null;
-
-    return course;
-  },
-});
-
 export const deleteCourse = mutation({
   args: {
     courseId: v.id("courses"),
   },
   async handler(ctx, args) {
-    const course = await assertCourseDeletion(ctx, { courseId: args.courseId });
+    const course = await ctx.db.get(args.courseId);
 
-    if (!course) throw new ConvexError("Unauthorized: Cannot delete course");
+    if (!course) throw new ConvexError("Course not found");
+
+    const user = await assertAuthenticated(ctx, {});
+
+    const [courseMembership, schoolMembership] = await Promise.all([
+      getCourseMembership(ctx, {
+        courseId: course._id,
+        userId: user._id,
+      }),
+      getSchoolMembership(ctx, {
+        schoolId: course.schoolId,
+        userId: user._id,
+      }),
+    ]);
+
+    if (
+      courseMembership?.role !== "manager" &&
+      schoolMembership?.role !== "manager"
+    )
+      throw new ConvexError("Unauthorized: Cannot delete course");
 
     const [memberships, enrollments, classes, events] = await Promise.all([
       getCourseMemberships(ctx, { courseId: args.courseId }),

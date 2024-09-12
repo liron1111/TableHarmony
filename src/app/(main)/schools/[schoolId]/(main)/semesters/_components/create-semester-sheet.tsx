@@ -36,7 +36,7 @@ import { toast } from "sonner";
 import { shapeErrors } from "@/utils/errors";
 import { useParams } from "next/navigation";
 import { DatePickerWithRange } from "@/components/ui/date-picker";
-import { addDays, startOfToday } from "date-fns";
+import { addDays } from "date-fns";
 
 const formSchema = z.object({
   name: z
@@ -62,8 +62,8 @@ function CreateSemesterForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       dateRange: {
-        from: startOfToday(),
-        to: addDays(startOfToday(), 20),
+        from: new Date(),
+        to: addDays(new Date(), 20),
       },
     },
   });

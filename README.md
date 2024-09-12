@@ -1,34 +1,63 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# DevHarmony
 
-## Getting Started
+Manage Your Schools in One Place.
 
-First, run the development server:
+Track, maintain, and streamline every aspect of your schools.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+This project is for students, teachers and managers of schools designed to help managing the school system.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+![banner](/public/banner.png)
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Features
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+#### School Management
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Manage schools by creating, updating, and organizing schools within the system.
+Assign roles to users (e.g., manager, teacher, student) for proper access control.
 
-## Learn More
+#### Course Management
 
-To learn more about Next.js, take a look at the following resources:
+Create and manage courses within schools.
+Assign teachers and students to courses.
+Manage course details, including descriptions, schedules, and related events.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Semester Management
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Organize courses and classes within specific semesters.
+Create upcoming semesters and manage active or past semesters. View details such as semester start and end dates.
 
-## Deploy on Vercel
+- Light/dark mode toggle
+- Fullscreen mode
+- Cross platform (PWA)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tech Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+**Client:** React, Next, TailwindCSS, Shadcn.
+
+**Backend:** Node, Convex.
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+#### Clerk
+
+Create a clerk project for authentication and copy the API keys `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, In addition create a convex webhook and copy it's secret `CLERK_WEBHOOK_SECRET`, Lastly copy the JWT secret `CLERK_JWT_ISSUER_DOMAIN`.
+
+#### Convex
+
+Create a convex project and link to it using `npx convex dev` copy the `CONVEX_DEPLOYMENT` and `NEXT_PUBLIC_CONVEX_URL`.
+Remember to add the following environment variables to convex: `CLERK_WEBHOOK_SECRET`, `CLERK_JWT_ISSUER_DOMAIN`.
+
+#### Resend
+
+Create an account on https://resend.com/ and generate an api key and paste into `RESEND_API_KEY`
+
+Setup your domain in resend so that you can send emails from your custom domain and set `EMAIL_FROM` to match your expected from line. To do this, go to your domain provider and add the necessary records outlined in resend.
+
+## Acknowledgements
+
+- [Project Planner Ai](https://projectplannerai.com)
+- [Readme Template](https://readme.so/)
+
+[Logo](/public/logo.png)

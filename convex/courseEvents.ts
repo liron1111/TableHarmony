@@ -27,7 +27,9 @@ export const createCourseEvent = mutation({
       throw new ConvexError("Cannot create an event not during a semester");
 
     if (args.date > semester.to)
-      throw new ConvexError("Semester will be over IDK");
+      throw new ConvexError(
+        "Cannot create an event not during current semester"
+      );
 
     await ctx.db.insert("courseEvents", {
       courseId: args.courseId,
