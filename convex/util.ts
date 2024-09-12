@@ -1,4 +1,12 @@
-import { ActionCtx, MutationCtx, QueryCtx } from "./_generated/server";
+import { v } from "convex/values";
+import { Id } from "./_generated/dataModel";
+import {
+  ActionCtx,
+  mutation,
+  MutationCtx,
+  query,
+  QueryCtx,
+} from "./_generated/server";
 
 export function formatName(
   firstName?: string | null,
@@ -16,3 +24,14 @@ export function formatName(
 export async function getClerkId(ctx: QueryCtx | ActionCtx | MutationCtx) {
   return (await ctx.auth.getUserIdentity())?.subject;
 }
+
+export const generateUploadUrl = mutation(async (ctx) => {
+  return await ctx.storage.generateUploadUrl();
+});
+
+export const getImageUrl = query({
+  args: { storageId: v.id("_storage") },
+  handler: async (ctx, args) => {
+    return await ctx.storage.getUrl(args.storageId);
+  },
+});

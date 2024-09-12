@@ -24,21 +24,16 @@ import {
 import { useQuery } from "convex/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import useMediaQuery from "@/hooks/use-media-query";
 import { useSchool } from "./providers/school-provider";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const School = ({ name, image }: { name: string; image: string }) => (
   <div className="flex items-center gap-2">
-    <div className="relative size-5">
-      <Image
-        alt={`${name} logo`}
-        src={image}
-        layout="fill"
-        objectFit="cover"
-        className="rounded-md"
-      />
-    </div>
+    <Avatar className="size-6">
+      <AvatarImage src={image} alt={`${name} logo`} />
+      <AvatarFallback className="text-xs font-normal">SC</AvatarFallback>
+    </Avatar>
     <span className="max-w-[150px] truncate font-medium">{name}</span>
   </div>
 );

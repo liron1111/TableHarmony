@@ -31,7 +31,7 @@ export const createSchool = mutation({
     const schoolId = await ctx.db.insert("schools", {
       name: args.name,
       description: args.description,
-      image: "/assets/school.svg",
+      image: "/assets/school.jpg",
       isPublic: args.isPublic,
     });
 

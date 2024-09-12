@@ -4,6 +4,8 @@ import { UpdateNameForm } from "./_components/forms/update-name";
 import { UpdateDescriptionForm } from "./_components/forms/update-description";
 import { UpdateVisibilityForm } from "./_components/forms/update-visibility";
 import { UpdateInfoForm } from "./_components/forms/update-info";
+import { UpdateImageForm } from "./_components/forms/update-image";
+import { SchoolImage } from "./_components/school-image";
 
 export default function SchoolSettingsPage() {
   return (
@@ -12,6 +14,15 @@ export default function SchoolSettingsPage() {
         <div className="flex w-full flex-col gap-4">
           <span>To update school name, please fill the form below</span>
           <UpdateNameForm />
+        </div>
+      </ConfigurationPanel>
+      <ConfigurationPanel title="School image">
+        <div className="flex w-full flex-col gap-4">
+          <span>To update school image, please upload new image below</span>
+          <div className="flex flex-col gap-4 md:flex-row md:items-center">
+            <SchoolImage />
+            <UpdateImageForm />
+          </div>
         </div>
       </ConfigurationPanel>
       <ConfigurationPanel title="School visibility">

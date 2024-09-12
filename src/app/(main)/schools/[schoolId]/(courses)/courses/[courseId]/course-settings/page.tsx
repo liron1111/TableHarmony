@@ -8,6 +8,7 @@ import {
   PageHeaderHeading,
 } from "@/components/page-header";
 import { UpdateInfoForm } from "./_components/forms/update-info";
+import { UpdateImageForm } from "./_components/forms/update-image";
 
 export default function CourseSettingsPage() {
   return (
@@ -25,7 +26,12 @@ export default function CourseSettingsPage() {
             <UpdateNameForm />
           </div>
         </ConfigurationPanel>
-
+        <ConfigurationPanel title="Course image">
+          <div className="flex w-full flex-col gap-4">
+            <span>To update course image, please upload new image below</span>
+            <UpdateImageForm />
+          </div>
+        </ConfigurationPanel>
         <ConfigurationPanel title="Course description">
           <div className="flex w-full flex-col gap-4">
             <span>

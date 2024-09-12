@@ -90,6 +90,7 @@ export const updateCourse = mutation({
     name: v.optional(v.string()),
     description: v.optional(v.string()),
     info: v.optional(v.string()),
+    image: v.optional(v.string()),
   },
   async handler(ctx, args) {
     const course = await assertCourseManager(ctx, {
@@ -102,6 +103,7 @@ export const updateCourse = mutation({
       name: args.name ?? course.name,
       description: args.description ?? course.description,
       info: args.info ?? course.info,
+      image: args.image ?? course.image,
     });
   },
 });
