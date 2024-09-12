@@ -33,7 +33,7 @@ export default function MemberLayout({
   return (
     <MemberProvider>
       <MemberHeader />
-      <div className="pb-4">{children}</div>
+      {children}
     </MemberProvider>
   );
 }

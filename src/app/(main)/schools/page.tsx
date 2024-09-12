@@ -1,7 +1,6 @@
 import {
   PageActions,
   PageHeader,
-  PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
 import { CreateSchoolSheet } from "./_components/create-school-sheet";
@@ -25,10 +24,9 @@ export default function SchoolsPage({
   const searchQuery = searchParams?.query || "";
 
   return (
-    <div className="container">
+    <div className="container pb-8">
       <PageHeader>
         <PageHeaderHeading>Schools</PageHeaderHeading>
-        <PageHeaderDescription>Manage your schools.</PageHeaderDescription>
         <PageActions className="flex w-full flex-row">
           <SearchForm />
           <CreateSchoolSheet />

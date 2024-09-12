@@ -1,9 +1,5 @@
 import { ConfigurationPanel } from "@/components/configuration-panel";
-import {
-  PageHeader,
-  PageHeaderDescription,
-  PageHeaderHeading,
-} from "@/components/page-header";
+import { PageHeader, PageHeaderHeading } from "@/components/page-header";
 
 import { UpdateNameForm } from "./update-name-form";
 import { EditBioForm } from "./edit-bio-form";
@@ -17,12 +13,9 @@ export const metadata = createMetadata({
 
 export default function AccountSettingsPage() {
   return (
-    <div className="container">
+    <div className="container pb-8">
       <PageHeader>
         <PageHeaderHeading>Account settings</PageHeaderHeading>
-        <PageHeaderDescription>
-          Manage your account settings and set preferences.
-        </PageHeaderDescription>
       </PageHeader>
 
       <div className="space-y-8">

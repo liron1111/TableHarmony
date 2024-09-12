@@ -14,7 +14,7 @@ export const metadata = createMetadata({
 
 export default function NotificationsPage() {
   return (
-    <div className="container">
+    <div className="container pb-8">
       <PageHeader>
         <PageHeaderHeading>Notifications</PageHeaderHeading>
         <PageHeaderDescription>

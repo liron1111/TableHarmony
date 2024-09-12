@@ -1,7 +1,6 @@
 import {
   PageActions,
   PageHeader,
-  PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header";
 
@@ -25,12 +24,9 @@ export default function BrowsePage({
   const searchQuery = searchParams?.query || "";
 
   return (
-    <div className="container">
+    <div className="container pb-8">
       <PageHeader>
         <PageHeaderHeading>Browse</PageHeaderHeading>
-        <PageHeaderDescription>
-          Explore publicly available schools.
-        </PageHeaderDescription>
         <PageActions className="flex w-full flex-row">
           <SearchForm />
         </PageActions>

@@ -34,7 +34,7 @@ export default function CourseLayout({
   return (
     <CourseProvider>
       <CourseHeader />
-      <div className="pb-4">{children}</div>
+      {children}
     </CourseProvider>
   );
 }

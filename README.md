@@ -1,7 +1,5 @@
 # DevHarmony
 
-Manage Your Schools in One Place.
-
 Track, maintain, and streamline every aspect of your schools.
 
 This project is for students, teachers and managers of schools designed to help managing the school system.
@@ -27,7 +25,9 @@ Organize courses and classes within specific semesters.
 Create upcoming semesters and manage active or past semesters. View details such as semester start and end dates.
 
 - Light/dark mode toggle
-- Fullscreen mode
+- QR code
+- Changelog
+- Responsive design
 - Cross platform (PWA)
 
 ## Tech Stack
@@ -46,7 +46,7 @@ Create a clerk project for authentication and copy the API keys `NEXT_PUBLIC_CLE
 
 #### Convex
 
-Create a convex project and link to it using `npx convex dev` copy the `CONVEX_DEPLOYMENT` and `NEXT_PUBLIC_CONVEX_URL`.
+Create a convex project and link to it using `npx convex dev` copy the `CONVEX_DEPLOYMENT` and `NEXT_PUBLIC_CONVEX_URL`. <br />
 Remember to add the following environment variables to convex: `CLERK_WEBHOOK_SECRET`, `CLERK_JWT_ISSUER_DOMAIN`.
 
 #### Resend
@@ -59,5 +59,6 @@ Setup your domain in resend so that you can send emails from your custom domain 
 
 - [Project Planner Ai](https://projectplannerai.com)
 - [Readme Template](https://readme.so/)
+- [QR Grid](https://www.qrgrid.dev/)
 
-[Logo](/public/logo.png)
+![Logo](/public/logo.png)
