@@ -166,17 +166,17 @@ export const deleteCourse = mutation({
     ]);
 
     await Promise.all([
-      memberships.map((membership) => {
-        ctx.db.delete(membership._id);
+      memberships.map(async (membership) => {
+        await ctx.db.delete(membership._id);
       }),
-      enrollments.map((enrollment) => {
-        ctx.db.delete(enrollment._id);
+      enrollments.map(async (enrollment) => {
+        await ctx.db.delete(enrollment._id);
       }),
-      classes.map((courseClass) => {
-        ctx.db.delete(courseClass._id);
+      classes.map(async (courseClass) => {
+        await ctx.db.delete(courseClass._id);
       }),
-      events.map((event) => {
-        ctx.db.delete(event._id);
+      events.map(async (event) => {
+        await ctx.db.delete(event._id);
       }),
     ]);
 

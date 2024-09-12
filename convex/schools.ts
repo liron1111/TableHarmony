@@ -149,12 +149,17 @@ export const deleteSchool = mutation({
     ]);
 
     await Promise.all([
-      memberships.map((membership) =>
-        deleteSchoolMembership(ctx, { membershipId: membership._id })
+      courses.map(
+        async (course) => await deleteCourse(ctx, { courseId: course._id })
       ),
-      enrollments.map((enrollment) => ctx.db.delete(enrollment._id)),
-      semesters.map((semester) => ctx.db.delete(semester._id)),
-      courses.map((course) => deleteCourse(ctx, { courseId: course._id })),
+      memberships.map(
+        async (membership) =>
+          await deleteSchoolMembership(ctx, { membershipId: membership._id })
+      ),
+      enrollments.map(
+        async (enrollment) => await ctx.db.delete(enrollment._id)
+      ),
+      semesters.map(async (semester) => await ctx.db.delete(semester._id)),
     ]);
 
     await ctx.db.delete(school._id);

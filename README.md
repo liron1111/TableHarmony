@@ -58,7 +58,7 @@ Setup your domain in resend so that you can send emails from your custom domain 
 ## Acknowledgements
 
 - [Project Planner Ai](https://projectplannerai.com)
-- [Readme Template](https://readme.so/)
+- [Readme.so](https://readme.so/)
 - [QR Grid](https://www.qrgrid.dev/)
 
 ![Logo](/public/logo.png)
