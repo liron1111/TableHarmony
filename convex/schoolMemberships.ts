@@ -92,7 +92,6 @@ export const deleteSchoolMembership = internalMutation({
     const membership = await assertSchoolMembershipAccess(ctx, {
       membershipId: args.membershipId,
     });
-
     if (!membership)
       throw new ConvexError("Unauthorized: Cannot delete this membership");
 

@@ -8,6 +8,7 @@ import { Id } from "../../../../../../../../../../convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { cardStyles } from "@/styles/common";
 import Image from "next/image";
+import { ComingSoon } from "@/components/coming-soon";
 
 export function EventsList() {
   const { courseId } = useParams();
@@ -39,5 +40,10 @@ export function EventsList() {
     );
   }
 
-  return <div>{JSON.stringify(events, null, 2)}</div>;
+  return (
+    <div className="flex flex-col gap-10">
+      <ComingSoon />
+      {JSON.stringify(events, null, 4)}
+    </div>
+  );
 }

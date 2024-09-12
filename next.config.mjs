@@ -21,7 +21,7 @@ const nextConfig = {
 const withMDX = createMDX({});
 
 const pwaConfig = withPWA({
-  dest: "public",
+  dest: "public/pwa",
 });
 
 export default pwaConfig(withMDX(nextConfig));

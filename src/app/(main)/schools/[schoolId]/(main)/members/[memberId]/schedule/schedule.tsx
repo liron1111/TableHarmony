@@ -7,6 +7,7 @@ import { Id } from "../../../../../../../../../convex/_generated/dataModel";
 import { useParams } from "next/navigation";
 import { cardStyles } from "@/styles/common";
 import Image from "next/image";
+import { ComingSoon } from "@/components/coming-soon";
 
 export function Schedule() {
   const { memberId, schoolId } = useParams();
@@ -41,6 +42,7 @@ export function Schedule() {
 
   return (
     <div className="flex flex-col space-y-12">
+      <ComingSoon />
       <pre>{JSON.stringify(classes, null, 2)}</pre>
     </div>
   );

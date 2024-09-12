@@ -9,7 +9,7 @@ import { Logo } from "./logo";
 
 export function SiteFooter() {
   return (
-    <footer className="relative z-10 mt-8 flex flex-col border-t border-border py-8">
+    <footer className="relative z-10 flex flex-col border-t border-border py-8">
       <div className="container space-y-10 px-4 pt-6 lg:px-20">
         <section className="xl:grid xl:grid-cols-5 xl:gap-8">
           <div className="xl:col-span-2">
