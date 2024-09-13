@@ -46,10 +46,12 @@ export function MembershipProvider({
   const path = usePathname();
   const { schoolId } = useParams();
 
-  const membership = useQuery(api.schoolMemberships.getSchoolMembership, {
-    schoolId: schoolId as Id<"schools">,
-    userId: user?._id!,
-  });
+  const membership = useQuery(
+    api.schoolMemberships.getSchoolMembership,
+    user && schoolId
+      ? { schoolId: schoolId as Id<"schools">, userId: user._id }
+      : "skip"
+  );
 
   const isOnboarding = path.includes("onboarding");
   const isHomepage = path === `/schools/${schoolId}`;

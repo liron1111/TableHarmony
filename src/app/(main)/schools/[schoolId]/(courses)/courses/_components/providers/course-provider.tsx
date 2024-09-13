@@ -40,10 +40,15 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
 
   if (course === null) redirect(`/schools/${schoolId}/courses`);
 
-  const membership = useQuery(api.courseMemberships.getCourseMembership, {
-    courseId: courseId as Id<"courses">,
-    userId: user?._id!,
-  });
+  const membership = useQuery(
+    api.courseMemberships.getCourseMembership,
+    user && courseId
+      ? {
+          courseId: courseId as Id<"courses">,
+          userId: user._id,
+        }
+      : "skip"
+  );
 
   const isSchoolManager = schoolMembership?.role === "manager";
   const isHomepage = pathname === `/schools/${schoolId}/courses/${courseId}`;

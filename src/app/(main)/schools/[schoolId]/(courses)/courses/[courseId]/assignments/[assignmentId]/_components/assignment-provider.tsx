@@ -7,10 +7,9 @@ import {
 } from "../../../../../../../../../../../convex/_generated/dataModel";
 import { api } from "../../../../../../../../../../../convex/_generated/api";
 
-import { useCourse } from "../../../../_components/providers/course-provider";
-
 import React, { createContext, useContext } from "react";
 import { redirect, useParams } from "next/navigation";
+import { PublicError } from "@/utils/errors";
 
 interface AssignmentContextType {
   assignment?: Doc<"courseAssignments">;

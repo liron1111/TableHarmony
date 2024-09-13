@@ -16,6 +16,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { FileIcon } from "lucide-react";
+import { Doc } from "../../../../../../../../../../../../convex/_generated/dataModel";
+import { useParams } from "next/navigation";
 
 export const columns: ColumnDef<any>[] = [
   {
@@ -50,22 +52,7 @@ export const columns: ColumnDef<any>[] = [
       <DataTableColumnHeader column={column} title="Member" />
     ),
     cell: ({ row }) => {
-      const user = row.original.user;
-
-      return (
-        <div className="flex items-center gap-2">
-          <Avatar className="size-5">
-            <AvatarImage src={user?.image} alt={`${user?.name} avatar`} />
-            <AvatarFallback className="text-xs">SC</AvatarFallback>
-          </Avatar>
-          <Link
-            href={`/schools/${row.original.schoolId}/members/${user?._id}`}
-            className="text-blue-500 underline-offset-2 hover:underline"
-          >
-            {user?.name}
-          </Link>
-        </div>
-      );
+      return <MemberCell user={row.original.user} />;
     },
     filterFn: (row, id, value) => {
       return row.original.user.name.toLowerCase().includes(value.toLowerCase());
@@ -138,3 +125,22 @@ export const columns: ColumnDef<any>[] = [
     },
   },
 ];
+
+function MemberCell({ user }: { user: Doc<"users"> }) {
+  const { schoolId } = useParams();
+
+  return (
+    <div className="flex items-center gap-2">
+      <Avatar className="size-5">
+        <AvatarImage src={user?.image} alt={`${user?.name} avatar`} />
+        <AvatarFallback className="text-xs">SC</AvatarFallback>
+      </Avatar>
+      <Link
+        href={`/schools/${schoolId}/members/${user?._id}`}
+        className="text-blue-500 underline-offset-2 hover:underline"
+      >
+        {user?.name}
+      </Link>
+    </div>
+  );
+}
