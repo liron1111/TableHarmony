@@ -114,6 +114,11 @@ export default defineSchema({
     date: v.number(),
     file: v.optional(v.string()),
   }).index("by_courseId", ["courseId"]),
+  courseAssignmentsComments: defineTable({
+    assignmentId: v.id("courseAssignments"),
+    userId: v.id("users"),
+    comment: v.string(),
+  }).index("by_assignmentId", ["assignmentId"]),
   classes: defineTable({
     courseId: v.id("courses"),
     day: dayType,

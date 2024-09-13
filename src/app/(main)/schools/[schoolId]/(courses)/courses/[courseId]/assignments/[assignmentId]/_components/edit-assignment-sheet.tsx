@@ -124,11 +124,12 @@ function EditAssignmentForm({
         file: fileUrl,
       });
       toast.success("Updated assignment successfully!");
-      setShowSheet(false);
     } catch (error) {
       const formattedError = shapeErrors({ error });
       toast.error(formattedError.message);
     }
+
+    setShowSheet(false);
   }
 
   return (

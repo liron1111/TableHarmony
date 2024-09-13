@@ -63,6 +63,9 @@ export function MembershipProvider({
 
     if (membership === null && !school.isPublic) redirect("/schools");
 
+    if (membership === null && path !== `/schools/${school._id}`)
+      redirect(`/schools/${school._id}`);
+
     if (!courseId && isManagerRoute(path) && membership?.role !== "manager")
       redirect(`/schools/${school._id}`);
   }

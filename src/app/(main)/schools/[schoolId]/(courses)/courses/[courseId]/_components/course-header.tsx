@@ -64,6 +64,8 @@ export function CourseHeader() {
 
 function TabsSection() {
   const { schoolId, courseId } = useParams();
+  const { membership } = useCourse();
+  const { membership: schoolMembership } = useMembership();
 
   const path = usePathname();
   const currentTab = path.split("/").pop();
@@ -71,6 +73,8 @@ function TabsSection() {
   const calculatePath = (tab: string) => {
     return `/schools/${schoolId}/courses/${courseId}/${tab}`;
   };
+
+  if (schoolMembership?.role !== "manager" && membership === null) return;
 
   return (
     <Tabs value={currentTab} defaultValue={currentTab}>

@@ -104,6 +104,46 @@ export const deleteAssignment = mutation({
     if (!course)
       throw new ConvexError("Unauthorized: Cannot delete assignment");
 
+    const getComments = async () => {
+      const comments = await ctx.db
+        .query("courseAssignmentsComments")
+        .withIndex("by_assignmentId", (q) =>
+          q.eq("assignmentId", args.assignmentId)
+        )
+        .collect();
+
+      return comments;
+    };
+
+    const [comments] = await Promise.all([getComments()]);
+
+    await Promise.all(comments.map((comment) => ctx.db.delete(comment._id)));
+
     await ctx.db.delete(args.assignmentId);
+  },
+});
+
+export const getAssignmentComments = query({
+  args: {
+    assignmentId: v.id("courseAssignments"),
+  },
+  handler: async (ctx, args) => {
+    const comments = await ctx.db
+      .query("courseAssignmentsComments")
+      .withIndex("by_assignmentId", (q) =>
+        q.eq("assignmentId", args.assignmentId)
+      )
+      .order("desc")
+      .collect();
+
+    const commentsWithUsers = await Promise.all(
+      comments.map(async (comment) => {
+        const user = await ctx.db.get(comment.userId);
+        if (!user) return null;
+        return { ...comment, user };
+      })
+    );
+
+    return commentsWithUsers.filter((comment) => comment !== null);
   },
 });

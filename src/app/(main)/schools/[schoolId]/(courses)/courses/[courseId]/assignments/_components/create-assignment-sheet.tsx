@@ -120,11 +120,12 @@ function CreateAssignmentForm({
       });
 
       toast.success("Created assignment successfully!");
-      setShowSheet(false);
     } catch (error) {
       const formattedError = shapeErrors({ error });
       toast.error(formattedError.message);
     }
+
+    setShowSheet(false);
   }
 
   return (

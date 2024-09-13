@@ -9,7 +9,7 @@ import {
 import { useAssignment } from "./assignment-provider";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { CalendarIcon, PencilIcon, TrashIcon, FileIcon } from "lucide-react";
+import { CalendarIcon, EditIcon, TrashIcon, FileIcon } from "lucide-react";
 import { EditAssignmentSheet } from "./edit-assignment-sheet";
 import { DeleteAssignmentDialog } from "./delete-assignment-dialog";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCourse } from "../../../../_components/providers/course-provider";
+import { Id } from "../../../../../../../../../../../convex/_generated/dataModel";
 
 function formatAssignmentDate(date: Date | number) {
   const assignmentDate = new Date(date);
@@ -62,21 +63,23 @@ export function AssignmentHeader() {
           </div>
         )}
 
-        <PageActions>
-          <MenuButton />
-        </PageActions>
+        {assignment?._id && (
+          <PageActions>
+            <MenuButton assignmentId={assignment._id} />
+          </PageActions>
+        )}
       </PageHeader>
     </div>
   );
 }
-
-function MenuButton() {
-  const { assignment } = useAssignment();
+export function MenuButton({
+  assignmentId,
+}: {
+  assignmentId: Id<"courseAssignments">;
+}) {
   const { membership } = useCourse();
 
   if (membership?.role !== "manager") return null;
-
-  if (!assignment?._id) return null;
 
   return (
     <DropdownMenu>
@@ -84,15 +87,18 @@ function MenuButton() {
         <Button>Manage</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="flex flex-col" align="start">
-        <EditAssignmentSheet assignmentId={assignment._id}>
+        <EditAssignmentSheet assignmentId={assignmentId}>
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <PencilIcon className="mr-2 size-4" />
+            <EditIcon className="mr-2 size-4" />
             Edit
           </DropdownMenuItem>
         </EditAssignmentSheet>
-        <DeleteAssignmentDialog assignmentId={assignment._id}>
-          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <TrashIcon className="mr-2 size-4 text-destructive" />
+        <DeleteAssignmentDialog assignmentId={assignmentId}>
+          <DropdownMenuItem
+            className="text-destructive hover:!text-destructive"
+            onSelect={(e) => e.preventDefault()}
+          >
+            <TrashIcon className="mr-2 size-4" />
             Delete
           </DropdownMenuItem>
         </DeleteAssignmentDialog>

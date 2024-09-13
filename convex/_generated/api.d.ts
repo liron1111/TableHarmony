@@ -18,6 +18,7 @@ import type {
 import type * as classes from "../classes.js";
 import type * as clerk from "../clerk.js";
 import type * as courseAssignments from "../courseAssignments.js";
+import type * as courseAssignmentsComments from "../courseAssignmentsComments.js";
 import type * as courseEnrollments from "../courseEnrollments.js";
 import type * as courseMemberships from "../courseMemberships.js";
 import type * as courses from "../courses.js";
@@ -44,6 +45,7 @@ declare const fullApi: ApiFromModules<{
   classes: typeof classes;
   clerk: typeof clerk;
   courseAssignments: typeof courseAssignments;
+  courseAssignmentsComments: typeof courseAssignmentsComments;
   courseEnrollments: typeof courseEnrollments;
   courseMemberships: typeof courseMemberships;
   courses: typeof courses;

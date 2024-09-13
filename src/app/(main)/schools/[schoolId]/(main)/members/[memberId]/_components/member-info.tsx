@@ -20,10 +20,15 @@ export function MemberInfo() {
   );
 }
 
+function isEmptyHtml(html: string): boolean {
+  const textContent = html.replace(/<[^>]*>/g, "");
+  return textContent.trim().length === 0;
+}
+
 function Info() {
   const { member } = useMember();
 
-  if (!member?.bio)
+  if (isEmptyHtml(member?.bio!))
     return (
       <div className={cardStyles}>
         <div className="flex flex-col items-center gap-2 text-center">
@@ -39,7 +44,7 @@ function Info() {
     <div className="w-full space-y-4 rounded-md border border-border">
       <EditorProvider
         extensions={extensions}
-        content={member.bio}
+        content={member?.bio}
         editable={false}
         immediatelyRender={false}
       />

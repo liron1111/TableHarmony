@@ -1,6 +1,6 @@
 "use client";
 
-import { useConvexAuth, useQuery } from "convex/react";
+import { useQuery } from "convex/react";
 
 import { api } from "../../../../../../../../../convex/_generated/api";
 import {
@@ -63,6 +63,13 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
       schoolMembership?.role !== "manager"
     )
       throw new AuthorizationError();
+
+    if (
+      schoolMembership?.role !== "manager" &&
+      membership === null &&
+      pathname !== `/schools/${schoolId}/courses/${courseId}`
+    )
+      redirect(`/schools/${schoolId}/courses/${courseId}`);
   }
 
   return (

@@ -19,7 +19,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { format, isPast } from "date-fns";
-import { CalendarIcon, CalendarCheck, CalendarX } from "lucide-react";
+import { CalendarCheck, CalendarIcon, CalendarX } from "lucide-react";
+import { SchoolListSkeleton } from "@/app/(main)/schools/_components/school-list";
 
 function AssignmentCard({
   assignment,
@@ -46,11 +47,7 @@ function AssignmentCard({
             </Badge>
           </CardTitle>
           <CardDescription className="flex items-center">
-            {isPastAssignment ? (
-              <CalendarX className="mr-2 size-4 text-muted-foreground" />
-            ) : (
-              <CalendarCheck className="mr-2 size-4 text-muted-foreground" />
-            )}
+            <CalendarIcon className="mr-2 size-4 text-muted-foreground" />
             {format(assignment.date, "LLL dd, HH:mm")}
           </CardDescription>
         </CardHeader>
@@ -67,7 +64,7 @@ export function AssignmentsList() {
     courseId: courseId as Id<"courses">,
   });
 
-  if (!assignments) return null;
+  if (!assignments) return <SchoolListSkeleton />;
 
   if (assignments.length === 0) {
     return (

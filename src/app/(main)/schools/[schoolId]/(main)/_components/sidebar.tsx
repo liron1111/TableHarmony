@@ -31,7 +31,7 @@ import Link from "next/link";
 export function SchoolSidebar() {
   const { isMobile } = useMediaQuery();
 
-  if (isMobile) return null;
+  if (isMobile) return;
 
   return (
     <div className="h-[calc(100vh-65px)]">
@@ -61,20 +61,6 @@ export const NavItems = () => {
       active: isNavItemActive(schoolPath("")),
       position: "top",
     },
-    {
-      name: "Courses",
-      href: schoolPath("/courses"),
-      icon: <SchoolIcon className="size-5" />,
-      active: isNavItemActive("/courses") && !pathname.includes("members"),
-      position: "top",
-    },
-    {
-      name: "Semesters",
-      href: schoolPath("/semesters"),
-      icon: <CalendarIcon className="size-5" />,
-      active: isNavItemActive("/semesters"),
-      position: "top",
-    },
   ];
 
   if (!membership) return navItems;
@@ -84,6 +70,20 @@ export const NavItems = () => {
     href: schoolPath(`/members/${membership?.userId}`),
     icon: <UserIcon className="size-5" />,
     active: pathname.includes(`/members/${membership?.userId}`),
+    position: "top",
+  });
+  navItems.push({
+    name: "Courses",
+    href: schoolPath("/courses"),
+    icon: <SchoolIcon className="size-5" />,
+    active: isNavItemActive("/courses") && !pathname.includes("members"),
+    position: "top",
+  });
+  navItems.push({
+    name: "Semesters",
+    href: schoolPath("/semesters"),
+    icon: <CalendarIcon className="size-5" />,
+    active: isNavItemActive("/semesters"),
     position: "top",
   });
 
@@ -124,7 +124,7 @@ export function SchoolSidebarMobile() {
   const { isMobile } = useMediaQuery();
   const navItems = NavItems();
 
-  if (!isMobile) return null;
+  if (!isMobile) return;
 
   return (
     <Sheet open={showSheet} onOpenChange={setShowSheet}>

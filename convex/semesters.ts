@@ -106,6 +106,13 @@ export const deleteSemester = mutation({
 
     if (!school) throw new ConvexError("Unauthorized: Cannot delete semester");
 
+    const currentSemester = await getCurrentSemester(ctx, {
+      schoolId: school._id,
+    });
+
+    if (currentSemester?._id === args.semesterId)
+      throw new ConvexError("Cannot delete current semester");
+
     await ctx.db.delete(args.semesterId);
   },
 });
