@@ -28,17 +28,6 @@ export function useCourse() {
   return context;
 }
 
-function isManagerRoute(currentPath: string) {
-  const managerPaths = [
-    "/course-settings",
-    "/course-settings/danger",
-    "/memberships",
-    "/enrollments",
-  ];
-
-  return managerPaths.some((path) => currentPath.endsWith(path));
-}
-
 export function CourseProvider({ children }: { children: React.ReactNode }) {
   const { membership: schoolMembership } = useMembership();
   const { courseId, schoolId } = useParams();
@@ -56,21 +45,12 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
     userId: user?._id!,
   });
 
-  if (membership !== undefined && course !== undefined) {
-    if (
-      isManagerRoute(pathname) &&
-      membership?.role !== "manager" &&
-      schoolMembership?.role !== "manager"
-    )
-      throw new AuthorizationError();
+  const isSchoolManager = schoolMembership?.role === "manager";
+  const isHomepage = pathname === `/schools/${schoolId}/courses/${courseId}`;
+  const isGuest = membership === null;
 
-    if (
-      schoolMembership?.role !== "manager" &&
-      membership === null &&
-      pathname !== `/schools/${schoolId}/courses/${courseId}`
-    )
-      redirect(`/schools/${schoolId}/courses/${courseId}`);
-  }
+  if (!isSchoolManager && !isHomepage && isGuest)
+    redirect(`/schools/${schoolId}/courses/${courseId}`);
 
   return (
     <CourseContext.Provider value={{ course, membership }}>

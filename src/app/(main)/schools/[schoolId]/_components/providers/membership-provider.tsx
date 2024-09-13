@@ -1,18 +1,12 @@
 "use client";
 
 import { useQuery } from "convex/react";
-import { Doc } from "../../../../../../../convex/_generated/dataModel";
+import { Doc, Id } from "../../../../../../../convex/_generated/dataModel";
 import { api } from "../../../../../../../convex/_generated/api";
 
 import React, { createContext, useContext } from "react";
-import {
-  redirect,
-  useParams,
-  usePathname,
-  useSearchParams,
-} from "next/navigation";
+import { redirect, useParams, usePathname } from "next/navigation";
 import { useSchool } from "./school-provider";
-import { AuthorizationError } from "@/utils/errors";
 
 interface MembershipContextType {
   membership?: Doc<"schoolMemberships"> | null;
@@ -20,23 +14,25 @@ interface MembershipContextType {
 
 const MembershipContext = createContext<MembershipContextType>({});
 
+function isManagerRoute(currentPath: string, schoolId: string) {
+  const prefix = `/schools/${schoolId}/`;
+
+  const managerPaths = [
+    `${prefix}school-settings`,
+    `${prefix}memberships`,
+    `${prefix}enrollments`,
+    `${prefix}school-settings/danger`,
+  ];
+
+  return managerPaths.some((path) => currentPath === path);
+}
+
 export function useMembership() {
   const context = useContext(MembershipContext);
   if (context === undefined) {
     throw new Error("useMembership must be used within a MembershipProvider");
   }
   return context;
-}
-
-function isManagerRoute(currentPath: string) {
-  const managerPaths = [
-    "/school-settings",
-    "/memberships",
-    "/enrollments",
-    "/school-settings/danger",
-  ];
-
-  return managerPaths.some((path) => currentPath.endsWith(path));
 }
 
 export function MembershipProvider({
@@ -48,25 +44,31 @@ export function MembershipProvider({
   const user = useQuery(api.users.getCurrentUser);
 
   const path = usePathname();
-  const { courseId } = useParams();
+  const { schoolId } = useParams();
 
   const membership = useQuery(api.schoolMemberships.getSchoolMembership, {
-    schoolId: school?._id!,
+    schoolId: schoolId as Id<"schools">,
     userId: user?._id!,
   });
 
-  if (school !== undefined && membership !== undefined) {
-    if (!path.includes("onboarding")) {
-      if (membership !== null && !membership.boardingComplete)
-        redirect(`/schools/${school._id}/onboarding`);
-    } else if (membership?.boardingComplete) redirect(`/schools/${school._id}`);
+  const isOnboarding = path.includes("onboarding");
+  const isHomepage = path === `/schools/${schoolId}`;
+  const isGuest = membership === null;
 
-    if (membership === null && !school.isPublic) redirect("/schools");
+  if (membership) {
+    if (!isOnboarding && !membership.boardingComplete)
+      redirect(`/schools/${schoolId}/onboarding`);
 
-    if (membership === null && path !== `/schools/${school._id}`)
-      redirect(`/schools/${school._id}`);
+    if (isOnboarding && membership.boardingComplete)
+      redirect(`/schools/${schoolId}`);
+  }
 
-    if (!courseId && isManagerRoute(path) && membership?.role !== "manager")
+  if (school) {
+    if (isGuest && !school.isPublic) redirect("/schools");
+
+    if (isGuest && !isHomepage) redirect(`/schools/${school._id}`);
+
+    if (membership?.role !== "manager" && isManagerRoute(path, school._id))
       redirect(`/schools/${school._id}`);
   }
 

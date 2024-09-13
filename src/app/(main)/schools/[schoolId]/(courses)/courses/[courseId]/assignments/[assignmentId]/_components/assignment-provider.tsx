@@ -32,7 +32,6 @@ export function AssignmentProvider({
   children: React.ReactNode;
 }) {
   const { schoolId, courseId, assignmentId } = useParams();
-  const { membership } = useCourse();
 
   const assignment = useQuery(api.courseAssignments.getAssignment, {
     assignmentId: assignmentId as Id<"courseAssignments">,
@@ -40,8 +39,6 @@ export function AssignmentProvider({
 
   if (assignment === null)
     redirect(`/schools/${schoolId}/courses/${courseId}/assignments`);
-
-  if (membership === null) redirect(`/schools/${schoolId}/courses/${courseId}`);
 
   return (
     <AssignmentContext.Provider value={{ assignment }}>

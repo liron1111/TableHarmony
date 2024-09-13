@@ -74,20 +74,22 @@ function TabsSection() {
     return `/schools/${schoolId}/courses/${courseId}/${tab}`;
   };
 
-  if (schoolMembership?.role !== "manager" && membership === null) return;
-
   return (
     <Tabs value={currentTab} defaultValue={currentTab}>
       <TabsList className="space-x-2">
         <TabsTrigger value={courseId as string} asChild>
           <Link href={calculatePath("/")}>Info</Link>
         </TabsTrigger>
-        <TabsTrigger value={"classes"} asChild>
-          <Link href={calculatePath("/classes")}>Classes</Link>
-        </TabsTrigger>
-        <TabsTrigger value={"assignments"} asChild>
-          <Link href={calculatePath("/assignments")}>Assignments</Link>
-        </TabsTrigger>
+        {schoolMembership?.role !== "manager" && membership === null && (
+          <>
+            <TabsTrigger value={"classes"} asChild>
+              <Link href={calculatePath("/classes")}>Classes</Link>
+            </TabsTrigger>
+            <TabsTrigger value={"assignments"} asChild>
+              <Link href={calculatePath("/assignments")}>Assignments</Link>
+            </TabsTrigger>
+          </>
+        )}
       </TabsList>
     </Tabs>
   );
