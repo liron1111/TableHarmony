@@ -14,7 +14,7 @@ import { CommentCard } from "./comment-card";
 export function CommentList() {
   const { assignmentId } = useParams();
 
-  const comments = useQuery(api.courseAssignments.getAssignmentComments, {
+  const comments = useQuery(api.courseAssignments.getComments, {
     assignmentId: assignmentId as Id<"courseAssignments">,
   });
 
@@ -22,6 +22,7 @@ export function CommentList() {
 
   return (
     <div className="space-y-5">
+      <span className="text-xl font-medium">Comments</span>
       <CommentForm assignmentId={assignmentId as Id<"courseAssignments">} />
       {comments.map((comment) => (
         <CommentCard key={comment._id} comment={comment} />

@@ -70,6 +70,8 @@ function TabsSection() {
   const path = usePathname();
   const currentTab = path.split("/").pop();
 
+  const hasAccess = schoolMembership?.role === "manager" || membership !== null;
+
   const calculatePath = (tab: string) => {
     return `/schools/${schoolId}/courses/${courseId}/${tab}`;
   };
@@ -80,7 +82,7 @@ function TabsSection() {
         <TabsTrigger value={courseId as string} asChild>
           <Link href={calculatePath("/")}>Info</Link>
         </TabsTrigger>
-        {schoolMembership?.role !== "manager" && membership === null && (
+        {hasAccess && (
           <>
             <TabsTrigger value={"classes"} asChild>
               <Link href={calculatePath("/classes")}>Classes</Link>
@@ -110,85 +112,89 @@ function MembershipButtons() {
     return `/schools/${schoolId}/courses/${courseId}/${path}`;
   };
 
-  if (membership?.role === "manager" || schoolMembership?.role === "manager") {
+  const isManager =
+    membership?.role === "manager" || schoolMembership?.role === "manager";
+  const isGuest = membership === null;
+
+  if (isGuest && !isManager) {
     return (
-      <div>
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button>Manage</Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="space-y-1">
-            <DropdownMenuItem asChild>
-              <Link
-                href={calculatePath("enrollments")}
-                className={cn("cursor-pointer", {
-                  "bg-accent": isActive("enrollments"),
-                })}
-              >
-                <ClipboardIcon className="mr-2 size-4" />
-                Enrolls
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link
-                href={calculatePath("memberships")}
-                className={cn("cursor-pointer", {
-                  "bg-accent": isActive("memberships"),
-                })}
-              >
-                <UsersIcon className="mr-2 size-4" />
-                Members
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link
-                href={calculatePath("course-settings")}
-                className={cn("cursor-pointer", {
-                  "bg-accent": isActive("course-settings"),
-                })}
-              >
-                <SettingsIcon className="mr-2 size-4" />
-                Settings
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className={cn(
-                "cursor-pointer text-destructive hover:!text-destructive",
-                {
-                  "bg-accent": isActive("danger"),
-                }
-              )}
-              asChild
-            >
-              <Link href={calculatePath("course-settings/danger")}>
-                <TrashIcon className="mr-2 size-4" />
-                Danger
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <EnrollCourseDialog>
+        <Button>
+          <LogInIcon className="mr-2 size-4" />
+          Enroll
+        </Button>
+      </EnrollCourseDialog>
+    );
+  }
+
+  if (!isGuest && !isManager) {
+    return (
+      <LeaveCourseDialog>
+        <Button variant="destructive">
+          <LogOutIcon className="mr-2 size-4" />
+          Leave
+        </Button>
+      </LeaveCourseDialog>
     );
   }
 
   return (
-    <>
-      {!membership ? (
-        <EnrollCourseDialog>
-          <Button>
-            <LogInIcon className="mr-2 size-4" />
-            Enroll
-          </Button>
-        </EnrollCourseDialog>
-      ) : (
-        <LeaveCourseDialog>
-          <Button variant="destructive">
-            <LogOutIcon className="mr-2 size-4" />
-            Leave
-          </Button>
-        </LeaveCourseDialog>
-      )}
-    </>
+    <div>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button>Manage</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="space-y-1">
+          <DropdownMenuItem asChild>
+            <Link
+              href={calculatePath("enrollments")}
+              className={cn("cursor-pointer", {
+                "bg-accent": isActive("enrollments"),
+              })}
+            >
+              <ClipboardIcon className="mr-2 size-4" />
+              Enrolls
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link
+              href={calculatePath("memberships")}
+              className={cn("cursor-pointer", {
+                "bg-accent": isActive("memberships"),
+              })}
+            >
+              <UsersIcon className="mr-2 size-4" />
+              Members
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link
+              href={calculatePath("course-settings")}
+              className={cn("cursor-pointer", {
+                "bg-accent": isActive("course-settings"),
+              })}
+            >
+              <SettingsIcon className="mr-2 size-4" />
+              Settings
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className={cn(
+              "cursor-pointer text-destructive hover:!text-destructive",
+              {
+                "bg-accent": isActive("danger"),
+              }
+            )}
+            asChild
+          >
+            <Link href={calculatePath("course-settings/danger")}>
+              <TrashIcon className="mr-2 size-4" />
+              Danger
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

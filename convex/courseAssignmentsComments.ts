@@ -4,7 +4,7 @@ import { internalQuery, mutation, query } from "./_generated/server";
 import { getCourseMembership } from "./courseMemberships";
 import { assertAuthenticated, getCurrentUser } from "./users";
 
-export const assertCourseAssignmentCommentAccess = internalQuery({
+export const assertCommentAccess = internalQuery({
   args: {
     commentId: v.id("courseAssignmentsComments"),
   },
@@ -33,7 +33,7 @@ export const assertCourseAssignmentCommentAccess = internalQuery({
   },
 });
 
-export const createCourseAssignmentComment = mutation({
+export const createComment = mutation({
   args: {
     assignmentId: v.id("courseAssignments"),
     comment: v.string(),
@@ -70,12 +70,12 @@ export const createCourseAssignmentComment = mutation({
   },
 });
 
-export const deleteCourseAssignmentComment = mutation({
+export const deleteComment = mutation({
   args: {
     commentId: v.id("courseAssignmentsComments"),
   },
   async handler(ctx, args) {
-    const comment = await assertCourseAssignmentCommentAccess(ctx, {
+    const comment = await assertCommentAccess(ctx, {
       commentId: args.commentId,
     });
 
@@ -97,13 +97,13 @@ export const getComment = query({
   },
 });
 
-export const updateCourseAssignmentComment = mutation({
+export const updateComment = mutation({
   args: {
     commentId: v.id("courseAssignmentsComments"),
     comment: v.string(),
   },
   async handler(ctx, args) {
-    const comment = await assertCourseAssignmentCommentAccess(ctx, {
+    const comment = await assertCommentAccess(ctx, {
       commentId: args.commentId,
     });
 

@@ -46,7 +46,7 @@ function EditCommentForm({
   commentId: Id<"courseAssignmentsComments">;
 }) {
   const updateComment = useMutation(
-    api.courseAssignmentsComments.updateCourseAssignmentComment
+    api.courseAssignmentsComments.updateComment
   );
   const comment = useQuery(api.courseAssignmentsComments.getComment, {
     commentId,

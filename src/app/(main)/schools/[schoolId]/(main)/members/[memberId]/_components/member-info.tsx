@@ -28,7 +28,7 @@ function isEmptyHtml(html: string): boolean {
 function Info() {
   const { member } = useMember();
 
-  if (isEmptyHtml(member?.bio!))
+  if (!member?.bio || isEmptyHtml(member?.bio))
     return (
       <div className={cardStyles}>
         <div className="flex flex-col items-center gap-2 text-center">

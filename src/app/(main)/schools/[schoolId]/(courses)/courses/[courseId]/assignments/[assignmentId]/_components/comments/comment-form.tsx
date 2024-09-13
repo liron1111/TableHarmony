@@ -33,7 +33,7 @@ export function CommentForm({
   assignmentId: Id<"courseAssignments">;
 }) {
   const createComment = useMutation(
-    api.courseAssignmentsComments.createCourseAssignmentComment
+    api.courseAssignmentsComments.createComment
   );
 
   const form = useForm<z.infer<typeof formSchema>>({

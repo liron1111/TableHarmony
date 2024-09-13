@@ -104,26 +104,45 @@ export const deleteAssignment = mutation({
     if (!course)
       throw new ConvexError("Unauthorized: Cannot delete assignment");
 
-    const getComments = async () => {
-      const comments = await ctx.db
-        .query("courseAssignmentsComments")
-        .withIndex("by_assignmentId", (q) =>
-          q.eq("assignmentId", args.assignmentId)
-        )
-        .collect();
+    const [comments, submissions] = await Promise.all([
+      getComments(ctx, { assignmentId: args.assignmentId }),
+      getSubmissions(ctx, { assignmentId: args.assignmentId }),
+    ]);
 
-      return comments;
-    };
-
-    const [comments] = await Promise.all([getComments()]);
-
-    await Promise.all(comments.map((comment) => ctx.db.delete(comment._id)));
+    await Promise.all([
+      ...comments.map((comment) => ctx.db.delete(comment._id)),
+      ...submissions.map((submission) => ctx.db.delete(submission._id)),
+    ]);
 
     await ctx.db.delete(args.assignmentId);
   },
 });
 
-export const getAssignmentComments = query({
+export const getSubmissions = query({
+  args: {
+    assignmentId: v.id("courseAssignments"),
+  },
+  handler: async (ctx, args) => {
+    const submissions = await ctx.db
+      .query("courseAssignmentsSubmissions")
+      .withIndex("by_assignmentId", (q) =>
+        q.eq("assignmentId", args.assignmentId)
+      )
+      .collect();
+
+    const submissionsWithUsers = await Promise.all(
+      submissions.map(async (submission) => {
+        const user = await ctx.db.get(submission.userId);
+        if (!user) return null;
+        return { ...submission, user };
+      })
+    );
+
+    return submissionsWithUsers.filter((submission) => submission !== null);
+  },
+});
+
+export const getComments = query({
   args: {
     assignmentId: v.id("courseAssignments"),
   },

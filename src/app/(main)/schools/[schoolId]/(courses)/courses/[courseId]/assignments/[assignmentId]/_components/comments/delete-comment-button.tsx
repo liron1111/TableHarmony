@@ -15,7 +15,7 @@ export function DeleteCommentButton({
   commentId: Id<"courseAssignmentsComments">;
 }) {
   const deleteComment = useMutation(
-    api.courseAssignmentsComments.deleteCourseAssignmentComment
+    api.courseAssignmentsComments.deleteComment
   );
   const [isLoading, setIsLoading] = useState(false);
 

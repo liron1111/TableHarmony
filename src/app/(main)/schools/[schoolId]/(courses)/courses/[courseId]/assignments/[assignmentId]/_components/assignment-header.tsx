@@ -21,6 +21,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useCourse } from "../../../../_components/providers/course-provider";
 import { Id } from "../../../../../../../../../../../convex/_generated/dataModel";
+import { useParams } from "next/navigation";
+import { SubmitAssignmentSheet } from "./submit-assignment-sheet";
+import { useQuery } from "convex/react";
+import { api } from "../../../../../../../../../../../convex/_generated/api";
+import { UpdateSubmissionSheet } from "./update-submission-sheet";
 
 function formatAssignmentDate(date: Date | number) {
   const assignmentDate = new Date(date);
@@ -62,16 +67,14 @@ export function AssignmentHeader() {
             </a>
           </div>
         )}
-
-        {assignment?._id && (
-          <PageActions>
-            <MenuButton assignmentId={assignment._id} />
-          </PageActions>
-        )}
+        <PageActions>
+          <MembershipButtons />
+        </PageActions>
       </PageHeader>
     </div>
   );
 }
+
 export function MenuButton({
   assignmentId,
 }: {
@@ -105,4 +108,26 @@ export function MenuButton({
       </DropdownMenuContent>
     </DropdownMenu>
   );
+}
+
+function MembershipButtons() {
+  const { membership } = useCourse();
+  const { assignmentId } = useParams();
+
+  const submission = useQuery(api.courseAssignmentsSubmissions.getSubmission, {
+    assignmentId: assignmentId as Id<"courseAssignments">,
+    userId: membership?.userId!,
+  });
+
+  if (!membership) return null;
+
+  if (membership.role === "manager") {
+    return (
+      <MenuButton assignmentId={assignmentId as Id<"courseAssignments">} />
+    );
+  }
+
+  if (submission) return <UpdateSubmissionSheet userId={membership.userId} />;
+
+  return <SubmitAssignmentSheet />;
 }

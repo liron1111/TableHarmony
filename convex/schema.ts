@@ -119,10 +119,22 @@ export default defineSchema({
     userId: v.id("users"),
     comment: v.string(),
   }).index("by_assignmentId", ["assignmentId"]),
+  courseAssignmentsSubmissions: defineTable({
+    assignmentId: v.id("courseAssignments"),
+    userId: v.id("users"),
+    comment: v.optional(v.string()),
+    file: v.string(),
+  })
+    .index("by_assignmentId", ["assignmentId"])
+    .index("by_assignmentId_userId", ["assignmentId", "userId"]),
   classes: defineTable({
     courseId: v.id("courses"),
     day: dayType,
     from: v.number(),
     to: v.number(),
   }).index("by_courseId", ["courseId"]),
+  events: defineTable({
+    objectId: v.union(v.id("schools"), v.id("courses")),
+    key: v.string(),
+  }).index("by_objectId", ["objectId"]),
 });
