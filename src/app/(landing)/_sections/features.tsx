@@ -95,7 +95,7 @@ export function FeaturesSection() {
   ];
 
   return (
-    <section className="container py-12 md:py-24">
+    <section className="container py-8 md:py-12 md:pb-8 lg:py-24">
       <h2 className="mb-20 text-center text-3xl font-semibold tracking-tighter sm:text-5xl">
         Amazing Features
       </h2>

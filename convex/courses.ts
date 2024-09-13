@@ -160,18 +160,18 @@ export const deleteCourse = mutation({
     )
       throw new ConvexError("Unauthorized: Cannot delete course");
 
-    const [memberships, enrollments, classes, events] = await Promise.all([
+    const [memberships, enrollments, classes, assignments] = await Promise.all([
       getCourseMemberships(ctx, { courseId: args.courseId }),
       getCourseEnrollments(ctx, { courseId: args.courseId }),
       getCourseClasses(ctx, { courseId: args.courseId }),
-      getCourseEvents(ctx, { courseId: args.courseId }),
+      getCourseAssignments(ctx, { courseId: args.courseId }),
     ]);
 
     await Promise.all([
       ...memberships.map((membership) => ctx.db.delete(membership._id)),
       ...enrollments.map((enrollment) => ctx.db.delete(enrollment._id)),
       ...classes.map((courseClass) => ctx.db.delete(courseClass._id)),
-      ...events.map((event) => ctx.db.delete(event._id)),
+      ...assignments.map((assignment) => ctx.db.delete(assignment._id)),
     ]);
 
     await ctx.db.delete(args.courseId);
@@ -234,17 +234,17 @@ export const getCourseClasses = query({
   },
 });
 
-export const getCourseEvents = query({
+export const getCourseAssignments = query({
   args: {
     courseId: v.id("courses"),
   },
   async handler(ctx, args) {
-    const events = await ctx.db
-      .query("courseEvents")
+    const assignments = await ctx.db
+      .query("courseAssignments")
       .withIndex("by_courseId", (q) => q.eq("courseId", args.courseId))
       .collect();
 
-    return events;
+    return assignments;
   },
 });
 

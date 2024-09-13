@@ -28,7 +28,10 @@ export const dayType = v.union(
   v.literal("sunday")
 );
 
-export const eventType = v.union(v.literal("exam"), v.literal("assignment"));
+export const assignmentType = v.union(
+  v.literal("project"),
+  v.literal("homework")
+);
 
 export default defineSchema({
   users: defineTable({
@@ -103,12 +106,13 @@ export default defineSchema({
     .index("by_courseId_userId", ["courseId", "userId"])
     .index("by_courseId", ["courseId"])
     .index("by_userId", ["userId"]),
-  courseEvents: defineTable({
+  courseAssignments: defineTable({
     courseId: v.id("courses"),
     title: v.string(),
     description: v.string(),
-    type: eventType,
+    type: assignmentType,
     date: v.number(),
+    file: v.optional(v.string()),
   }).index("by_courseId", ["courseId"]),
   classes: defineTable({
     courseId: v.id("courses"),

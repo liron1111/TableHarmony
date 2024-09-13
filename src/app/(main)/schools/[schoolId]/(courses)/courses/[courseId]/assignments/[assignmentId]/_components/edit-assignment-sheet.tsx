@@ -7,11 +7,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { api } from "../../../../../../../../../../convex/_generated/api";
-import { Id } from "../../../../../../../../../../convex/_generated/dataModel";
-import { useMutation } from "convex/react";
+import { api } from "../../../../../../../../../../../convex/_generated/api";
+import { useMutation, useQuery } from "convex/react";
+import { Id } from "../../../../../../../../../../../convex/_generated/dataModel";
 
-import { useCourse } from "../../../_components/providers/course-provider";
+import { useCourse } from "../../../../_components/providers/course-provider";
 
 import {
   Sheet,
@@ -24,6 +24,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -35,7 +36,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { shapeErrors } from "@/utils/errors";
-import { useParams } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -52,57 +52,83 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { TimePicker } from "@/components/ui/time-picker";
 import { cn } from "@/lib/utils";
-import { addDays, format, startOfToday } from "date-fns";
+import { format, startOfToday } from "date-fns";
+import { useConvex } from "convex/react";
+import { PublicError } from "@/utils/errors";
 
 const formSchema = z.object({
-  title: z
-    .string({
-      message: "Title is required",
-    })
-    .min(2),
-  description: z
-    .string({
-      message: "Description is required",
-    })
-    .max(50),
-  type: z.enum(["exam", "assignment"]),
+  title: z.string().min(2, { message: "Title is required" }),
+  description: z.string().max(500, { message: "Description is too long" }),
+  type: z.enum(["project", "homework"]),
   date: z.date(),
+  file: z.instanceof(FileList).optional(),
 });
 
-function CreateEventForm({
+function EditAssignmentForm({
   setShowSheet,
+  assignmentId,
 }: {
   setShowSheet: Dispatch<SetStateAction<boolean>>;
+  assignmentId: Id<"courseAssignments">;
 }) {
-  const createEvent = useMutation(api.courseEvents.createCourseEvent);
-  const { courseId } = useParams();
+  const updateAssignment = useMutation(api.courseAssignments.updateAssignment);
+  const generateUploadUrl = useMutation(api.util.generateUploadUrl);
+  const convex = useConvex();
+  const assignment = useQuery(api.courseAssignments.getAssignment, {
+    assignmentId,
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      type: "assignment",
-      date: addDays(startOfToday(), 7),
+      type: assignment?.type,
+      title: assignment?.title,
+      description: assignment?.description,
+      date: new Date(assignment?.date ?? new Date()),
     },
   });
 
   const isLoading = form.formState.isSubmitting;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!assignment) return;
+
     try {
-      await createEvent({
-        courseId: courseId as Id<"courses">,
+      let fileUrl: string | undefined = assignment.file;
+
+      if (values.file && values.file.length > 0) {
+        const file = values.file[0];
+        const uploadUrl = await generateUploadUrl();
+
+        const result = await fetch(uploadUrl, {
+          method: "POST",
+          headers: { "Content-Type": file.type },
+          body: file,
+        });
+        if (!result.ok) throw new PublicError("Failed to upload file");
+
+        const { storageId } = await result.json();
+        const tempFileUrl = await convex.query(api.util.getImageUrl, {
+          storageId,
+        });
+
+        fileUrl = tempFileUrl ?? undefined;
+      }
+
+      await updateAssignment({
+        assignmentId: assignment._id,
         title: values.title,
         description: values.description,
         type: values.type,
         date: values.date.getTime(),
+        file: fileUrl,
       });
-      toast.success("Created event successfully!");
+      toast.success("Updated assignment successfully!");
+      setShowSheet(false);
     } catch (error) {
       const formattedError = shapeErrors({ error });
       toast.error(formattedError.message);
     }
-
-    setShowSheet(false);
   }
 
   return (
@@ -118,7 +144,7 @@ function CreateEventForm({
                 <Input
                   {...field}
                   disabled={isLoading}
-                  placeholder="Enter event title"
+                  placeholder="Enter assignment title"
                 />
               </FormControl>
               <FormMessage />
@@ -136,7 +162,7 @@ function CreateEventForm({
                   {...field}
                   disabled={isLoading}
                   className="h-[200px]"
-                  placeholder="Provide a detailed description of the event."
+                  placeholder="Provide a detailed description of the assignment."
                 />
               </FormControl>
               <FormMessage />
@@ -159,7 +185,7 @@ function CreateEventForm({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {["exam", "assignment"].map((type) => (
+                    {["project", "homework"].map((type) => (
                       <SelectItem key={type} value={type}>
                         {type}
                       </SelectItem>
@@ -212,9 +238,39 @@ function CreateEventForm({
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="file"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>File (Optional)</FormLabel>
+              <FormControl>
+                <Input
+                  type="file"
+                  onChange={(e) => field.onChange(e.target.files)}
+                  disabled={isLoading}
+                />
+              </FormControl>
+              {assignment?.file && (
+                <FormDescription>
+                  Current file:{" "}
+                  <a
+                    href={assignment.file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary underline underline-offset-4"
+                  >
+                    View
+                  </a>
+                </FormDescription>
+              )}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="flex w-full sm:justify-end">
           <LoaderButton isLoading={isLoading} className="w-full md:w-auto">
-            Create
+            Update
           </LoaderButton>
         </div>
       </form>
@@ -222,7 +278,13 @@ function CreateEventForm({
   );
 }
 
-export function CreateEventSheet() {
+export function EditAssignmentSheet({
+  children,
+  assignmentId,
+}: {
+  children: React.ReactNode;
+  assignmentId: Id<"courseAssignments">;
+}) {
   const [showSheet, setShowSheet] = useState(false);
   const { membership } = useCourse();
 
@@ -230,18 +292,19 @@ export function CreateEventSheet() {
 
   return (
     <Sheet open={showSheet} onOpenChange={setShowSheet}>
-      <SheetTrigger asChild>
-        <Button>New event</Button>
-      </SheetTrigger>
+      <SheetTrigger>{children}</SheetTrigger>
 
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Create event</SheetTitle>
+          <SheetTitle>Edit assignment</SheetTitle>
           <SheetDescription>
-            Fill in the details below to create a new event.
+            Fill in the details below to edit the assignment.
           </SheetDescription>
         </SheetHeader>
-        <CreateEventForm setShowSheet={setShowSheet} />
+        <EditAssignmentForm
+          setShowSheet={setShowSheet}
+          assignmentId={assignmentId}
+        />
       </SheetContent>
     </Sheet>
   );

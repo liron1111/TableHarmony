@@ -32,8 +32,8 @@ const itemVariants = {
 
 export function HeroSection() {
   return (
-    <section className="container py-8 md:py-12 md:pb-8 lg:py-24 lg:pb-20">
-      <div className="flex flex-col items-center space-y-7">
+    <section className="container py-8 md:py-12 md:pb-8 lg:py-24">
+      <div className="flex flex-col items-center space-y-10">
         <motion.div
           className="flex flex-col items-center space-y-7 text-center"
           variants={containerVariants}
