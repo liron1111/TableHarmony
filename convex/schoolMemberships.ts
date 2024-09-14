@@ -98,21 +98,6 @@ export const deleteSchoolMembership = internalMutation({
     if (!membership)
       throw new ConvexError("Unauthorized: Cannot delete this membership");
 
-    if (membership.role === "student") {
-      const [coursesMemberships] = await Promise.all([
-        getUserCourseMemberships(ctx, {
-          userId: membership.userId,
-          schoolId: membership.schoolId,
-        }),
-      ]);
-
-      await Promise.all([
-        ...coursesMemberships.map((membership) =>
-          exit(ctx, { membershipId: membership._id })
-        ),
-      ]);
-    }
-
     await ctx.db.delete(membership._id);
   },
 });

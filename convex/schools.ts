@@ -18,6 +18,7 @@ import {
 } from "./schoolMemberships";
 import { createScoolEnrollment } from "./schoolEnrollments";
 import { deleteCourse } from "./courses";
+import { trackEvent } from "./events";
 
 export const createSchool = mutation({
   args: {
@@ -127,6 +128,11 @@ export const updateSchool = mutation({
       description: args.description ?? school.description,
       isPublic: args.isPublic ?? school.isPublic,
       info: args.info ?? school.info,
+    });
+
+    trackEvent(ctx, {
+      objectId: school._id,
+      key: "school updated",
     });
   },
 });
@@ -260,6 +266,11 @@ export const exit = mutation({
       throw new ConvexError("You are not a member of this school");
 
     await deleteSchoolMembership(ctx, { membershipId: membership._id });
+
+    trackEvent(ctx, {
+      objectId: membership.schoolId,
+      key: "exited school",
+    });
   },
 });
 
@@ -272,6 +283,11 @@ export const enroll = mutation({
     await createScoolEnrollment(ctx, {
       schoolId: args.schoolId,
       role: args.role,
+    });
+
+    trackEvent(ctx, {
+      objectId: args.schoolId,
+      key: "enrolled school",
     });
   },
 });
@@ -299,6 +315,11 @@ export const approveEnrollment = internalMutation({
     });
 
     await ctx.db.delete(enrollment._id);
+
+    trackEvent(ctx, {
+      objectId: enrollment.schoolId,
+      key: "approved enrollment",
+    });
   },
 });
 

@@ -18,6 +18,7 @@ import {
   createCourseEnrollment,
   deleteCourseEnrollment,
 } from "./courseEnrollments";
+import { trackEvent } from "./events";
 
 export const createCourse = mutation({
   args: {
@@ -47,6 +48,11 @@ export const createCourse = mutation({
       userId: user._id,
       courseId: courseId,
       role: "manager",
+    });
+
+    trackEvent(ctx, {
+      objectId: args.schoolId,
+      key: "course created",
     });
   },
 });
@@ -175,6 +181,11 @@ export const deleteCourse = mutation({
     ]);
 
     await ctx.db.delete(args.courseId);
+
+    trackEvent(ctx, {
+      objectId: course.schoolId,
+      key: "course deleted",
+    });
   },
 });
 

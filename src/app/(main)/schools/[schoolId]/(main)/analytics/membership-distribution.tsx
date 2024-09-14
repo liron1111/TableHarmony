@@ -15,8 +15,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useSchool } from "../../../../_components/providers/school-provider";
-import { api } from "../../../../../../../../../convex/_generated/api";
+import { useSchool } from "../../_components/providers/school-provider";
+import { api } from "../../../../../../../convex/_generated/api";
 import { useQuery } from "convex/react";
 import { Skeleton } from "@/components/ui/skeleton";
 
