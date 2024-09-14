@@ -11,7 +11,6 @@ import {
 import React, { createContext, useContext } from "react";
 import { redirect, useParams, usePathname } from "next/navigation";
 import { useMembership } from "../../../../_components/providers/membership-provider";
-import { AuthorizationError } from "@/utils/errors";
 
 interface CourseContextType {
   course?: Doc<"courses">;
@@ -28,8 +27,27 @@ export function useCourse() {
   return context;
 }
 
+function isManagerRoute(
+  currentPath: string,
+  schoolId: string,
+  courseId: string
+) {
+  const prefix = `/schools/${schoolId}/courses/${courseId}/`;
+
+  const managerPaths = [
+    `${prefix}course-settings`,
+    `${prefix}course-settings/danger`,
+    `${prefix}course-settings/memberships`,
+    `${prefix}analytics`,
+    `${prefix}enrollments`,
+  ];
+
+  return managerPaths.some((path) => currentPath === path);
+}
+
 export function CourseProvider({ children }: { children: React.ReactNode }) {
   const { membership: schoolMembership } = useMembership();
+
   const { courseId, schoolId } = useParams();
   const pathname = usePathname();
 
@@ -50,11 +68,19 @@ export function CourseProvider({ children }: { children: React.ReactNode }) {
       : "skip"
   );
 
-  const isSchoolManager = schoolMembership?.role === "manager";
+  const isManager =
+    schoolMembership?.role === "manager" || membership?.role === "manager";
   const isHomepage = pathname === `/schools/${schoolId}/courses/${courseId}`;
   const isGuest = membership === null;
 
-  if (!isSchoolManager && !isHomepage && isGuest)
+  if (!isManager && !isHomepage && isGuest)
+    redirect(`/schools/${schoolId}/courses/${courseId}`);
+
+  if (
+    !isManager &&
+    !isGuest &&
+    isManagerRoute(pathname, schoolId as string, courseId as string)
+  )
     redirect(`/schools/${schoolId}/courses/${courseId}`);
 
   return (

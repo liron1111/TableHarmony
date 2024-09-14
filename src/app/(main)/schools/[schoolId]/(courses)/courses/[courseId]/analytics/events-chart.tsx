@@ -1,5 +1,9 @@
 "use client";
 
+import { useQuery } from "convex/react";
+import { api } from "../../../../../../../../../convex/_generated/api";
+import { Id } from "../../../../../../../../../convex/_generated/dataModel";
+
 import * as React from "react";
 import {
   Area,
@@ -19,8 +23,6 @@ import {
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
@@ -31,37 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-// Mock data for testing with events spread over 3 days
-const mockEvents = [
-  ...Array(10)
-    .fill(0)
-    .flatMap((_, index) => {
-      const date = new Date(2024, 2, index * 3 + 1); // Spread events every 3 days
-      const baseCount = 10; // Base number of events per day
-      const trendFactor = Math.sin(index / 5) * 15; // Creates a wave pattern
-      const randomFactor = Math.random() * 5; // Adds some randomness
-      const totalCount = Math.max(
-        0,
-        Math.round(baseCount + trendFactor + randomFactor)
-      );
-
-      return Array(totalCount)
-        .fill(0)
-        .map((_, i) => ({
-          _creationTime: new Date(
-            date.getTime() + i * 1000 * 60 * 60
-          ).toISOString(), // Spread events throughout the day
-          key: [
-            "Course Creation",
-            "Course Deletion",
-            "Assignment Creation",
-            "Assignment Submission",
-            "Course Enrollment",
-          ][Math.floor(Math.random() * 5)],
-        }));
-    }),
-];
+import { useParams } from "next/navigation";
 
 const chartConfig = {
   events: {
@@ -72,19 +44,17 @@ const chartConfig = {
 
 export function EventsChart() {
   const [timeRange, setTimeRange] = React.useState("90d");
-  const [selectedKey, setSelectedKey] = React.useState("Course Creation");
+  const [selectedKey, setSelectedKey] = React.useState("all");
 
-  const events = mockEvents;
-
-  //const { schoolId } = useParams();
-  //const events = useQuery(api.events.getEvents, {
-  //  objectId: schoolId,
-  //});
+  const { courseId } = useParams();
+  const events = useQuery(api.events.getEvents, {
+    objectId: courseId as Id<"courses">,
+  });
 
   const eventOptions = React.useMemo(() => {
     const uniqueKeys = new Set(events?.map((event) => event.key) || []);
     return [
-      { label: "All Events", value: "all" },
+      { label: "All", value: "all" },
       ...Array.from(uniqueKeys).map((key) => ({ label: key, value: key })),
     ];
   }, [events]);
@@ -103,8 +73,10 @@ export function EventsChart() {
     );
 
     const filteredEvents = events.filter(
-      (event) => selectedKey === "all" || event.key === selectedKey
-    ); //TODO: filter by time range
+      (event) =>
+        (selectedKey === "all" || event.key === selectedKey) &&
+        new Date(event._creationTime) >= startDate
+    );
 
     const eventCounts = filteredEvents.reduce(
       (acc, event) => {

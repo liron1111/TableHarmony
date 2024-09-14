@@ -76,6 +76,21 @@ export const deleteCourseMembership = internalMutation({
     if (!course && user._id !== membership.userId)
       throw new ConvexError("Unauthorized: Cannot delete course membership");
 
+    await deleteCourseMembershipsCascade(ctx, { membershipId: membership._id });
+  },
+});
+
+export const deleteCourseMembershipsCascade = internalMutation({
+  args: {
+    membershipId: v.id("courseMemberships"),
+  },
+  async handler(ctx, args) {
+    const membership = await ctx.db.get(args.membershipId);
+
+    if (!membership) throw new ConvexError("Membership not found");
+
+    //TODO: delete all submissions (maybe comments too)
+
     await ctx.db.delete(membership._id);
   },
 });

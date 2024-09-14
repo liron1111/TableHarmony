@@ -13,11 +13,12 @@ import { assertAuthenticated, getCurrentUser, getUserById } from "./users";
 import {
   createSchoolMembership,
   deleteSchoolMembership,
+  deleteSchoolMembershipCascade,
   getSchoolMembership,
   getUserSchoolMemberships,
 } from "./schoolMemberships";
 import { createScoolEnrollment } from "./schoolEnrollments";
-import { deleteCourse } from "./courses";
+import { deleteCourseCascade } from "./courses";
 import { trackEvent } from "./events";
 
 export const createSchool = mutation({
@@ -155,9 +156,11 @@ export const deleteSchool = mutation({
     ]);
 
     await Promise.all([
-      ...courses.map((course) => deleteCourse(ctx, { courseId: course._id })),
+      ...courses.map((course) =>
+        deleteCourseCascade(ctx, { courseId: course._id })
+      ),
       ...memberships.map((membership) =>
-        deleteSchoolMembership(ctx, { membershipId: membership._id })
+        deleteSchoolMembershipCascade(ctx, { membershipId: membership._id })
       ),
       ...enrollments.map((enrollment) => ctx.db.delete(enrollment._id)),
       ...semesters.map((semester) => ctx.db.delete(semester._id)),

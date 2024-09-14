@@ -3,6 +3,7 @@ import { internalQuery, mutation, query } from "./_generated/server";
 
 import { getCourseMembership } from "./courseMemberships";
 import { assertAuthenticated, getCurrentUser } from "./users";
+import { trackEvent } from "./events";
 
 export const assertCommentAccess = internalQuery({
   args: {
@@ -67,6 +68,11 @@ export const createComment = mutation({
       userId: user._id,
       comment: args.comment,
     });
+
+    trackEvent(ctx, {
+      objectId: assignment.courseId,
+      key: "comment created",
+    });
   },
 });
 
@@ -79,11 +85,16 @@ export const deleteComment = mutation({
       commentId: args.commentId,
     });
 
-    if (!comment) {
-      throw new ConvexError("Unauthorized: Cannot delete comment");
-    }
+    if (!comment) throw new ConvexError("Unauthorized: Cannot delete comment");
 
     await ctx.db.delete(args.commentId);
+
+    const assignment = await ctx.db.get(comment.assignmentId);
+    if (!assignment) throw new ConvexError("Assignment not found");
+    trackEvent(ctx, {
+      objectId: assignment.courseId,
+      key: "comment deleted",
+    });
   },
 });
 
@@ -112,5 +123,12 @@ export const updateComment = mutation({
     }
 
     await ctx.db.patch(args.commentId, { comment: args.comment });
+
+    const assignment = await ctx.db.get(comment.assignmentId);
+    if (!assignment) throw new ConvexError("Assignment not found");
+    trackEvent(ctx, {
+      objectId: assignment.courseId,
+      key: "comment updated",
+    });
   },
 });

@@ -111,6 +111,11 @@ export const updateCourse = mutation({
       info: args.info ?? course.info,
       image: args.image ?? course.image,
     });
+
+    trackEvent(ctx, {
+      objectId: args.courseId,
+      key: "course updated",
+    });
   },
 });
 
@@ -165,6 +170,19 @@ export const deleteCourse = mutation({
       schoolMembership?.role !== "manager"
     )
       throw new ConvexError("Unauthorized: Cannot delete course");
+
+    await deleteCourseCascade(ctx, { courseId: course._id });
+  },
+});
+
+export const deleteCourseCascade = internalMutation({
+  args: {
+    courseId: v.id("courses"),
+  },
+  async handler(ctx, args) {
+    const course = await ctx.db.get(args.courseId);
+
+    if (!course) throw new ConvexError("Course not found");
 
     const [memberships, enrollments, classes, assignments] = await Promise.all([
       getCourseMemberships(ctx, { courseId: args.courseId }),
@@ -270,6 +288,11 @@ export const enroll = mutation({
       courseId: args.courseId,
       userId: user._id,
     });
+
+    trackEvent(ctx, {
+      objectId: args.courseId,
+      key: "enrolled",
+    });
   },
 });
 
@@ -278,7 +301,15 @@ export const exit = mutation({
     membershipId: v.id("courseMemberships"),
   },
   async handler(ctx, args) {
+    const membership = await ctx.db.get(args.membershipId);
+    if (!membership) throw new ConvexError("Membership not found");
+
     await deleteCourseMembership(ctx, { membershipId: args.membershipId });
+
+    trackEvent(ctx, {
+      objectId: membership.courseId,
+      key: "exited",
+    });
   },
 });
 
@@ -298,6 +329,11 @@ export const approveEnrollment = internalMutation({
     });
 
     await deleteCourseEnrollment(ctx, { enrollmentId: enrollment._id });
+
+    trackEvent(ctx, {
+      objectId: enrollment.courseId,
+      key: "enrollment approved",
+    });
   },
 });
 

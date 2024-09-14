@@ -1,6 +1,6 @@
 "use client";
 
-import { Pie, PieChart } from "recharts";
+import { Label, Pie, PieChart } from "recharts";
 
 import {
   Card,
@@ -49,11 +49,16 @@ export function MembershipDistributionChart() {
 
   if (!data) {
     return (
-      <Card className="flex flex-col">
-        <CardHeader className="items-center">
-          <CardTitle>Membership Distribution</CardTitle>
+      <Card className="w-fit">
+        <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+          <div className="grid flex-1 gap-1 text-center sm:text-left">
+            <CardTitle>Memberships</CardTitle>
+            <CardDescription className="truncate">
+              This chart shows the distribution of school memberships by role.
+            </CardDescription>
+          </div>
         </CardHeader>
-        <CardContent className="flex items-center justify-center">
+        <CardContent className="mt-4 flex items-center justify-center">
           <div className="aspect-square w-full max-w-[250px]">
             <Skeleton className="h-full w-full rounded-full" />
           </div>
@@ -61,8 +66,8 @@ export function MembershipDistributionChart() {
       </Card>
     );
   }
-  const members = Object.groupBy(data, (item) => item.role);
 
+  const members = Object.groupBy(data, (item) => item.role);
   const chartData = Object.entries(members).map(([role, users]) => ({
     role,
     totalUsers: users.length,
@@ -70,9 +75,14 @@ export function MembershipDistributionChart() {
   }));
 
   return (
-    <Card className="flex flex-col">
-      <CardHeader className="items-center pb-0">
-        <CardTitle>Membership Distribution</CardTitle>
+    <Card className="w-fit">
+      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+        <div className="grid flex-1 gap-1 text-center sm:text-left">
+          <CardTitle>Memberships</CardTitle>
+          <CardDescription>
+            This chart shows the distribution of school memberships by role.
+          </CardDescription>
+        </div>
       </CardHeader>
       <CardContent>
         <ChartContainer
@@ -88,8 +98,39 @@ export function MembershipDistributionChart() {
               data={chartData}
               dataKey="totalUsers"
               nameKey="role"
-              stroke="0"
-            />
+              innerRadius={60}
+              strokeWidth={5}
+            >
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                    return (
+                      <text
+                        x={viewBox.cx}
+                        y={viewBox.cy}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                      >
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          className="fill-foreground text-3xl font-bold"
+                        >
+                          {data.length}
+                        </tspan>
+                        <tspan
+                          x={viewBox.cx}
+                          y={(viewBox.cy || 0) + 24}
+                          className="fill-muted-foreground"
+                        >
+                          Members
+                        </tspan>
+                      </text>
+                    );
+                  }
+                }}
+              />
+            </Pie>
           </PieChart>
         </ChartContainer>
       </CardContent>

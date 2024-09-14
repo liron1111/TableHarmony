@@ -1,6 +1,7 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { assertAuthenticated, getUserById } from "./users";
+import { trackEvent } from "./events";
 
 export const createSubmission = mutation({
   args: {
@@ -10,6 +11,9 @@ export const createSubmission = mutation({
   },
   handler: async (ctx, args) => {
     const user = await assertAuthenticated(ctx, {});
+
+    const assignment = await ctx.db.get(args.assignmentId);
+    if (!assignment) throw new ConvexError("Assignment not found");
 
     const submission = await getSubmission(ctx, {
       assignmentId: args.assignmentId,
@@ -25,6 +29,11 @@ export const createSubmission = mutation({
       userId: user._id,
       file: args.file,
       comment: args.comment,
+    });
+
+    trackEvent(ctx, {
+      objectId: assignment.courseId,
+      key: "submission created",
     });
   },
 });
@@ -75,6 +84,11 @@ export const updateSubmission = mutation({
     await ctx.db.patch(submission._id, {
       comment: args.comment ?? submission.comment,
       file: args.file ?? submission.file,
+    });
+
+    trackEvent(ctx, {
+      objectId: assignment.courseId,
+      key: "submission updated",
     });
   },
 });

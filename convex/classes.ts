@@ -6,6 +6,7 @@ import {
   getUserCourses,
 } from "./courses";
 import { dayType } from "./schema";
+import { trackEvent } from "./events";
 
 const timeSinceMidnight = (term: number) => {
   const date = new Date(term);
@@ -55,6 +56,11 @@ export const createClass = mutation({
       from,
       to,
     });
+
+    trackEvent(ctx, {
+      key: "class created",
+      objectId: course._id,
+    });
   },
 });
 
@@ -98,6 +104,11 @@ export const updateClass = mutation({
       from,
       to,
     });
+
+    trackEvent(ctx, {
+      key: "class updated",
+      objectId: courseClass.courseId,
+    });
   },
 });
 
@@ -117,6 +128,11 @@ export const deleteClass = mutation({
     if (!course) throw new ConvexError("Unauthorized: Cannot delete class");
 
     await ctx.db.delete(courseClass._id);
+
+    trackEvent(ctx, {
+      key: "class deleted",
+      objectId: courseClass.courseId,
+    });
   },
 });
 

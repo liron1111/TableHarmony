@@ -10,8 +10,10 @@ import { schoolRoleType } from "./schema";
 
 import { assertSchoolManager } from "./schools";
 import { getCurrentUser } from "./users";
-import { getUserCourseMemberships } from "./courseMemberships";
-import { exit } from "./courses";
+import {
+  deleteCourseMembershipsCascade,
+  getUserCourseMemberships,
+} from "./courseMemberships";
 
 export const assertSchoolMembershipAccess = internalQuery({
   args: { membershipId: v.id("schoolMemberships") },
@@ -97,6 +99,34 @@ export const deleteSchoolMembership = internalMutation({
 
     if (!membership)
       throw new ConvexError("Unauthorized: Cannot delete this membership");
+
+    await deleteSchoolMembershipCascade(ctx, {
+      membershipId: membership._id,
+    });
+  },
+});
+
+export const deleteSchoolMembershipCascade = internalMutation({
+  args: { membershipId: v.id("schoolMemberships") },
+  async handler(ctx, args) {
+    const membership = await ctx.db.get(args.membershipId);
+
+    if (!membership) throw new ConvexError("Membership not found");
+
+    const [courseMemberships] = await Promise.all([
+      getUserCourseMemberships(ctx, {
+        userId: membership.userId,
+        schoolId: membership.schoolId,
+      }),
+    ]);
+
+    await Promise.all([
+      ...courseMemberships.map((courseMembership) =>
+        deleteCourseMembershipsCascade(ctx, {
+          membershipId: courseMembership._id,
+        })
+      ),
+    ]);
 
     await ctx.db.delete(membership._id);
   },

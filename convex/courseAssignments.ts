@@ -1,8 +1,9 @@
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { assignmentType } from "./schema";
 import { assertCourseManager } from "./courses";
 import { getCurrentSemester } from "./schools";
+import { trackEvent } from "./events";
 
 export const createCourseAssignment = mutation({
   args: {
@@ -35,7 +36,7 @@ export const createCourseAssignment = mutation({
         "Cannot create an assignment not during current semester"
       );
 
-    const assignmentId = await ctx.db.insert("courseAssignments", {
+    await ctx.db.insert("courseAssignments", {
       courseId: args.courseId,
       title: args.title,
       description: args.description,
@@ -44,7 +45,10 @@ export const createCourseAssignment = mutation({
       file: args.file,
     });
 
-    return assignmentId;
+    trackEvent(ctx, {
+      objectId: args.courseId,
+      key: "assignment created",
+    });
   },
 });
 
@@ -85,6 +89,11 @@ export const updateAssignment = mutation({
       date: args.date,
       file: args.file,
     });
+
+    trackEvent(ctx, {
+      objectId: assignment.courseId,
+      key: "assignment updated",
+    });
   },
 });
 
@@ -103,6 +112,24 @@ export const deleteAssignment = mutation({
 
     if (!course)
       throw new ConvexError("Unauthorized: Cannot delete assignment");
+
+    await deleteAssignmentCascade(ctx, { assignmentId: args.assignmentId });
+
+    trackEvent(ctx, {
+      objectId: assignment.courseId,
+      key: "assignment deleted",
+    });
+  },
+});
+
+export const deleteAssignmentCascade = internalMutation({
+  args: {
+    assignmentId: v.id("courseAssignments"),
+  },
+  async handler(ctx, args) {
+    const assignment = await ctx.db.get(args.assignmentId);
+
+    if (!assignment) throw new ConvexError("Assignment not found");
 
     const [comments, submissions] = await Promise.all([
       getComments(ctx, { assignmentId: args.assignmentId }),

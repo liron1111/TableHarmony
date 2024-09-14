@@ -3,7 +3,7 @@ import { mutation, query } from "./_generated/server";
 
 export const trackEvent = mutation({
   args: {
-    objectId: v.id("schools"),
+    objectId: v.union(v.id("schools"), v.id("courses")),
     key: v.string(),
   },
   async handler(ctx, args) {

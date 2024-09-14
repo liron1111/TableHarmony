@@ -61,7 +61,7 @@ export const columns: ColumnDef<any>[] = [
   {
     accessorKey: "_creationTime",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Joined at" />
+      <DataTableColumnHeader column={column} title="Submitted at" />
     ),
     cell: ({ row }) => {
       return new Date(row.getValue("_creationTime")).toLocaleDateString(

@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  AreaChartIcon,
   ClipboardIcon,
   LogInIcon,
   LogOutIcon,
@@ -165,6 +166,18 @@ function MembershipButtons() {
             >
               <UsersIcon className="mr-2 size-4" />
               Members
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link
+              href={calculatePath("analytics")}
+              className={cn("cursor-pointer", {
+                "bg-accent": isActive("analytics"),
+              })}
+            >
+              <AreaChartIcon className="mr-2 size-4" />
+              Analytics
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
