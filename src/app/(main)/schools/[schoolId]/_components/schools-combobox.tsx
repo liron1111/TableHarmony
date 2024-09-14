@@ -30,7 +30,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const School = ({ name, image }: { name: string; image: string }) => (
   <div className="flex items-center gap-2">
-    <Avatar className="size-6">
+    <Avatar className="size-5">
       <AvatarImage src={image} alt={`${name} logo`} />
       <AvatarFallback className="text-xs font-normal">SC</AvatarFallback>
     </Avatar>

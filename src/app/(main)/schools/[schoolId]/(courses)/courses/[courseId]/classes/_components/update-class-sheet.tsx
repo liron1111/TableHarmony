@@ -41,16 +41,7 @@ import {
 } from "@/components/ui/select";
 import { TimePicker } from "@/components/ui/time-picker";
 import { startOfToday } from "date-fns";
-
-const DAYS_OF_WEEK = [
-  "sunday",
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-];
+import { DAYS_OF_WEEK } from "@/config/contants";
 
 const formSchema = z.object({
   day: z.enum(DAYS_OF_WEEK as [string, ...string[]]),

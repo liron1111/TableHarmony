@@ -10,6 +10,7 @@ import Image from "next/image";
 import { format } from "date-fns";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 const DAYS_OF_WEEK = [
   "sunday",
@@ -86,20 +87,25 @@ export function Schedule() {
               <p className="text-muted-foreground">No classes scheduled</p>
             ) : (
               <div className="space-y-2">
-                {schedule[day].map(({ class: classItem, course }, index) => (
-                  <Card
-                    key={classItem._id}
-                    className={`bg-[hsl(var(--chart-${(index + 1 + DAYS_OF_WEEK.indexOf(day)) % 5}))]`}
-                  >
-                    <CardContent className="flex items-center justify-between p-4">
-                      <span className="font-medium">{course.name}</span>
-                      <span>
-                        {format(classItem.from, "HH:mm")} -{" "}
-                        {format(classItem.to, "HH:mm")}
-                      </span>
-                    </CardContent>
-                  </Card>
-                ))}
+                {schedule[day].map(({ class: classItem, course }, index) => {
+                  const colorIndex =
+                    (index + 1 + DAYS_OF_WEEK.indexOf(day)) % 5;
+
+                  return (
+                    <Card
+                      key={classItem._id}
+                      className={`bg-[hsl(var(--chart-${colorIndex}))]`}
+                    >
+                      <CardContent className="flex items-center justify-between p-4">
+                        <span className="font-medium">{course.name}</span>
+                        <span>
+                          {format(classItem.from, "HH:mm")} -{" "}
+                          {format(classItem.to, "HH:mm")}
+                        </span>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
             )}
           </CardContent>

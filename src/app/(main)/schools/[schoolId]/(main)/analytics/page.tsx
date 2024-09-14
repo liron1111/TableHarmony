@@ -1,6 +1,7 @@
 import { PageHeader, PageHeaderHeading } from "@/components/page-header";
-import { EventsChart } from "./events-chart";
-import { MembershipDistributionChart } from "./membership-distribution";
+import { EventsChart } from "./_charts/events";
+import { MembershipDistributionChart } from "./_charts/membership-distribution";
+import { ClassesChart } from "./_charts/classes";
 
 export default function AnalyticsPage() {
   return (
@@ -10,7 +11,10 @@ export default function AnalyticsPage() {
       </PageHeader>
       <div className="space-y-10">
         <EventsChart />
-        <MembershipDistributionChart />
+        <div className="flex flex-col gap-10 md:flex-row">
+          <MembershipDistributionChart />
+          <ClassesChart />
+        </div>
       </div>
     </div>
   );

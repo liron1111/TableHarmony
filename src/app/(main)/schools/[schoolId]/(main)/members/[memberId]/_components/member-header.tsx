@@ -76,13 +76,13 @@ function TabsSection() {
     <Tabs value={currentTab} defaultValue={currentTab}>
       <TabsList className="space-x-2">
         <TabsTrigger value={memberId as string} asChild>
-          <Link href={calculatePath("/")}>Info</Link>
+          <Link href={calculatePath("/")}>info</Link>
         </TabsTrigger>
         <TabsTrigger value="courses" asChild>
-          <Link href={calculatePath("/courses")}>Courses</Link>
+          <Link href={calculatePath("/courses")}>courses</Link>
         </TabsTrigger>
         <TabsTrigger value="schedule" asChild>
-          <Link href={calculatePath("/schedule")}>Schedule</Link>
+          <Link href={calculatePath("/schedule")}>schedule</Link>
         </TabsTrigger>
       </TabsList>
     </Tabs>

@@ -16,16 +16,7 @@ import { Button } from "@/components/ui/button";
 import { PencilIcon, TrashIcon } from "lucide-react";
 import { cardStyles } from "@/styles/common";
 import Image from "next/image";
-
-const DAYS_OF_WEEK = [
-  "sunday",
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-];
+import { DAYS_OF_WEEK } from "@/config/contants";
 
 export function ClassesSchedule() {
   const { course } = useCourse();

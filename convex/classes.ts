@@ -7,6 +7,7 @@ import {
 } from "./courses";
 import { dayType } from "./schema";
 import { trackEvent } from "./events";
+import { getSchoolCourses } from "./schools";
 
 const timeSinceMidnight = (term: number) => {
   const date = new Date(term);
@@ -174,5 +175,25 @@ export const getUserClasses = query({
     );
 
     return classes;
+  },
+});
+
+export const getSchoolClasses = query({
+  args: {
+    schoolId: v.id("schools"),
+  },
+  async handler(ctx, args) {
+    const courses = await getSchoolCourses(ctx, { schoolId: args.schoolId });
+
+    const classes = await Promise.all(
+      courses.map(
+        async (course) =>
+          await getCourseClasses(ctx, {
+            courseId: course._id,
+          })
+      )
+    );
+
+    return classes.flat();
   },
 });

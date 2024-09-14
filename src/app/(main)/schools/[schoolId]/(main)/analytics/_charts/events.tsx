@@ -1,14 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
@@ -19,8 +12,6 @@ import {
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
@@ -37,7 +28,7 @@ const mockEvents = [
   ...Array(10)
     .fill(0)
     .flatMap((_, index) => {
-      const date = new Date(2024, 2, index * 3 + 1); // Spread events every 3 days
+      const date = new Date(2024, 7, index * 3 + 1); // Spread events every 3 days
       const baseCount = 10; // Base number of events per day
       const trendFactor = Math.sin(index / 5) * 15; // Creates a wave pattern
       const randomFactor = Math.random() * 5; // Adds some randomness
@@ -71,8 +62,8 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function EventsChart() {
-  const [timeRange, setTimeRange] = React.useState("90d");
-  const [selectedKey, setSelectedKey] = React.useState("Course Creation");
+  const [timeRange, setTimeRange] = React.useState("30d");
+  const [selectedKey, setSelectedKey] = React.useState("all");
 
   const events = mockEvents;
 
@@ -84,7 +75,7 @@ export function EventsChart() {
   const eventOptions = React.useMemo(() => {
     const uniqueKeys = new Set(events?.map((event) => event.key) || []);
     return [
-      { label: "All Events", value: "all" },
+      { label: "All", value: "all" },
       ...Array.from(uniqueKeys).map((key) => ({ label: key, value: key })),
     ];
   }, [events]);
@@ -103,8 +94,10 @@ export function EventsChart() {
     );
 
     const filteredEvents = events.filter(
-      (event) => selectedKey === "all" || event.key === selectedKey
-    ); //TODO: filter by time range
+      (event) =>
+        (selectedKey === "all" || event.key === selectedKey) &&
+        new Date(event._creationTime) >= startDate
+    );
 
     const eventCounts = filteredEvents.reduce(
       (acc, event) => {
@@ -125,45 +118,47 @@ export function EventsChart() {
 
   return (
     <Card>
-      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
-        <div className="grid flex-1 gap-1 text-center sm:text-left">
+      <CardHeader className="flex gap-2 space-y-0 border-b py-5 sm:flex-row">
+        <div className="grid flex-1 gap-1 text-left">
           <CardTitle>Events</CardTitle>
           <CardDescription>
             Displaying event counts over the selected time range.
           </CardDescription>
         </div>
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger
-            className="w-[160px] rounded-lg sm:ml-auto"
-            aria-label="Select time range"
-          >
-            <SelectValue placeholder="Last 3 months" />
-          </SelectTrigger>
-          <SelectContent className="rounded-xl">
-            <SelectItem value="90d">Last 3 months</SelectItem>
-            <SelectItem value="30d">Last 30 days</SelectItem>
-            <SelectItem value="7d">Last 7 days</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={selectedKey} onValueChange={setSelectedKey}>
-          <SelectTrigger
-            className="w-[160px] rounded-lg sm:ml-auto"
-            aria-label="Select an event type"
-          >
-            <SelectValue placeholder="Select event type" />
-          </SelectTrigger>
-          <SelectContent className="rounded-xl">
-            {eventOptions.map((option) => (
-              <SelectItem
-                key={option.value}
-                value={option.value}
-                className="rounded-lg"
-              >
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-2">
+          <Select value={timeRange} onValueChange={setTimeRange}>
+            <SelectTrigger
+              className="w-[160px] rounded-lg sm:ml-auto"
+              aria-label="Select time range"
+            >
+              <SelectValue placeholder="Last 3 months" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="90d">Last 3 months</SelectItem>
+              <SelectItem value="30d">Last 30 days</SelectItem>
+              <SelectItem value="7d">Last 7 days</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={selectedKey} onValueChange={setSelectedKey}>
+            <SelectTrigger
+              className="w-[160px] rounded-lg sm:ml-auto"
+              aria-label="Select an event type"
+            >
+              <SelectValue placeholder="Select event type" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              {eventOptions.map((option) => (
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  className="rounded-lg"
+                >
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer

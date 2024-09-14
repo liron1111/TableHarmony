@@ -15,11 +15,11 @@ export function SettingsTabs() {
     <Tabs value={currentTab} defaultValue={currentTab}>
       <TabsList className="space-x-4">
         <TabsTrigger value="school-settings" asChild>
-          <Link href={`/schools/${schoolId}/school-settings`}>General</Link>
+          <Link href={`/schools/${schoolId}/school-settings`}>general</Link>
         </TabsTrigger>
         <TabsTrigger value="danger" asChild>
           <Link href={`/schools/${schoolId}/school-settings/danger`}>
-            Danger
+            danger
           </Link>
         </TabsTrigger>
       </TabsList>

@@ -2,6 +2,9 @@
 
 import { Label, Pie, PieChart } from "recharts";
 
+import { useSchool } from "../../../_components/providers/school-provider";
+import { api } from "../../../../../../../../convex/_generated/api";
+
 import {
   Card,
   CardContent,
@@ -15,8 +18,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { useSchool } from "../../_components/providers/school-provider";
-import { api } from "../../../../../../../convex/_generated/api";
 import { useQuery } from "convex/react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -49,17 +50,17 @@ export function MembershipDistributionChart() {
 
   if (!data) {
     return (
-      <Card className="w-fit">
-        <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
-          <div className="grid flex-1 gap-1 text-center sm:text-left">
+      <Card className="w-full md:w-[400px]">
+        <CardHeader className="flex gap-2 space-y-0 border-b py-5 sm:flex-row">
+          <div className="grid flex-1 gap-1 text-left">
             <CardTitle>Memberships</CardTitle>
             <CardDescription className="truncate">
-              This chart shows the distribution of school memberships by role.
+              School membership distribution by role.
             </CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="mt-4 flex items-center justify-center">
-          <div className="aspect-square w-full max-w-[250px]">
+        <CardContent className="flex items-center justify-center p-4 sm:p-10">
+          <div className="aspect-square w-full max-w-[200px]">
             <Skeleton className="h-full w-full rounded-full" />
           </div>
         </CardContent>
@@ -75,19 +76,17 @@ export function MembershipDistributionChart() {
   }));
 
   return (
-    <Card className="w-fit">
-      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
-        <div className="grid flex-1 gap-1 text-center sm:text-left">
+    <Card className="w-full md:w-[400px]">
+      <CardHeader className="flex gap-2 space-y-0 border-b py-5 sm:flex-row">
+        <div className="grid flex-1 gap-1 text-left">
           <CardTitle>Memberships</CardTitle>
-          <CardDescription>
-            This chart shows the distribution of school memberships by role.
-          </CardDescription>
+          <CardDescription>School distribution by roles.</CardDescription>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex items-center justify-center">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
+          className="aspect-square w-full max-w-[200px]"
         >
           <PieChart>
             <ChartTooltip
@@ -98,8 +97,8 @@ export function MembershipDistributionChart() {
               data={chartData}
               dataKey="totalUsers"
               nameKey="role"
-              innerRadius={60}
-              strokeWidth={5}
+              innerRadius={50}
+              strokeWidth={10}
             >
               <Label
                 content={({ viewBox }) => {
