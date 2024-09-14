@@ -22,6 +22,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useParams } from "next/navigation";
+import { api } from "../../../../../../../../convex/_generated/api";
+import { useQuery } from "convex/react";
+import { Id } from "../../../../../../../../convex/_generated/dataModel";
 
 // Mock data for testing with events spread over 3 days
 const mockEvents = [
@@ -64,13 +68,14 @@ const chartConfig = {
 export function EventsChart() {
   const [timeRange, setTimeRange] = React.useState("30d");
   const [selectedKey, setSelectedKey] = React.useState("all");
+  const [isMock, setIsMock] = React.useState("true");
 
-  const events = mockEvents;
+  const { schoolId } = useParams();
+  const schoolEvents = useQuery(api.events.getEvents, {
+    objectId: schoolId as Id<"schools">,
+  });
 
-  //const { schoolId } = useParams();
-  //const events = useQuery(api.events.getEvents, {
-  //  objectId: schoolId,
-  //});
+  const events = isMock === "true" ? mockEvents : schoolEvents;
 
   const eventOptions = React.useMemo(() => {
     const uniqueKeys = new Set(events?.map((event) => event.key) || []);
@@ -126,6 +131,18 @@ export function EventsChart() {
           </CardDescription>
         </div>
         <div className="flex items-center gap-2">
+          <Select value={isMock} onValueChange={setIsMock}>
+            <SelectTrigger
+              className="w-[160px] rounded-lg sm:ml-auto"
+              aria-label="Select is mock"
+            >
+              <SelectValue placeholder="Mock data" />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="true">Mock</SelectItem>
+              <SelectItem value="false">Real data</SelectItem>
+            </SelectContent>
+          </Select>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger
               className="w-[160px] rounded-lg sm:ml-auto"

@@ -159,11 +159,14 @@ export const deleteSchool = mutation({
       ...courses.map((course) =>
         deleteCourseCascade(ctx, { courseId: course._id })
       ),
+      ...enrollments.map((enrollment) => ctx.db.delete(enrollment._id)),
+      ...semesters.map((semester) => ctx.db.delete(semester._id)),
+    ]);
+
+    await Promise.all([
       ...memberships.map((membership) =>
         deleteSchoolMembershipCascade(ctx, { membershipId: membership._id })
       ),
-      ...enrollments.map((enrollment) => ctx.db.delete(enrollment._id)),
-      ...semesters.map((semester) => ctx.db.delete(semester._id)),
     ]);
 
     await ctx.db.delete(school._id);

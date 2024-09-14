@@ -8,6 +8,7 @@ import { useParams, usePathname } from "next/navigation";
 import {
   AlignLeftIcon,
   AreaChartIcon,
+  BookIcon,
   CalendarIcon,
   ClipboardIcon,
   HomeIcon,
@@ -91,6 +92,13 @@ export const NavItems = () => {
   if (membership.role === "manager") {
     navItems.push(
       ...[
+        {
+          name: "Docs",
+          href: schoolPath("/docs"),
+          icon: <BookIcon className="size-5" />,
+          active: isNavItemActive("/docs"),
+          position: "bottom",
+        },
         {
           name: "Analytics",
           href: schoolPath("/analytics"),

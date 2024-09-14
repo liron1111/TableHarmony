@@ -19,6 +19,7 @@ import {
   deleteCourseEnrollment,
 } from "./courseEnrollments";
 import { trackEvent } from "./events";
+import { deleteAssignmentCascade } from "./courseAssignments";
 
 export const createCourse = mutation({
   args: {
@@ -195,7 +196,9 @@ export const deleteCourseCascade = internalMutation({
       ...memberships.map((membership) => ctx.db.delete(membership._id)),
       ...enrollments.map((enrollment) => ctx.db.delete(enrollment._id)),
       ...classes.map((courseClass) => ctx.db.delete(courseClass._id)),
-      ...assignments.map((assignment) => ctx.db.delete(assignment._id)),
+      ...assignments.map((assignment) =>
+        deleteAssignmentCascade(ctx, { assignmentId: assignment._id })
+      ),
     ]);
 
     await ctx.db.delete(args.courseId);
