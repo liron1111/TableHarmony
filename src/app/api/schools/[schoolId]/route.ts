@@ -26,7 +26,11 @@ export async function GET(
       schoolId: schoolId as Id<"schools">,
     });
 
-    return NextResponse.json(school);
+    const schoolEvents = await fetchQuery(api.events.getEvents, {
+      objectId: schoolId as Id<"schools">,
+    });
+
+    return NextResponse.json({ school, events: schoolEvents });
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to get school" },

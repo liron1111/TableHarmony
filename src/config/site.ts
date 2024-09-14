@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "DevHarmony",
-  url: "https://devharmony.io",
+  url: "https://www.devharmony.io",
   title: "Manage Your Schools in One Place",
   description:
     "Track, maintain, and streamline every aspect of your schools with DevHarmony.",
