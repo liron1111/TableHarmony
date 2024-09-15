@@ -27,37 +27,6 @@ import { api } from "../../../../../../../../convex/_generated/api";
 import { useQuery } from "convex/react";
 import { Id } from "../../../../../../../../convex/_generated/dataModel";
 
-// Mock data for testing with events spread over 3 days
-const mockEvents = [
-  ...Array(10)
-    .fill(0)
-    .flatMap((_, index) => {
-      const date = new Date(2024, 7, index * 3 + 1); // Spread events every 3 days
-      const baseCount = 10; // Base number of events per day
-      const trendFactor = Math.sin(index / 5) * 15; // Creates a wave pattern
-      const randomFactor = Math.random() * 5; // Adds some randomness
-      const totalCount = Math.max(
-        0,
-        Math.round(baseCount + trendFactor + randomFactor)
-      );
-
-      return Array(totalCount)
-        .fill(0)
-        .map((_, i) => ({
-          _creationTime: new Date(
-            date.getTime() + i * 1000 * 60 * 60
-          ).toISOString(), // Spread events throughout the day
-          key: [
-            "Course Creation",
-            "Course Deletion",
-            "Assignment Creation",
-            "Assignment Submission",
-            "Course Enrollment",
-          ][Math.floor(Math.random() * 5)],
-        }));
-    }),
-];
-
 const chartConfig = {
   events: {
     label: "Events",
@@ -68,14 +37,11 @@ const chartConfig = {
 export function EventsChart() {
   const [timeRange, setTimeRange] = React.useState("30d");
   const [selectedKey, setSelectedKey] = React.useState("all");
-  const [isMock, setIsMock] = React.useState("true");
 
   const { schoolId } = useParams();
-  const schoolEvents = useQuery(api.events.getEvents, {
+  const events = useQuery(api.events.getEvents, {
     objectId: schoolId as Id<"schools">,
   });
-
-  const events = isMock === "true" ? mockEvents : schoolEvents;
 
   const eventOptions = React.useMemo(() => {
     const uniqueKeys = new Set(events?.map((event) => event.key) || []);
@@ -131,18 +97,6 @@ export function EventsChart() {
           </CardDescription>
         </div>
         <div className="flex items-center gap-2">
-          <Select value={isMock} onValueChange={setIsMock}>
-            <SelectTrigger
-              className="w-[160px] rounded-lg sm:ml-auto"
-              aria-label="Select is mock"
-            >
-              <SelectValue placeholder="Mock data" />
-            </SelectTrigger>
-            <SelectContent className="rounded-xl">
-              <SelectItem value="true">Mock</SelectItem>
-              <SelectItem value="false">Real data</SelectItem>
-            </SelectContent>
-          </Select>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger
               className="w-[160px] rounded-lg sm:ml-auto"

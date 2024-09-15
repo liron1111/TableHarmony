@@ -15,12 +15,7 @@ export async function POST(req: NextRequest) {
   if (!objectId || !key) {
     return NextResponse.json(
       { error: "Object ID and key are required" },
-      {
-        status: 400,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
+      { status: 400 }
     );
   }
 
