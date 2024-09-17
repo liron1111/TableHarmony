@@ -114,10 +114,15 @@ function MembershipButtons() {
   const { membership } = useCourse();
   const { assignmentId } = useParams();
 
-  const submission = useQuery(api.courseAssignmentsSubmissions.getSubmission, {
-    assignmentId: assignmentId as Id<"courseAssignments">,
-    userId: membership?.userId!,
-  });
+  const submission = useQuery(
+    api.courseAssignmentsSubmissions.getSubmission,
+    membership?.userId
+      ? {
+          assignmentId: assignmentId as Id<"courseAssignments">,
+          userId: membership.userId,
+        }
+      : "skip"
+  );
 
   if (!membership) return null;
 

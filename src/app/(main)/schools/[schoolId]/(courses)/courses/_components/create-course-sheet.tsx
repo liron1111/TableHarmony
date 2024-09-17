@@ -46,7 +46,7 @@ const formSchema = z.object({
     .string({
       message: "Description is required",
     })
-    .max(50),
+    .max(100, { message: "Description is too long" }),
 });
 
 function CreateCourseForm({

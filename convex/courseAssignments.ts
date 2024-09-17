@@ -149,7 +149,7 @@ export const getSubmissions = query({
   args: {
     assignmentId: v.id("courseAssignments"),
   },
-  handler: async (ctx, args) => {
+  async handler(ctx, args) {
     const submissions = await ctx.db
       .query("courseAssignmentsSubmissions")
       .withIndex("by_assignmentId", (q) =>

@@ -24,7 +24,7 @@ import { useEffect } from "react";
 import { shapeErrors } from "@/utils/errors";
 
 const updateDescriptionSchema = z.object({
-  description: z.string().max(50),
+  description: z.string().max(100, { message: "Description is too long" }),
 });
 
 export function UpdateDescriptionForm() {
