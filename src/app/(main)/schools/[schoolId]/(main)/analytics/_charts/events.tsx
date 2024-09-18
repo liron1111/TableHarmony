@@ -15,6 +15,12 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useParams } from "next/navigation";
+import { api } from "../../../../../../../../convex/_generated/api";
+import { useQuery } from "convex/react";
+import { Id } from "../../../../../../../../convex/_generated/dataModel";
+import { eachDayOfInterval, format, subDays, isEqual } from "date-fns";
+import { MultiSelect } from "@/components/ui/multi-select";
 import {
   Select,
   SelectContent,
@@ -22,21 +28,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useParams } from "next/navigation";
-import { api } from "../../../../../../../../convex/_generated/api";
-import { useQuery } from "convex/react";
-import { Id } from "../../../../../../../../convex/_generated/dataModel";
 
-const chartConfig = {
-  events: {
-    label: "Events",
-    color: "hsl(var(--chart-1))",
-  },
-} satisfies ChartConfig;
+const colors = [
+  "hsl(var(--chart-1))",
+  "hsl(var(--chart-2))",
+  "hsl(var(--chart-3))",
+  "hsl(var(--chart-4))",
+  "hsl(var(--chart-5))",
+];
 
 export function EventsChart() {
   const [timeRange, setTimeRange] = React.useState("30d");
-  const [selectedKey, setSelectedKey] = React.useState("all");
+  const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(
+    new Set(["all"])
+  );
 
   const { schoolId } = useParams();
   const events = useQuery(api.events.getEvents, {
@@ -51,41 +56,102 @@ export function EventsChart() {
     ];
   }, [events]);
 
+  const handleSelectChange = (newSelection: Set<string>) => {
+    if (newSelection.has("all")) {
+      // If "All" is selected, select all options
+      setSelectedKeys(new Set(eventOptions.map((option) => option.value)));
+    } else if (
+      selectedKeys.has("all") &&
+      newSelection.size < eventOptions.length - 1
+    ) {
+      // If "All" was previously selected and we're deselecting options
+      setSelectedKeys(newSelection);
+    } else {
+      // Normal selection/deselection
+      setSelectedKeys(newSelection);
+    }
+  };
+
+  const chartConfig = React.useMemo(() => {
+    const config: ChartConfig = {};
+    const keysToUse =
+      selectedKeys.size === eventOptions.length
+        ? new Set(
+            eventOptions
+              .map((option) => option.value)
+              .filter((key) => key !== "all")
+          )
+        : selectedKeys;
+
+    Array.from(keysToUse).forEach((key, index) => {
+      if (key !== "all") {
+        config[key] = {
+          label: key,
+          color: colors[index % colors.length],
+        };
+      }
+    });
+    return config;
+  }, [selectedKeys, eventOptions]);
+
   const chartData = React.useMemo(() => {
     if (!events) return [];
 
     const now = new Date();
-    const startDate = new Date(
-      now.getTime() -
-        (timeRange === "30d" ? 30 : timeRange === "7d" ? 7 : 90) *
-          24 *
-          60 *
-          60 *
-          1000
-    );
+    const daysToSubtract =
+      timeRange === "30d" ? 30 : timeRange === "7d" ? 7 : 90;
+    const startDate = subDays(now, daysToSubtract);
 
-    const filteredEvents = events.filter(
-      (event) =>
-        (selectedKey === "all" || event.key === selectedKey) &&
-        new Date(event._creationTime) >= startDate
-    );
+    const allDatesInRange = eachDayOfInterval({
+      start: startDate,
+      end: now,
+    }).map((date) => format(date, "yyyy-MM-dd"));
 
-    const eventCounts = filteredEvents.reduce(
-      (acc, event) => {
-        const date = new Date(event._creationTime).toISOString().split("T")[0];
-        acc[date] = (acc[date] || 0) + 1;
-        return acc;
-      },
-      {} as Record<string, number>
-    );
+    const eventCounts: Record<string, Record<string, number>> = {};
 
-    return Object.entries(eventCounts)
-      .map(([date, count]) => ({
-        date,
-        count,
-      }))
-      .sort((a, b) => a.date.localeCompare(b.date));
-  }, [events, timeRange, selectedKey]);
+    events.forEach((event) => {
+      const eventDate = format(new Date(event._creationTime), "yyyy-MM-dd");
+      if (new Date(event._creationTime) >= startDate) {
+        if (!eventCounts[eventDate]) {
+          eventCounts[eventDate] = {};
+        }
+        eventCounts[eventDate][event.key] =
+          (eventCounts[eventDate][event.key] || 0) + 1;
+      }
+    });
+
+    const keysToUse =
+      selectedKeys.size === eventOptions.length
+        ? new Set(
+            eventOptions
+              .map((option) => option.value)
+              .filter((key) => key !== "all")
+          )
+        : selectedKeys;
+
+    return allDatesInRange.map((date) => ({
+      date,
+      ...Object.fromEntries(
+        Array.from(keysToUse).map((key) => [key, eventCounts[date]?.[key] || 0])
+      ),
+    }));
+  }, [events, timeRange, selectedKeys, eventOptions]);
+
+  const xAxisTicks = React.useMemo(() => {
+    if (chartData.length <= 7) {
+      return chartData.map((item) => item.date);
+    }
+    const step = Math.floor(chartData.length / 6);
+    const ticks = [
+      chartData[0].date,
+      ...chartData
+        .slice(step, -step)
+        .filter((_, index) => index % step === 0)
+        .map((item) => item.date),
+      chartData[chartData.length - 1].date,
+    ];
+    return ticks;
+  }, [chartData]);
 
   return (
     <Card>
@@ -110,25 +176,12 @@ export function EventsChart() {
               <SelectItem value="7d">Last 7 days</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={selectedKey} onValueChange={setSelectedKey}>
-            <SelectTrigger
-              className="w-[160px] rounded-lg sm:ml-auto"
-              aria-label="Select an event type"
-            >
-              <SelectValue placeholder="Select event type" />
-            </SelectTrigger>
-            <SelectContent className="rounded-xl">
-              {eventOptions.map((option) => (
-                <SelectItem
-                  key={option.value}
-                  value={option.value}
-                  className="rounded-lg"
-                >
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <MultiSelect
+            title="Select events"
+            options={eventOptions}
+            selectedValues={selectedKeys}
+            onChange={handleSelectChange}
+          />
         </div>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
@@ -138,18 +191,23 @@ export function EventsChart() {
         >
           <AreaChart data={chartData}>
             <defs>
-              <linearGradient id="colorEvents" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor={chartConfig.events.color}
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor={chartConfig.events.color}
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
+              {Object.entries(chartConfig).map(([key, config]) => (
+                <linearGradient
+                  key={key}
+                  id={`color${key}`}
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="5%"
+                    stopColor={config.color}
+                    stopOpacity={0.4}
+                  />
+                  <stop offset="95%" stopColor={config.color} stopOpacity={0} />
+                </linearGradient>
+              ))}
             </defs>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis
@@ -157,6 +215,7 @@ export function EventsChart() {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
+              ticks={xAxisTicks}
               tickFormatter={(value) => {
                 const date = new Date(value);
                 return date.toLocaleDateString("en-US", {
@@ -164,28 +223,61 @@ export function EventsChart() {
                   day: "numeric",
                 });
               }}
+              interval={0}
             />
-            <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              allowDecimals={false}
+              tickFormatter={(value) => Math.floor(value).toString()}
+            />
             <ChartTooltip
               cursor={false}
-              content={
-                <ChartTooltipContent
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    });
-                  }}
-                />
-              }
+              content={({ active, payload, label }) => {
+                if (active && payload && payload.length) {
+                  return (
+                    <Card className="px-2 py-1 md:w-96">
+                      <CardHeader className="p-2">
+                        <CardTitle className="text-sm font-medium">
+                          {format(new Date(label), "MMM d, yyyy")}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-2">
+                        {payload.map((entry, index) => (
+                          <div
+                            key={`item-${index}`}
+                            className="flex items-center gap-2 p-0.5 text-sm"
+                          >
+                            <div
+                              className="size-3 rounded-md shadow-sm"
+                              style={{ backgroundColor: entry.color }}
+                            />
+                            <span className="capitalize text-muted-foreground">
+                              {entry.name}
+                            </span>
+                            <span className="ml-auto font-medium">
+                              {entry.value}
+                            </span>
+                          </div>
+                        ))}
+                      </CardContent>
+                    </Card>
+                  );
+                }
+                return null;
+              }}
             />
-            <Area
-              type="monotone"
-              dataKey="count"
-              stroke={chartConfig.events.color}
-              fillOpacity={1}
-              fill="url(#colorEvents)"
-            />
+            {Object.entries(chartConfig).map(([key, config]) => (
+              <Area
+                key={key}
+                type="monotone"
+                dataKey={key}
+                stroke={config.color}
+                fill={config.color}
+                fillOpacity={0.1}
+              />
+            ))}
           </AreaChart>
         </ChartContainer>
       </CardContent>
