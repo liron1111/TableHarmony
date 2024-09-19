@@ -1,7 +1,8 @@
 "use client";
 
+import { CodeBlock } from "@/components/code-block";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Sheet,
   SheetContent,
@@ -11,7 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { siteConfig } from "@/config/site";
-import { CheckIcon, CopyIcon } from "lucide-react";
+import { Car, CheckIcon, CopyIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -46,7 +47,7 @@ export function EventsIntegrationSheet() {
   return (
     <Sheet>
       <SheetTrigger>
-        <Button variant="secondary">Events Integration</Button>
+        <Button>Integrate Events</Button>
       </SheetTrigger>
 
       <SheetContent>
@@ -74,9 +75,9 @@ export function EventsIntegrationSheet() {
               )}
             </Button>
           </CardHeader>
-          <pre className="mt-2 w-full overflow-x-auto p-2">
-            <code className="language-javascript">{code}</code>
-          </pre>
+          <div className="p-2">
+            <CodeBlock code={code} language="javascript" />
+          </div>
         </Card>
       </SheetContent>
     </Sheet>

@@ -13,13 +13,12 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useParams } from "next/navigation";
 import { api } from "../../../../../../../../convex/_generated/api";
 import { useQuery } from "convex/react";
 import { Id } from "../../../../../../../../convex/_generated/dataModel";
-import { eachDayOfInterval, format, subDays, isEqual } from "date-fns";
+import { eachDayOfInterval, format, subDays } from "date-fns";
 import { MultiSelect } from "@/components/ui/multi-select";
 import {
   Select,

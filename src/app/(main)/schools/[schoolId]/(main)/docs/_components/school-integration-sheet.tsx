@@ -1,7 +1,8 @@
 "use client";
 
+import { CodeBlock } from "@/components/code-block";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 import {
   Sheet,
   SheetContent,
@@ -42,7 +43,7 @@ export function SchoolIntegrationSheet() {
   return (
     <Sheet>
       <SheetTrigger>
-        <Button variant="secondary">School Integration</Button>
+        <Button variant="outline">Integrate School</Button>
       </SheetTrigger>
 
       <SheetContent>
@@ -70,9 +71,9 @@ export function SchoolIntegrationSheet() {
               )}
             </Button>
           </CardHeader>
-          <pre className="mt-2 w-full overflow-x-auto p-2">
-            <code className="language-javascript">{code}</code>
-          </pre>
+          <div className="p-2">
+            <CodeBlock code={code} language="javascript" />
+          </div>
         </Card>
       </SheetContent>
     </Sheet>
